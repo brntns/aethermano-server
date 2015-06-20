@@ -92,7 +92,7 @@ exports.Map.prototype = {
     	this.randomTerrain(100, 0, ret , 0 , ret, 3, 30, 1, 2, 17, 45);
     	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
     	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
-    	this.portal(0,ret,0,ret,24,24,8);
+    	this.portal(0,ret-24 ,0,ret-24,24,24,8);
     /*	var platformNum = Math.floor(this.mapSize/100);
     	for (var y = 0; y < platformNum; y++) {
     		var platformPosition = Math.floor(this.mapSize*Math.random());
