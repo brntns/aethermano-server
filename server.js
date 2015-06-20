@@ -1,6 +1,5 @@
 var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
-	, fs = require('fs')
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
 

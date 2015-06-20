@@ -1,5 +1,4 @@
 'use strict';
-var noise = require('./js/noise.js');
 //var fs = require('fs');
 var _ = require('lodash');
 var debug = true;
