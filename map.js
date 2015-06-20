@@ -67,8 +67,10 @@ exports.Map.prototype = {
     	}
   	},
   	portal: function(pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_x, size_y, portalRadius) {
+      console.log("generating portal. coordinates:");
     	var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
     	var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
+      console.log(Position_x, Position_y);
     	for (var z = 0; z < size_x; z++){
     		for (var i = 0; i < size_y; i++){
     			if(Math.sqrt((z-size_x/2)*(z-size_x/2)+(i-size_y/2)*(i-size_y/2)) < portalRadius){
