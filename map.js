@@ -105,7 +105,9 @@ exports.Map.prototype = {
     	this.randomTerrain(100, 0, ret , 0 , ret, 3, 30, 1, 2, 17, 45);
     	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
     	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
-      this.colouring(1, 0, 100, 0, 100, 2, 2);
+      this.colouring(0.3, 0, 150, 0, 150, 1, 4);
+      this.colouring(0.6, 0, 100, 0, 100, 1, 4);
+      this.colouring(1, 0, 50, 0, 50, 1, 4);
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
   	},
   	setMap: function(){
