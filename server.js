@@ -7,7 +7,7 @@ var map = new gameMap.Map();
 
 map.create();
 
-app.listen(process.env.PORT);
+app.listen(8000);
 
 var players = [];
 var x = 0;

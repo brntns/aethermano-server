@@ -83,6 +83,17 @@ exports.Map.prototype = {
     		}
     	}
   	},
+    colouring: function (prob, pos_xMin, pos_xMax, pos_yMin, pos_yMax, colourMin, colourMax) {
+      for (var x = pos_xMin; x < pos_xMax+1;x++){
+        for (var y = pos_yMin; y < pos_yMax; y++){
+          var randy = Math.random();
+          if (this.map[x+y*ret] != 0 && randy < prob) {
+            var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
+            this.map[x+y*ret] = Colour;
+          }
+        }
+      }
+    },
   	generate: function (size) {
     	this.clear();
     	this.mapSize = size * size;
@@ -94,32 +105,8 @@ exports.Map.prototype = {
     	this.randomTerrain(100, 0, ret , 0 , ret, 3, 30, 1, 2, 17, 45);
     	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
     	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
+      this.colouring(1, 0, 100, 0, 100, 2, 2);
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
-    /*	var platformNum = Math.floor(this.mapSize/100);
-    	for (var y = 0; y < platformNum; y++) {
-    		var platformPosition = Math.floor(this.mapSize*Math.random());
-    		var platformSize_x = Math.floor(27*Math.random())+3;
-    		var platformSize_y = 2;
-    		for (var z = 0; z < platformSize_x;z++){
-    			for (var i = 0; i < platformSize_y; i++){
-    				var platformColour = Math.floor(28*Math.random())+17;
-    				this.map[platformPosition+z+(i*ret)] = platformColour;
-    			}
-    		}
-    	}
-    //Create Cavities
-    	var caveNum = Math.floor(this.mapSize/2000);
-    	for (var y = 0; y < caveNum; y++){
-    		var cavePosition = Math.floor(this.mapSize*Math.random());
-    		var caveSize_x = Math.floor(27*Math.random())+3;
-    		var caveSize_y = Math.floor(27*Math.random())+3;
-    		for (var z = 0; z < caveSize_x;z++){
-    			for (var i = 0; i < caveSize_y; i++){
-    				this.map[cavePosition+z+(i*ret)] = 0;
-    			}
-    		}
- 
-    	} */
   	},
   	setMap: function(){
     	this.mapData.layers[0].data = this.map;
