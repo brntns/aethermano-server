@@ -84,8 +84,8 @@ exports.Map.prototype = {
     	}
   	},
     colouring: function (prob, pos_xMin, pos_xMax, pos_yMin, pos_yMax, colourMin, colourMax) {
-      for (var x = pos_xMin; x < pos_xMax+1;x++){
-        for (var y = pos_yMin; y < pos_yMax; y++){
+      for (var x = pos_xMin; x < pos_xMax+1;x++) {
+        for (var y = pos_yMin; y < pos_yMax; y++) {
           var randy = Math.random();
           if (this.map[x+y*ret] != 0 && randy < prob) {
             var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
