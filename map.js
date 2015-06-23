@@ -108,6 +108,9 @@ exports.Map.prototype = {
       this.colouring(0.3, 0, 150, 0, 150, 1, 4);
       this.colouring(0.6, 0, 100, 0, 100, 1, 4);
       this.colouring(1, 0, 50, 0, 50, 1, 4);
+      this.colouring(0.3, 100, 350, 0, 150, 59, 63);
+      this.colouring(0.6, 150, 300, 0, 100, 59, 63);
+      this.colouring(1, 0, 200, 250, 50, 59, 63);
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
   	},
   	setMap: function(){
