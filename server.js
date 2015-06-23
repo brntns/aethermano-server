@@ -28,7 +28,8 @@ io.sockets.on('connection', function (socket) {
 	}
 
 	socket.emit('playerConnected', player);
-	socket.emit('getMap', map.mapData);
+	socket.emit('getMap', map.mapData, items.itemData);
+
 	socket.emit('updatePlayers', players);
 	socket.broadcast.emit('updatePlayers', [player]);
 
