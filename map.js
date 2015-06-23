@@ -5,7 +5,7 @@ var debug = true;
 var start = process.hrtime();
 var ret = 640;
 exports.Map = function(){
-	this.mapData = { 
+	this.mapData = {
     "height":16,
     "layers":[{
        "data":[],
