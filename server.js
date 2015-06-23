@@ -2,10 +2,12 @@ var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
+  , gameItems = require('./items.js')
 
 var map = new gameMap.Map();
-
+var items = new gameItems.Items();
 map.create();
+items.create();
 
 app.listen(8000);
 
@@ -26,7 +28,8 @@ io.sockets.on('connection', function (socket) {
 	}
 
 	socket.emit('playerConnected', player);
-	socket.emit('getMap', map.mapData);
+	socket.emit('getMap', map.mapData, items.itemData);
+
 	socket.emit('updatePlayers', players);
 	socket.broadcast.emit('updatePlayers', [player]);
 
@@ -45,8 +48,8 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('disconnect', function () {
-		_.remove(players, function(p) { 
-			return p.id == player.id; 
+		_.remove(players, function(p) {
+			return p.id == player.id;
 		});
 		socket.broadcast.emit('removePlayer', player.id);
 	});

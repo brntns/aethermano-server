@@ -5,7 +5,7 @@ var debug = true;
 var start = process.hrtime();
 var ret = 640;
 exports.Map = function(){
-	this.mapData = { 
+	this.mapData = {
     "height":16,
     "layers":[{
        "data":[],
@@ -36,6 +36,8 @@ exports.Map = function(){
     "tilewidth":16,
     "version":1,
     "width":16,
+    "portalPosx":0,
+    "portalPosy":0
   };
   this.map = [];
   this.maps;
@@ -70,6 +72,8 @@ exports.Map.prototype = {
       console.log("generating portal. coordinates:");
     	var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
     	var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
+      this.mapData.portalPosx = Position_x;
+      this.mapData.portalPosy = Position_y;
       console.log(Position_x, Position_y);
     	for (var z = 0; z < size_x; z++){
     		for (var i = 0; i < size_y; i++){
