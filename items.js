@@ -13,8 +13,17 @@ exports.Items = function(){
 exports.Items.prototype = {
 	create: function () {
 		console.log('Creating Items...');
+    this.createItem();
 		console.log('Done Creating Items!');
-	}
+	},
+  createItem: function(){
+    var phaseboots = {
+      "name":"phaseers",
+      "awesome": true
+    };
+
+    this.itemData.data.push(phaseboots)
+  }
 };
 
 
