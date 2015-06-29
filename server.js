@@ -47,6 +47,16 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('updatePlayers', [player]);
 	});
 
+  socket.on('requestNewMap', function (data) {
+   map.create();
+
+    socket.emit('getMap', map.mapData, items.itemData);
+     console.log('sendingmap');
+
+
+
+  });
+
 	socket.on('disconnect', function () {
 		_.remove(players, function(p) {
 			return p.id == player.id;

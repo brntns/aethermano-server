@@ -7,17 +7,7 @@ var ret = 640;
 exports.Map = function(){
 	this.mapData = {
     "height":16,
-    "layers":[{
-       "data":[],
-        "height":ret,
-        "name":"Tile Layer 1",
-        "opacity":1,
-        "type":"tilelayer",
-        "visible":true,
-        "width":ret,
-        "x":0,
-        "y":0
-    }],
+    "layers":[],
     "orientation":"orthogonal",
     "properties":{},
     "tileheight":16,
@@ -46,7 +36,7 @@ exports.Map.prototype = {
 	create: function () {
 		console.log('Creating New Map...');
     	this.generate(ret);
-    	this.setMap();
+    	//this.setMap();
 		console.log('Done Creating Map!');
 	},
   	clear: function() {
@@ -86,6 +76,7 @@ exports.Map.prototype = {
     			}
     		}
     	}
+      this.setMap();
   	},
     colouring: function (prob, pos_xMin, pos_xMax, pos_yMin, pos_yMax, colourMin, colourMax) {
       for (var x = pos_xMin; x < pos_xMax+1;x++){
@@ -116,9 +107,23 @@ exports.Map.prototype = {
       this.colouring(0.6, 150, 300, 0, 100, 59, 63);
       this.colouring(1, 0, 200, 250, 50, 59, 63);
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
+
   	},
   	setMap: function(){
-    	this.mapData.layers[0].data = this.map;
+
+      var levelmap = {
+        "height":ret,
+        "name":"Tile Layer 1",
+        "opacity":1,
+        "type":"tilelayer",
+        "visible":true,
+        "width":ret,
+        "x":0,
+        "y":0
+    };
+      levelmap.data = this.map;
+    //console.log(this.map);
+    	this.mapData.layers.push(levelmap);
   	}
 };
 
