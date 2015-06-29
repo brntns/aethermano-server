@@ -9,7 +9,9 @@ var items = new gameItems.Items();
 map.create();
 items.create();
 
-app.listen(8000);
+app.listen(process.env.PORT);
+
+//app.listen(8000);
 
 var players = [];
 var x = 0;
@@ -26,12 +28,13 @@ io.sockets.on('connection', function (socket) {
 		var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
 		players.push(player);
 	}
-
+  socket.join('level1');
 	socket.emit('playerConnected', player);
 	socket.emit('getMap', map.mapData, items.itemData);
 
 	socket.emit('updatePlayers', players);
-	socket.broadcast.emit('updatePlayers', [player]);
+  io.to('level1').emit('updatePlayers', [player]);
+//	socket.broadcast.emit('updatePlayers', [player]);
 
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
@@ -49,8 +52,12 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('requestNewMap', function (data) {
    map.create();
-
-    socket.emit('getMap', map.mapData, items.itemData);
+   console.log('leaving 1');
+   socket.leave('level1');
+   console.log('joining 2');
+   socket.join('level2');
+    io.to('level2').emit('getMap', map.mapData, items.itemData);
+    //socket.emit('getMap', map.mapData, items.itemData);
      console.log('sendingmap');
 
 
