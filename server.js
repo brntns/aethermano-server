@@ -38,10 +38,6 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('playerSpawn', spawnPoint);
 	});
 
-  socket.on('mapUpdated', function(){
-    console.log('mapupdated');
-    socket.emit('playerRepawn', spawnPoint);
-  });
 
 	console.log('Player Connected: ', player);
   //console.log(socket.room);
@@ -65,6 +61,13 @@ io.sockets.on('connection', function (socket) {
  //   socket.emit('changeLevel', {level:socket.room, map:map.maps});
       socket.emit('changeLevel', {level:socket.room});
   });
+
+  socket.on('mapUpdated', function(){
+    console.log('mapupdated');
+     var respawnPoint = {x: 360, y:155, level:socket.room};
+    socket.emit('playerRepawn', respawnPoint);
+  });
+
 
 	socket.on('disconnect', function () {
 		_.remove(players, function(p) {
