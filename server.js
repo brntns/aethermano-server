@@ -6,10 +6,13 @@ var app = require('http').createServer()
 
 var map = new gameMap.Map();
 var items = new gameItems.Items();
+var level = [1,2,3,4,5];
 map.create();
 items.create();
 
-app.listen(8000);
+//app.listen(process.env.PORT);
+
+  app.listen(8000);
 
 var players = [];
 var x = 0;
@@ -18,34 +21,53 @@ var tileSize = 32;
 var debug = false;
 
 io.sockets.on('connection', function (socket) {
-	if(debug){
-			var spawnPoint = {x: 400, y:0};
-		}
-	else{
-		var spawnPoint = {x: 360, y:155, status:'spawn'};
-		var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
-		players.push(player);
-	}
+
+
+  socket.room = 1;
+  socket.join(1);
+  var spawnPoint = {x: 360, y:155, level:socket.room};
+	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
+	players.push(player);
 
 	socket.emit('playerConnected', player);
-	socket.emit('getMap', map.mapData, items.itemData);
+	socket.emit('getMap', map.maps, items.itemData);
 
-	socket.emit('updatePlayers', players);
-	socket.broadcast.emit('updatePlayers', [player]);
+  socket.broadcast.to('level1').emit('updatePlayers', [player])
 
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
 	});
 
+
 	console.log('Player Connected: ', player);
+  //console.log(socket.room);
 
 	socket.on('newPlayerPosition', function (data) {
 		player.x = data.x;
 		player.y = data.y;
 		player.status = data.status;
+    player.level = data.level;
+    // console.log(data.level)
+    socket.broadcast.to(data.level).emit('updatePlayers', [player])
 
-		socket.broadcast.emit('updatePlayers', [player]);
 	});
+
+  socket.on('requestLevelChange', function (level) {
+    //need a $promise
+    //map.create();
+    socket.leave(level);
+    socket.join(level+1);
+    socket.room = level+1;
+ //   socket.emit('changeLevel', {level:socket.room, map:map.maps});
+      socket.emit('changeLevel', {level:socket.room});
+  });
+
+  socket.on('mapUpdated', function(){
+    console.log('mapupdated');
+     var respawnPoint = {x: 360, y:155, level:socket.room};
+    socket.emit('playerRepawn', respawnPoint);
+  });
+
 
 	socket.on('disconnect', function () {
 		_.remove(players, function(p) {
