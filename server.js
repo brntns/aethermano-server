@@ -51,13 +51,13 @@ io.sockets.on('connection', function (socket) {
 
 	});
   socket.on('requestLevelChange', function (level) {
-    //need a $promise
-    map.create();
+		if (map.maps.length < level) {
+			map.create();
+		}
     socket.leave(level);
-    socket.join(level+1);
-    socket.room = level+1;
-   socket.emit('changeLevel', {level:socket.room, map:map.maps});
-//      socket.emit('changeLevel', {level:socket.room});
+    socket.join(level + 1);
+    socket.room = level + 1;
+    socket.emit('changeLevel', {level:socket.room, map:map.maps});
   });
   socket.on('mapUpdated', function(){
     console.log('mapupdated');
