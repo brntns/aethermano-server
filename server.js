@@ -6,7 +6,7 @@ var app = require('http').createServer()
 
 var map = new gameMap.Map();
 var items = new gameItems.Items();
-var level = [1,2,3,4,5];
+
 map.create();
 map.create();
 items.create();

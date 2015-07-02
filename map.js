@@ -48,7 +48,7 @@ exports.Map.prototype = {
 		console.log('Creating New Map...');
     this.generate(ret);
     	//this.setMap();
-		console.log('Done Creating Map!' + JSON.stringify(this.mapData.layers.length));
+		console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
 	},
   	clear: function() {
     	this.mapSize = null;
