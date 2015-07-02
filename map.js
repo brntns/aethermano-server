@@ -125,7 +125,7 @@ exports.Map.prototype = {
     	this.randomTerrain(100, 0, ret , 0 , ret, 3, 30, 1, 2, 17, 45);
     	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
     	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
-      //this.randomTerrain(2500, 0, ret , 0 , ret, 30, 50, 30, 50, 0, 0); //Large Voids
+      this.randomTerrain(2500, 0, ret , 0 , ret, 30, 50, 30, 50, 0, 0); //Large Voids
     //Corner Colours
       this.colouring(0.3, 0, 150, 0, 150, 1, 4);
       this.colouring(0.6, 0, 100, 0, 100, 1, 4);
@@ -141,13 +141,13 @@ exports.Map.prototype = {
       this.colouring(1, 0, 50, ret-50, ret, 55, 59);
     //Portal Spawn
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
-    //Ring Colour Coding
+    /*Ring Colour Coding
       var ringMax = Math.max(this.mapData.portalPosx,this.mapData.portalPosy,ret-this.mapData.portalPosx,ret-this.mapData.portalPosy);
       var ringsteps = Math.floor((1.5*ringMax/20))+1;
       var ringstep = 20;
       for (var j = 0; j < ringsteps; j++) {
         this.ring(this.mapData.portalPosx+12,this.mapData.portalPosx+12,this.mapData.portalPosy+12,this.mapData.portalPosy+12,(12+j*ringstep),(12+(j+1)*ringstep),(j+13),(j+13));
-      };
+      };*/
       this.setMap();
   	},
   	setMap: function(){
