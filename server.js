@@ -8,6 +8,7 @@ var map = new gameMap.Map();
 var items = new gameItems.Items();
 var level = [1,2,3,4,5];
 map.create();
+map.create();
 items.create();
 
 //app.listen(process.env.PORT);
@@ -38,10 +39,8 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('playerSpawn', spawnPoint);
 	});
 
-
 	console.log('Player Connected: ', player);
   //console.log(socket.room);
-
 	socket.on('newPlayerPosition', function (data) {
 		player.x = data.x;
 		player.y = data.y;
@@ -51,20 +50,18 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.to(data.level).emit('updatePlayers', [player])
 
 	});
-
   socket.on('requestLevelChange', function (level) {
     //need a $promise
-    //map.create();
+    map.create();
     socket.leave(level);
     socket.join(level+1);
     socket.room = level+1;
- //   socket.emit('changeLevel', {level:socket.room, map:map.maps});
-      socket.emit('changeLevel', {level:socket.room});
+   socket.emit('changeLevel', {level:socket.room, map:map.maps});
+//      socket.emit('changeLevel', {level:socket.room});
   });
-
   socket.on('mapUpdated', function(){
     console.log('mapupdated');
-     var respawnPoint = {x: 360, y:155, level:socket.room};
+     var respawnPoint = {x: 360, y:155};
     socket.emit('playerRepawn', respawnPoint);
   });
 
