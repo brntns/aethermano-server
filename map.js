@@ -54,7 +54,7 @@ exports.Map.prototype = {
     	this.mapSize = null;
     	this.map = [];
   	},
-  	randomTerrain: function (numb, pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_xMin, size_xMax, size_yMin, size_yMax, colourMin, colourMax) {
+  	randomTerrain: function randomTerrain(numb, pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_xMin, size_xMax, size_yMin, size_yMax, colourMin, colourMax) {
   		var num = Math.floor(this.mapSize/numb);
     	for (var y = 0; y < num; y++) {
     		var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
@@ -69,7 +69,7 @@ exports.Map.prototype = {
     		}
     	}
   	},
-  	portal: function(pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_x, size_y, portalRadius) {
+  	portal: function portal(pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_x, size_y, portalRadius) {
       console.log("generating portal. coordinates:");
     	var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
     	var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
@@ -87,9 +87,23 @@ exports.Map.prototype = {
     			}
     		}
     	}
-
   	},
-    colouring: function (prob, pos_xMin, pos_xMax, pos_yMin, pos_yMax, colourMin, colourMax) {
+    ring: function ring(pos_xMin, pos_xMax, pos_yMin, pos_yMax, minRadius, maxRadius, colourMin, colourMax) {
+      var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
+      var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
+      for (var z = -maxRadius; z < maxRadius; z++){
+        for (var i = -maxRadius; i < maxRadius; i++){
+          var rad = Math.sqrt(z*z+i*i);
+          if(rad > minRadius && rad <= maxRadius){
+            var ringColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
+            if (this.map[Position_x+Position_y*ret+z+i*ret] != 0 && Position_x+z <= 639 && Position_y+z >= 0 && Position_y+i <= 639 && Position_y+i >= 0 ) {
+              this.map[Position_x+Position_y*ret+z+i*ret] = ringColour;
+            }
+          }
+        }
+      }
+    },
+    colouring: function colouring(prob, pos_xMin, pos_xMax, pos_yMin, pos_yMax, colourMin, colourMax) {
       for (var x = pos_xMin; x < pos_xMax+1;x++) {
         for (var y = pos_yMin; y < pos_yMax; y++) {
           var randy = Math.random();
@@ -100,7 +114,7 @@ exports.Map.prototype = {
         }
       }
     },
-  	generate: function (size) {
+  	generate: function generate(size) {
     	this.clear();
     	this.mapSize = size * size;
     //Clear Terrain
@@ -111,7 +125,8 @@ exports.Map.prototype = {
     	this.randomTerrain(100, 0, ret , 0 , ret, 3, 30, 1, 2, 17, 45);
     	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
     	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
-      this.randomTerrain(2500, 0, ret , 0 , ret, 30, 50, 30, 50, 0, 0);
+      //this.randomTerrain(2500, 0, ret , 0 , ret, 30, 50, 30, 50, 0, 0); //Large Voids
+    //Corner Colours
       this.colouring(0.3, 0, 150, 0, 150, 1, 4);
       this.colouring(0.6, 0, 100, 0, 100, 1, 4);
       this.colouring(1, 0, 50, 0, 50, 1, 4);
@@ -124,7 +139,14 @@ exports.Map.prototype = {
       this.colouring(0.3, 0, 150, ret-150, ret, 55, 59);
       this.colouring(0.6, 0, 100, ret-100, ret, 55, 59);
       this.colouring(1, 0, 50, ret-50, ret, 55, 59);
+    //Portal Spawn
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
+    //Ring Colour Coding
+      var ringMax = Math.max(this.mapData.portalPosx,this.mapData.portalPosy,ret-this.mapData.portalPosx,ret-this.mapData.portalPosy);
+      var ringstep = Math.floor((ringMax-24)/20);
+      for (var j = 0; j < 20; j++) {
+        this.ring(this.mapData.portalPosx+12,this.mapData.portalPosx+12,this.mapData.portalPosy+12,this.mapData.portalPosy+12,(12+j*ringstep),(12+(j+1)*ringstep),(j+13),(j+13));
+      };
       this.setMap();
   	},
   	setMap: function(){
