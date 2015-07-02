@@ -37,8 +37,8 @@ exports.Map = function(){
     "tilewidth":16,
     "version":1,
     "width":16,
-    "portalPosx":0,
-    "portalPosy":0
+    "portalPosx":1,
+    "portalPosy":1
   };
   this.map = [];
   this.maps = [];
@@ -126,19 +126,3 @@ exports.Map.prototype = {
  //      console.log(this.maps);
   	}
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
