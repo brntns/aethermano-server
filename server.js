@@ -26,7 +26,9 @@ io.sockets.on('connection', function (socket) {
 
   socket.room = 1;
   socket.join(1);
-  var spawnPoint = {x: 360, y:155, level:socket.room};
+  var spawnx = Math.random()*640*16;
+  var spawny = Math.random()*640*16;
+  var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
 	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
 	players.push(player);
 
@@ -60,8 +62,10 @@ io.sockets.on('connection', function (socket) {
     socket.emit('changeLevel', {level:socket.room, map:map.maps});
   });
   socket.on('mapUpdated', function(){
-    console.log('mapupdated');
-     var respawnPoint = {x: 360, y:155};
+    console.log('mapupdated');  
+    var spawnx = Math.random()*640*16;
+    var spawny = Math.random()*640*16;
+    var respawnPoint = {x: spawnx, y: spawny};
     socket.emit('playerRepawn', respawnPoint);
   });
 
