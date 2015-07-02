@@ -11,9 +11,9 @@ map.create();
 map.create();
 items.create();
 
-app.listen(process.env.PORT);
+//app.listen(process.env.PORT);
 
-//  app.listen(8000);
+  app.listen(8000);
 
 var players = [];
 var x = 0;

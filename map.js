@@ -111,12 +111,19 @@ exports.Map.prototype = {
     	this.randomTerrain(100, 0, ret , 0 , ret, 3, 30, 1, 2, 17, 45);
     	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
     	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
+      this.randomTerrain(2500, 0, ret , 0 , ret, 30, 50, 30, 50, 0, 0);
       this.colouring(0.3, 0, 150, 0, 150, 1, 4);
       this.colouring(0.6, 0, 100, 0, 100, 1, 4);
       this.colouring(1, 0, 50, 0, 50, 1, 4);
-      this.colouring(0.3, 100, 350, 0, 150, 59, 63);
-      this.colouring(0.6, 150, 300, 0, 100, 59, 63);
-      this.colouring(1, 0, 200, 250, 50, 59, 63);
+      this.colouring(0.3, ret-150, ret, 0, 150, 59, 63);
+      this.colouring(0.6, ret-100, ret, 0, 100, 59, 63);
+      this.colouring(1, ret-50, ret, 0, 50, 59, 63);
+      this.colouring(0.3, ret-150, ret, ret-150, ret, 31, 34);
+      this.colouring(0.6, ret-100, ret, ret-100, ret, 31, 34);
+      this.colouring(1, ret-50, ret, ret-50, ret, 31, 34);
+      this.colouring(0.3, 0, 150, ret-150, ret, 55, 59);
+      this.colouring(0.6, 0, 100, ret-100, ret, 55, 59);
+      this.colouring(1, 0, 50, ret-50, ret, 55, 59);
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
       this.setMap();
   	},
