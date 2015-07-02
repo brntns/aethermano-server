@@ -53,7 +53,9 @@ io.sockets.on('connection', function (socket) {
 
 	});
   socket.on('requestLevelChange', function (level) {
-		if (map.maps.length < level) {
+		console.log(level);
+		console.log(map.maps.length);
+				if (map.maps.length <= level+1) {
 			map.create();
 		}
     socket.leave(level);
@@ -62,7 +64,7 @@ io.sockets.on('connection', function (socket) {
     socket.emit('changeLevel', {level:socket.room, map:map.maps});
   });
   socket.on('mapUpdated', function(){
-    console.log('mapupdated');  
+    console.log('mapupdated');
     var spawnx = Math.random()*640*16;
     var spawny = Math.random()*640*16;
     var respawnPoint = {x: spawnx, y: spawny};
