@@ -143,8 +143,9 @@ exports.Map.prototype = {
     	this.portal(0,ret-24 ,0,ret-24,24,24,8);
     //Ring Colour Coding
       var ringMax = Math.max(this.mapData.portalPosx,this.mapData.portalPosy,ret-this.mapData.portalPosx,ret-this.mapData.portalPosy);
-      var ringstep = Math.floor((ringMax-24)/20);
-      for (var j = 0; j < 20; j++) {
+      var ringsteps = Math.floor((1.5*ringMax/20))+1;
+      var ringstep = 20;
+      for (var j = 0; j < ringsteps; j++) {
         this.ring(this.mapData.portalPosx+12,this.mapData.portalPosx+12,this.mapData.portalPosy+12,this.mapData.portalPosy+12,(12+j*ringstep),(12+(j+1)*ringstep),(j+13),(j+13));
       };
       this.setMap();
