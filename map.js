@@ -147,7 +147,9 @@ exports.Map.prototype = {
     this.colouring(0.3, 0, 150, ret-150, ret, 55, 59);
     this.colouring(0.6, 0, 100, ret-100, ret, 55, 59);
     this.colouring(1, 0, 50, ret-50, ret, 55, 59);
-    this.makeTerrain(0, ret-20, 20, 20, 0, 0);
+    //Testing Room lower left corner
+    var testRoomSize = 40
+    this.makeTerrain(0, ret-testRoomSize, testRoomSize, testRoomSize, 0, 0);
   //Portal Spawn
   	this.portal(0,ret-24 ,0,ret-24,24,24,8);
   /*Ring Colour Coding
