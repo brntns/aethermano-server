@@ -6,8 +6,10 @@ var app = require('http').createServer()
 var map = new gameMap.Map();
 
 map.create();
+map.create();
 
-app.listen(process.env.PORT);
+// app.listen(process.env.PORT);
+app.listen(8000);
 
 var players = [];
 var x = 0;
@@ -45,8 +47,8 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('disconnect', function () {
-		_.remove(players, function(p) { 
-			return p.id == player.id; 
+		_.remove(players, function(p) {
+			return p.id == player.id;
 		});
 		socket.broadcast.emit('removePlayer', player.id);
 	});
