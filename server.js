@@ -3,12 +3,15 @@ var app = require('http').createServer()
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
   , gameItems = require('./items.js')
+	, gameMonster = require('./monster.js')
 
 var map = new gameMap.Map();
 var items = new gameItems.Items();
+var monster = new gameMonster.Monster();
 
 map.create();
 map.create();
+monster.create();
 items.create();
 
 //app.listen(process.env.PORT);
@@ -29,16 +32,18 @@ io.sockets.on('connection', function (socket) {
   var spawnx = 10;//Math.random()*640*16;
   var spawny = 640*16-10;//Math.random()*640*16;
   var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
+	var monsterPoint = {x: spawnx +50, y: spawny, level:socket.room};
 	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
 	players.push(player);
 
 	socket.emit('playerConnected', player);
-	socket.emit('getMap', map.maps, items.itemData);
+	socket.emit('getMap', map.maps, monster.monsterData);
 
   socket.broadcast.to('level1').emit('updatePlayers', [player])
 
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
+		socket.emit('monsterSpawn', monsterPoint);
 	});
 
 	console.log('Player Connected: ', player);
