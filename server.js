@@ -13,7 +13,7 @@ items.create();
 
 //app.listen(process.env.PORT);
 
-  app.listen(8000);
+app.listen(8000);
 
 var players = [];
 var x = 0;
@@ -26,8 +26,8 @@ io.sockets.on('connection', function (socket) {
 
   socket.room = 1;
   socket.join(1);
-  var spawnx = Math.random()*640*16;
-  var spawny = Math.random()*640*16;
+  var spawnx = 10;//Math.random()*640*16;
+  var spawny = 640*16-10;//Math.random()*640*16;
   var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
 	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
 	players.push(player);
