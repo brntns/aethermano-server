@@ -2,13 +2,22 @@ var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
+  , gameItems = require('./items.js')
+	, gameMonster = require('./monster.js')
 
 var map = new gameMap.Map();
+var items = new gameItems.Items();
+var monster = new gameMonster.Monster();
 
 map.create();
 map.create();
 
-// app.listen(process.env.PORT);
+
+monster.create();
+items.create();
+
+//app.listen(process.env.PORT);
+
 app.listen(8000);
 
 var players = [];
@@ -18,33 +27,57 @@ var tileSize = 32;
 var debug = false;
 
 io.sockets.on('connection', function (socket) {
-	if(debug){
-			var spawnPoint = {x: 400, y:0};
-		}
-	else{
-		var spawnPoint = {x: 360, y:155, status:'spawn'};
-		var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
-		players.push(player);
-	}
+
+
+  socket.room = 1;
+  socket.join(1);
+  var spawnx = 10;//Math.random()*640*16;
+  var spawny = 640*16-10;//Math.random()*640*16;
+  var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
+	var monsterPoint = {x: spawnx +50, y: spawny, level:socket.room};
+	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
+	players.push(player);
 
 	socket.emit('playerConnected', player);
-	socket.emit('getMap', map.mapData);
-	socket.emit('updatePlayers', players);
-	socket.broadcast.emit('updatePlayers', [player]);
+	socket.emit('getMap', map.maps, monster.monsterData);
+
+  socket.broadcast.to('level1').emit('updatePlayers', [player])
 
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
+		socket.emit('monsterSpawn', monsterPoint);
 	});
 
 	console.log('Player Connected: ', player);
-
+  //console.log(socket.room);
 	socket.on('newPlayerPosition', function (data) {
 		player.x = data.x;
 		player.y = data.y;
 		player.status = data.status;
+    player.level = data.level;
+    // console.log(data.level)
+    socket.broadcast.to(data.level).emit('updatePlayers', [player])
 
-		socket.broadcast.emit('updatePlayers', [player]);
 	});
+  socket.on('requestLevelChange', function (level) {
+		console.log(level);
+		console.log(map.maps.length);
+				if (map.maps.length <= level+1) {
+			map.create();
+		}
+    socket.leave(level);
+    socket.join(level + 1);
+    socket.room = level + 1;
+    socket.emit('changeLevel', {level:socket.room, map:map.maps});
+  });
+  socket.on('mapUpdated', function(){
+    console.log('mapupdated');
+    var spawnx = Math.random()*640*16;
+    var spawny = Math.random()*640*16;
+    var respawnPoint = {x: spawnx, y: spawny};
+    socket.emit('playerRepawn', respawnPoint);
+  });
+
 
 	socket.on('disconnect', function () {
 		_.remove(players, function(p) {
