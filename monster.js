@@ -10,7 +10,6 @@ exports.Monster = function(){
 	    "width":16,
 	    "data":[]
   };
-  this.monster = [];
   this.monsters = [];
 };
 exports.Monster.prototype = {
@@ -25,6 +24,7 @@ exports.Monster.prototype = {
       "boss": true
     };
 
-    this.monsterData.data.push(uglymonster)
+    this.monsterData.data.push(uglymonster);
+		this.monsters.push(this.monsterData);
   }
 };
