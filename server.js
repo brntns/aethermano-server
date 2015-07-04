@@ -13,6 +13,8 @@ map.create();
 map.create();
 monster.create();
 monster.create();
+monster.create();
+monster.create();
 items.create();
 //app.listen(process.env.PORT);
 app.listen(8000);
@@ -20,21 +22,27 @@ app.listen(8000);
 var players = [];
 var x = 0;
 var y = 0;
+var monsterSpawns = [{
+	x:50, y: 10000
+},{
+	x: 50, y: 7500
+},{
+	x: 50, y: 5000
+},{
+	x: 50, y: 2500
+}];
 
 io.sockets.on('connection', function (socket) {
-  var spawnx = Math.random()*640*16;//10;
-  var spawny = Math.random()*640*16;//640*16-10;
-  var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
-	var monsterSpawns = [{
-		x: spawnx +50, y: spawny + 100
-	},{
-		x: spawnx +150, y: spawny - 50
-	}];
-	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
-	players.push(player);
 	// connect to level
 	socket.room = 1;
 	socket.join(1);
+	//spawn points
+  var spawnx = Math.random()*640*16;//10;
+  var spawny = Math.random()*640*16;//640*16-10;
+  var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
+	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
+	// add player
+	players.push(player);
 	// connect player
 	socket.emit('playerConnected', player);
 	//push map
