@@ -96,3 +96,32 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('removePlayer', player.id);
 	});
 });
+
+//block
+var fs = require('fs'),
+PNG = require('pngjs').PNG;
+
+function writeImg() {
+    var img = new PNG({
+      filterType: 4,
+      width: 640,
+      height: 640
+    });
+
+    for (var y = 0; y < img.height; y++) {
+      for (var x = 0; x < img.width; x++) {
+        var idx = (img.width * y + x) << 2;
+        // invert color
+        img.data[idx] = 120;
+        img.data[idx+1] = 255;
+        img.data[idx+2] = 131;
+
+        // and reduce opacity
+        img.data[idx+3] = 255;
+      }
+    }
+
+    img.pack().pipe(fs.createWriteStream('out.png'));
+}
+
+writeImg();
