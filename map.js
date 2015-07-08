@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var ret = 640;
+var ret = 1600;
 exports.Map = function(){
 
 	this.mapData = {
@@ -134,6 +134,7 @@ exports.Map.prototype = {
   	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
   	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
     this.randomTerrain(2500, 0, ret , 0 , ret, 30, 50, 30, 50, 0, 0); //Large Voids
+    this.randomTerrain(1000, 0, ret , 0 , ret, 1, 2, 1, 1, 17, 45);
   //Corner Colours
     this.colouring(0.3, 0, 150, 0, 150, 1, 4);
     this.colouring(0.6, 0, 100, 0, 100, 1, 4);
