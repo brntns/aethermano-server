@@ -12,7 +12,7 @@ var monster = new gameMonster.Monster();
 map.create();
 map.create();
 
-var monsterPerScreen = 0.1;
+var monsterPerScreen = 0.000000001;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
 for (i = 0; i < monsterNum; i++) {
 	monster.create();
@@ -50,7 +50,7 @@ io.sockets.on('connection', function (socket) {
 	//push map
 	socket.emit('getMap', map.maps, monster.monsters,items.itemData);
 	//update player
-  	socket.broadcast.to('level1').emit('updatePlayers', [player])
+  socket.broadcast.to('level1').emit('updatePlayers', [player])
 	// update Spawnpoints
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
@@ -59,11 +59,8 @@ io.sockets.on('connection', function (socket) {
 	//console.log('Player Connected: ', player);
 	// update player postition
 	socket.on('newPlayerPosition', function (data) {
-		player.x = data.x;
-		player.y = data.y;
-		player.status = data.status;
-    player.level = data.level;
-    // console.log(data.level)
+		player.mov = data;
+    console.log(data)
     socket.broadcast.to(data.level).emit('updatePlayers', [player])
 	});
 	//update monsters
@@ -72,7 +69,7 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.to(data.level).emit('updateMonsters', [monster])
 	});
 	//update level
-  	socket.on('requestLevelChange', function (level) {
+  socket.on('requestLevelChange', function (level) {
 		console.log(level);
 		console.log(map.maps.length);
 		if (map.maps.length <= level+1) {
@@ -81,7 +78,7 @@ io.sockets.on('connection', function (socket) {
     socket.leave(level);
     socket.join(level + 1);
     socket.room = level + 1;
-    socket.emit('changeLevel', {level:socket.room, map:map.maps});
+  	socket.emit('changeLevel', {level:socket.room, map:map.maps});
   	});
   	socket.on('mapUpdated', function(){
     console.log('mapupdated');
