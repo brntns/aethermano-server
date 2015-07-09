@@ -97,7 +97,7 @@ exports.Map.prototype = {
   		}
   	}
 	},
-  circle: function circle(numb,pos_xMin, pos_xMax, pos_yMin, pos_yMax, circleRadiusMin, circleRadiusMax, colourMin, colourMax) {
+  circle: function circle(numb, pos_xMin, pos_xMax, pos_yMin, pos_yMax, circleRadiusMin, circleRadiusMax, colourMin, colourMax) {
     var TSize = (pos_xMax - pos_xMin)*(pos_yMax - pos_yMin);
     var num = Math.floor(TSize/numb);
     for (var y = 0; y < num; y++) {    
@@ -128,32 +128,42 @@ exports.Map.prototype = {
         }
       }
     }
+  },randomSnakes: function randomSnakes(numb, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
+    var num = Math.floor(TSize/numb);
+    for (var j = 0; j < num; j++) {
+      var startX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+      var startY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
+      var seg = Math.floor(Math.random()*(segMax-segMin+1)+segMin);
+      this.snake(seg, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
+    }
   },
-  snake: function snake(seg, startX, startY, lengthMin, lengthMax, thickness, colourMin, colourMax) {
+  snake: function snake(seg, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
     var PosX = startX;
     var PosY = startY;
     var lastD = Math.floor(Math.random()*4);;
     for (var i = 0; i < seg; i++) {
       var direction = Math.floor(Math.random()*4);
       var randColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-      var randLength = Math.floor(Math.random()*(lengthMax-lengthMin+1)+lengthMin);
+      var randLengthX = Math.floor(Math.random()*(lengthXMax-lengthXMin+1)+lengthXMin);
+      var randLengthY = Math.floor(Math.random()*(lengthYMax-lengthYMin+1)+lengthYMin);
       if (direction === 0) {
         if (lastD === 3) {
-          for (var x = 0; x < randLength; x++) {
-            for (var y = 0; y < thickness; y++) {
+          for (var x = 0; x < randLengthX; x++) {
+            for (var y = 0; y < thickY; y++) {
               this.map[PosX+ret*PosY+x+ret*y] = randColour;
             }
           }
-          PosX = PosX + randLength - 1;
+          PosX = PosX + randLengthX - 1;
           PosY = PosY;
           lastD = 0;
         } else if (lastD === 1) {
-          for (var x = 0; x < randLength; x++) {
-            for (var y = 0; y < thickness; y++) {
-              this.map[PosX+thickness+ret*PosY+x+ret*y] = randColour;
+          for (var x = 0; x < randLengthX; x++) {
+            for (var y = 0; y < thickY; y++) {
+              this.map[PosX+thickX+ret*PosY+x+ret*y] = randColour;
             }
           }
-          PosX = PosX + randLength + thickness - 1;
+          PosX = PosX + randLengthX + thickX - 1;
           PosY = PosY;
           lastD = 0;
         } else {
@@ -161,43 +171,43 @@ exports.Map.prototype = {
         }
       } else if (direction === 1) {
         if (lastD === 0) {
-          for (var x = 0; x < thickness; x++) {
-            for (var y = 0; y < randLength; y++) {
-              this.map[PosX-thickness+ret*PosY+x-ret*y] = randColour;
+          for (var x = 0; x < thickX; x++) {
+            for (var y = 0; y < randLengthY; y++) {
+              this.map[PosX-thickX+ret*PosY+x-ret*y] = randColour;
             }
           }
-          PosX = PosX - thickness;
-          PosY = PosY - randLength + 1;
+          PosX = PosX - thickX;
+          PosY = PosY - randLengthY + 1;
           lastD = 1;
         } else if (lastD === 2) {
-          for (var x = 0; x < thickness; x++) {
-            for (var y = 0; y < randLength; y++) {
+          for (var x = 0; x < thickX; x++) {
+            for (var y = 0; y < randLengthY; y++) {
               this.map[PosX+ret*PosY+x-ret*y] = randColour;
             }
           }
           PosX = PosX;
-          PosY = PosY - randLength + 1;
+          PosY = PosY - randLengthY + 1;
           lastD = 1;
         } else {
           i--;
         }
       } else if (direction === 2) {
         if (lastD === 1) {
-          for (var x = 0; x < randLength; x++) {
-            for (var y = 0; y < thickness; y++) {
+          for (var x = 0; x < randLengthX; x++) {
+            for (var y = 0; y < thickY; y++) {
               this.map[PosX+ret*PosY-x+ret*y] = randColour;
             }
           }
-          PosX = PosX - randLength + 1;
+          PosX = PosX - randLengthX + 1;
           PosY = PosY;
           lastD = 2;
         } else if (lastD === 3) {
-          for (var x = 0; x < randLength; x++) {
-            for (var y = 0; y < thickness; y++) {
-              this.map[PosX+thickness+ret*PosY-x+ret*y] = randColour;
+          for (var x = 0; x < randLengthX; x++) {
+            for (var y = 0; y < thickY; y++) {
+              this.map[PosX+thickX+ret*PosY-x+ret*y] = randColour;
             }
           }
-          PosX = PosX - randLength + thickness + 1;
+          PosX = PosX - randLengthX + thickX + 1;
           PosY = PosY;
           lastD = 2;
         } else {
@@ -205,22 +215,22 @@ exports.Map.prototype = {
         }
       } else {
         if (lastD === 0) {
-          for (var x = 0; x < thickness; x++) {
-            for (var y = 0; y < randLength; y++) {
+          for (var x = 0; x < thickX; x++) {
+            for (var y = 0; y < randLengthY; y++) {
               this.map[PosX+ret*PosY+x+ret*y] = randColour;
             }
           }
           PosX = PosX;
-          PosY = PosY + randLength - 1;
+          PosY = PosY + randLengthY - 1;
           lastD = 3;
         } else if (lastD === 2) {
-          for (var x = 0; x < thickness; x++) {
-            for (var y = 0; y < randLength; y++) {
-              this.map[PosX-thickness+ret*PosY+x+ret*y] = randColour;
+          for (var x = 0; x < thickX; x++) {
+            for (var y = 0; y < randLengthY; y++) {
+              this.map[PosX-thickX+ret*PosY+x+ret*y] = randColour;
             }
           }
-          PosX = PosX - thickness;
-          PosY = PosY + randLength - 1;
+          PosX = PosX - thickX;
+          PosY = PosY + randLengthY - 1;
           lastD = 3;
         } else {
           i--;
@@ -247,13 +257,18 @@ exports.Map.prototype = {
     		this.map[y] = 0;
   	}
   //Build Terrain
+  /*
   //Ground
     this.randomTerrain(500, 0, ret, 0, ret, 20, 30, 20, 30, 17, 45);
     this.randomTerrain(250, 0, ret, 0, ret, 2, 3, 7, 20, 0, 0);
     this.randomTerrain(250, 0, ret, 0, ret, 14, 32, 2, 3, 0, 0);
     this.randomTerrain(750, 0, ret, 0, ret, 24, 38, 4, 6, 0, 0);
     this.randomTerrain(50, 230, ret-230, 230, ret-230, 1, 1, 1, 1, 0, 0);
-    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0);
+    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
+  */
+    this.makeTerrain(0,0,ret,ret,17,45);
+    this.randomSnakes(1000, 5, 50, 0, ret, 0, ret, 6, 24, 4, 10, 3, 3, 0, 0);
+  /*
   //Fire Kingdom
     this.makeTerrain(0, 0, 160, 160, 0, 0);
     this.circle(300,0, 160, 0, 160, 2, 9, 17, 45);
@@ -263,7 +278,7 @@ exports.Map.prototype = {
     this.colouring(1, 0, 100, 0, 100, 1, 4);
   //Ice Kingdom
     this.makeTerrain(ret-250, ret-250, 250, 250, 17, 45);
-    this.snake(200, ret-125, ret-125, 5, 20, 3, 0, 0);
+    this.snake(100, ret-125, ret-125, 5, 20, 5, 20, 3, 3, 0, 0);
     this.colouring(0.3, ret-250, ret-1, ret-250, ret-1, 59, 63);
     this.colouring(0.6, ret-175, ret-1, ret-175, ret-1, 59, 63);
     this.colouring(1, ret-100, ret-1, ret-100, ret-1, 59, 63);
@@ -283,6 +298,7 @@ exports.Map.prototype = {
     //Testing Room lower left corner
     var testRoomSize = 40
     this.makeTerrain(0, ret-testRoomSize, testRoomSize, testRoomSize, 0, 0);
+    */
   //Portal Spawn
   	this.portal(0,ret-24 ,0,ret-24,24,24,8);
   /*Ring Colour Coding
