@@ -60,7 +60,8 @@ io.sockets.on('connection', function (socket) {
 	socket.on('newPlayerPosition', function (data) {
 		player.mov = data;
     console.log(data)
-    socket.broadcast.to(data.level).emit('updatePlayers', [player])
+    //socket.broadcast.to(data.level).emit('updatePlayers', [player])
+		socket.emit('updateMovement', data)
 	});
 	//update monsters
 	socket.on('monsterUpdate', function (data) {
@@ -128,4 +129,4 @@ function writeImg() {
     img.pack().pipe(fs.createWriteStream('out.png'));
 }
 
-writeImg();
+// writeImg();
