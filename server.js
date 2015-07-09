@@ -61,7 +61,8 @@ io.sockets.on('connection', function (socket) {
 	socket.on('newPlayerPosition', function (data) {
 		player.mov = data;
     //console.log(data)
-    //socket.broadcast.to(data.level).emit('updatePlayers', [player])
+   socket.broadcast.emit('updatePlayers',[player])
+	//io.sockets.emit('updatePlayers', data);
 		socket.emit('updateMovement', data)
 	});
 	//update monsters
