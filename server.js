@@ -12,7 +12,7 @@ var monster = new gameMonster.Monster();
 map.create();
 map.create();
 
-var monsterPerScreen = 0.000000001;
+var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
 for (i = 0; i < monsterNum; i++) {
 	monster.create();
@@ -60,7 +60,7 @@ io.sockets.on('connection', function (socket) {
 	// update player postition
 	socket.on('newPlayerPosition', function (data) {
 		player.mov = data;
-    console.log(data)
+    //console.log(data)
     socket.broadcast.to(data.level).emit('updatePlayers', [player])
 	});
 	//update monsters

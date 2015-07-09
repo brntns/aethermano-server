@@ -69,7 +69,7 @@ exports.Map.prototype = {
   		}
   	}
 	},
-  makeTerrain: function randomTerrain(pos_x, pos_y, size_x, size_y, colourMin, colourMax) {
+  makeTerrain: function makeTerrain(pos_x, pos_y, size_x, size_y, colourMin, colourMax) {
     for (var z = 0; z < size_x;z++){
       for (var i = 0; i < size_y; i++){
         var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
@@ -130,24 +130,32 @@ exports.Map.prototype = {
     		this.map[y] = 0;
   	}
   //Build Terrain
-  	this.randomTerrain(100, 0, ret , 0 , ret, 3, 30, 1, 2, 17, 45);
-  	this.randomTerrain(1000, 0, ret , 0 , ret, 3, 30, 3, 30, 0, 0);
-  	this.randomTerrain(700, 0, ret , 0 , ret, 1, 10, 1, 1, 17, 45);
-    this.randomTerrain(2500, 0, ret , 0 , ret, 30, 50, 30, 50, 0, 0); //Large Voids
-    this.randomTerrain(1000, 0, ret , 0 , ret, 1, 2, 1, 1, 17, 45);
+  //Ground
+    this.randomTerrain(500, 0, ret, 0, ret, 20, 30, 20, 30, 17, 45);
+    this.randomTerrain(250, 0, ret, 0, ret, 2, 3, 7, 20, 0, 0);
+    this.randomTerrain(250, 0, ret, 0, ret, 14, 32, 2, 3, 0, 0);
+    this.randomTerrain(750, 0, ret, 0, ret, 24, 38, 4, 6, 0, 0);
+    this.randomTerrain(50, 230, ret-230, 230, ret-230, 1, 1, 1, 1, 0, 0);
+    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0);
+  // Center Part of the Map
+  	this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 17, 45);
+  	this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
+  	this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 17, 45);
+    this.randomTerrain(2500,250, ret-250 ,250 , ret-250, 30, 50, 30, 50, 0, 0); //Large Voids
+    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 17, 45);
   //Corner Colours
-    this.colouring(0.3, 0, 150, 0, 150, 1, 4);
-    this.colouring(0.6, 0, 100, 0, 100, 1, 4);
-    this.colouring(1, 0, 50, 0, 50, 1, 4);
-    this.colouring(0.3, ret-150, ret, 0, 150, 59, 63);
-    this.colouring(0.6, ret-100, ret, 0, 100, 59, 63);
-    this.colouring(1, ret-50, ret, 0, 50, 59, 63);
-    this.colouring(0.3, ret-150, ret, ret-150, ret, 31, 34);
-    this.colouring(0.6, ret-100, ret, ret-100, ret, 31, 34);
-    this.colouring(1, ret-50, ret, ret-50, ret, 31, 34);
-    this.colouring(0.3, 0, 150, ret-150, ret, 55, 59);
-    this.colouring(0.6, 0, 100, ret-100, ret, 55, 59);
-    this.colouring(1, 0, 50, ret-50, ret, 55, 59);
+    this.colouring(0.3, 0, 250, 0, 250, 1, 4);
+    this.colouring(0.6, 0, 175, 0, 175, 1, 4);
+    this.colouring(1, 0, 100, 0, 100, 1, 4);
+    this.colouring(0.3, ret-250, ret, 0, 250, 31, 34);
+    this.colouring(0.6, ret-175, ret, 0, 175, 31, 34);
+    this.colouring(1, ret-100, ret, 0, 100, 31, 34);
+    this.colouring(0.3, ret-250, ret, ret-250, ret, 59, 63);
+    this.colouring(0.6, ret-175, ret, ret-175, ret, 59, 63);
+    this.colouring(1, ret-100, ret, ret-100, ret, 59, 63);
+    this.colouring(0.3, 0, 250, ret-250, ret, 55, 59);
+    this.colouring(0.6, 0, 175, ret-175, ret, 55, 59);
+    this.colouring(1, 0, 100, ret-100, ret, 55, 59);
     //Testing Room lower left corner
     var testRoomSize = 40
     this.makeTerrain(0, ret-testRoomSize, testRoomSize, testRoomSize, 0, 0);
