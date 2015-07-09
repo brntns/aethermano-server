@@ -55,7 +55,8 @@ exports.Map.prototype = {
   	this.map = [];
 	},
 	randomTerrain: function randomTerrain(numb, pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_xMin, size_xMax, size_yMin, size_yMax, colourMin, colourMax) {
-		var num = Math.floor(this.mapSize/numb);
+		var TSize = (pos_xMax - pos_xMin)*(pos_yMax - pos_yMin);
+    var num = Math.floor(TSize/numb);
   	for (var y = 0; y < num; y++) {
   		var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
   		var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
@@ -96,6 +97,23 @@ exports.Map.prototype = {
   		}
   	}
 	},
+  circle: function circle(numb,pos_xMin, pos_xMax, pos_yMin, pos_yMax, circleRadiusMin, circleRadiusMax, colourMin, colourMax) {
+    var TSize = (pos_xMax - pos_xMin)*(pos_yMax - pos_yMin);
+    var num = Math.floor(TSize/numb);
+    for (var y = 0; y < num; y++) {    
+      var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
+      var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
+      var radius = Math.floor(Math.random()*(circleRadiusMax-circleRadiusMin)+circleRadiusMin);
+      for (var z = 0; z < 2*radius; z++){
+        for (var i = 0; i < 2*radius; i++){
+          if(Math.sqrt((z-radius)*(z-radius)+(i-radius)*(i-radius)) < radius){
+            var circleColour = Math.floor(Math.random()*(colourMax-colourMin)+colourMin);
+            this.map[Position_x+Position_y*ret+z+i*ret] = circleColour;
+          }
+        }
+      }
+    }
+  },
   ring: function ring(pos_xMin, pos_xMax, pos_yMin, pos_yMax, minRadius, maxRadius, colourMin, colourMax) {
     var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
     var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
@@ -137,25 +155,29 @@ exports.Map.prototype = {
     this.randomTerrain(750, 0, ret, 0, ret, 24, 38, 4, 6, 0, 0);
     this.randomTerrain(50, 230, ret-230, 230, ret-230, 1, 1, 1, 1, 0, 0);
     this.makeTerrain(260, 260, ret-520, ret-520, 0, 0);
+  //Fire Kingdom
+    this.makeTerrain(0, 0, 160, 160, 0, 0);
+    this.circle(300,0, 160, 0, 160, 2, 9, 17, 45);
+    this.circle(100,0, 160, 0, 160, 2, 4, 17, 45);
   // Center Part of the Map
   	this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 17, 45);
   	this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
   	this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 17, 45);
-    this.randomTerrain(2500,250, ret-250 ,250 , ret-250, 30, 50, 30, 50, 0, 0); //Large Voids
+    this.randomTerrain(2500,250, ret-280 ,250 , ret-280, 30, 50, 30, 50, 0, 0); //Large Voids
     this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 17, 45);
   //Corner Colours
     this.colouring(0.3, 0, 250, 0, 250, 1, 4);
     this.colouring(0.6, 0, 175, 0, 175, 1, 4);
     this.colouring(1, 0, 100, 0, 100, 1, 4);
-    this.colouring(0.3, ret-250, ret, 0, 250, 31, 34);
-    this.colouring(0.6, ret-175, ret, 0, 175, 31, 34);
+    this.colouring(0.3, ret-250, ret-1, 0, 250, 31, 34);
+    this.colouring(0.6, ret-175, ret-1, 0, 175, 31, 34);
     this.colouring(1, ret-100, ret, 0, 100, 31, 34);
-    this.colouring(0.3, ret-250, ret, ret-250, ret, 59, 63);
-    this.colouring(0.6, ret-175, ret, ret-175, ret, 59, 63);
-    this.colouring(1, ret-100, ret, ret-100, ret, 59, 63);
-    this.colouring(0.3, 0, 250, ret-250, ret, 55, 59);
-    this.colouring(0.6, 0, 175, ret-175, ret, 55, 59);
-    this.colouring(1, 0, 100, ret-100, ret, 55, 59);
+    this.colouring(0.3, ret-250, ret-1, ret-250, ret-1, 59, 63);
+    this.colouring(0.6, ret-175, ret-1, ret-175, ret-1, 59, 63);
+    this.colouring(1, ret-100, ret-1, ret-100, ret-1, 59, 63);
+    this.colouring(0.3, 0, 250, ret-250, ret-1, 55, 59);
+    this.colouring(0.6, 0, 175, ret-175, ret-1, 55, 59);
+    this.colouring(1, 0, 100, ret-100, ret-1, 55, 59);
     //Testing Room lower left corner
     var testRoomSize = 40
     this.makeTerrain(0, ret-testRoomSize, testRoomSize, testRoomSize, 0, 0);

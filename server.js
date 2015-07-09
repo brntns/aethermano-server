@@ -130,4 +130,4 @@ function writeImg() {
     img.pack().pipe(fs.createWriteStream('out.png'));
 }
 
-// writeImg();
+ writeImg();
