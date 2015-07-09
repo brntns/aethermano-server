@@ -20,11 +20,12 @@ for (i = 0; i < monsterNum; i++) {
 }
 var monsterSpawns = [];
 for (j = 0; j < monsterNum/2; j++) {
-	var X = Math.floor(Math.random()*map.ret*16);
-	var Y = Math.floor(Math.random()*map.ret*16);
+	var X = Math.floor(Math.random()*1600*16);
+	var Y = Math.floor(Math.random()*1600*16);
 	var spawnPointeru = {x:X,y:Y};
 	monsterSpawns.push(spawnPointeru);
 }
+console.log(monsterSpawns);
 items.create();
 //app.listen(process.env.PORT);
 app.listen(8000);
