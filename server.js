@@ -59,11 +59,12 @@ io.sockets.on('connection', function (socket) {
 	//console.log('Player Connected: ', player);
 	// update player postition
 	socket.on('newPlayerPosition', function (data) {
-		player.mov = data;
-    //console.log(data)
-   socket.broadcast.emit('updatePlayers',[player])
-	//io.sockets.emit('updatePlayers', data);
-		socket.emit('updateMovement', data)
+		player.x = data.x;
+		player.y = data.y;
+		player.status = data.status;
+    player.level = data.level;
+    // console.log(data.level)
+    socket.broadcast.to(data.level).emit('updatePlayers', [player]);
 	});
 	//update monsters
 	socket.on('monsterUpdate', function (data) {
