@@ -159,19 +159,28 @@ exports.Map.prototype = {
       }
     }
   },
-  ring: function ring(posXMin, posXMax, posYMin, posYMax, minRadius, maxRadius, colourMin, colourMax) {
-    var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
-    var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
-    for (var z = -maxRadius; z < maxRadius; z++){
-      for (var i = -maxRadius; i < maxRadius; i++){
+  ring: function ring(posXMin, posXMax, posYMin, posYMax, radius, thick, colourMin, colourMax) {
+    var PosX = this.Random(posXMin,posXMax);
+    var PosY = this.Random(posYMin,posYMax);
+    for (var z = -radius; z < radius; z++){
+      for (var i = -radius; i < radius; i++){
         var rad = Math.sqrt(z*z+i*i);
-        if(rad > minRadius && rad <= maxRadius){
+        if(rad > radius-thick && rad <= radius){
           var ringColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-          if (this.map[PosX+PosY*ret+z+i*ret] != 0 && PosX+z <= 639 && PosY+z >= 0 && PosY+i <= 639 && PosY+i >= 0 ) {
+          if (PosX+z <= ret-1 && PosX+z >= 0 && PosY+i <= ret-1 && PosY+i >= 0 ) {
             this.map[PosX+PosY*ret+z+i*ret] = ringColour;
           }
         }
       }
+    }
+  },
+  randomRings: function randomRings(numb, posXMin, posXMax, posYMin, posYMax, radiusMin, radiusMax, thickMin, thickMax, colourMin, colourMax) {
+    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
+    var num = Math.floor(TSize/numb);
+    for (var j = 0; j < num; j++) {
+      var radius = this.Random(radiusMin,radiusMax);
+      var thick = this.Random(thickMin,thickMax);
+      this.ring(posXMin, posXMax, posYMin, posYMax, radius, thick, colourMin, colourMax);
     }
   },
   randomSnakes: function randomSnakes(numb, bend, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
@@ -395,51 +404,92 @@ exports.Map.prototype = {
     		this.map[y] = 0;
   	}
   //Build Terrain
-  /*
-  //Ground
-    this.randomTerrain(500, 0, ret, 0, ret, 20, 30, 20, 30, 17, 45);
-    this.randomTerrain(250, 0, ret, 0, ret, 2, 3, 7, 20, 0, 0);
-    this.randomTerrain(250, 0, ret, 0, ret, 14, 32, 2, 3, 0, 0);
-    this.randomTerrain(750, 0, ret, 0, ret, 24, 38, 4, 6, 0, 0);
-    this.randomTerrain(50, 230, ret-230, 230, ret-230, 1, 1, 1, 1, 0, 0);
-    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
-  */
   // Dungeon
     this.makeTerrain(0,0,ret,ret,17,45);
     this.randomTerrain(3750, 0, ret, 0, ret, 24, 32, 24, 32, 0, 0);
     this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
-    //this.snake(200, 0, 400, 800, 400, 800, 600, 600, 4, 14, 4, 14, 3, 3, 0, 0);
-    //this.worm(200, 1000, 800, 4, 14, 4, 14, 3, 3, 0, 0);
-    //randomSnakes(numb, bend, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
+    //Underground Passages
+    this.randomSnakes(3500, 0, 25, 50, 250, ret-250, 0, 260, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, 0, 260, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, 250, ret-250, ret-260, ret, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, ret-260, ret, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
   // Center Part of the Map
     this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 17, 45);
     this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
     this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 17, 45);
     this.randomTerrain(2500,250, ret-280 ,250 , ret-280, 30, 50, 30, 50, 0, 0); //Large Voids
     this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 17, 45);
-  //Fire Kingdom
+  // The Very Center
+    this.ring(800, 800, 800, 800, 199, 199, 0, 0);
+    //this.ring(800, 800, 800, 800, 199, 1, 17, 45);
+    this.ring(800, 800, 800, 800, 100, 100, 40, 45);
+    this.randomRings(600, 675, 925, 675, 925, 7, 28, 1, 4, 40, 45);
+    this.randomRings(500, 700, 900, 700, 900, 6, 38, 1, 4, 0, 0);
+  // Fire Kingdom
+    //Make Space
     this.makeTerrain(0, 0, 250, 250, 0, 0);
-    this.circle(2300,0, 250, 0, 250, 7, 12, 1, 4);    
-    this.circle(1700,0, 250, 0, 250, 4, 9, 1, 4);
-    this.circle(400,0, 250, 0, 250, 3, 5, 1, 4);
-    this.circle(300,0, 250, 0, 250, 1, 2, 1, 4);
+    //Borders
+    this.circle(300, 0, 250, 230, 250, 7, 12, 0, 0);    
+    this.circle(200, 0, 250, 230, 250, 4, 9, 0, 0);
+    this.circle(100, 0, 250, 230, 250, 3, 5, 0, 0);
+    this.circle(50, 230, 250, 0, 250, 1, 2, 0, 0);
+
+    this.circle(300, 230, 250, 0, 250, 7, 12, 0, 0);    
+    this.circle(200, 230, 250, 0, 250, 4, 9, 0, 0);
+    this.circle(100, 230, 250, 0, 250, 3, 5, 0, 0);
+    this.circle(50, 230, 250, 0, 250, 1, 2, 0, 0);
+    //Fire Terrain
+    this.circle(1000, 0, 250, 0, 250, 7, 12, 1, 4);    
+    this.circle(7500, 0, 250, 0, 250, 4, 9, 1, 4);
+    this.circle(200, 0, 250, 0, 250, 3, 5, 1, 4);
+
+    this.circle(2000, 0, 250, 0, 250, 9, 13, 0, 0);    
+    this.circle(1000, 0, 250, 0, 250, 7, 10, 0, 0);    
+    this.circle(750, 0, 250, 0, 250, 4, 7, 0, 0);
+    //this.circle(300, 0, 250, 0, 250, 1, 2, 1, 4);
     /*
     this.colouring(0.3, 0, 250, 0, 250, 1, 4);
     this.colouring(0.6, 0, 175, 0, 175, 1, 4);
     this.colouring(1, 0, 100, 0, 100, 1, 4);
     */
   //Ice Kingdom
+    //Make Space
     this.makeTerrain(ret-250, ret-250, 250, 250, 0, 0);
-    this.randomTerrain(400, ret-250, ret , ret-250 , ret, 2, 3, 5, 30, 59, 63);
+    //Borders
+    this.randomTerrain(100, ret-260, ret-230 , ret-260 , ret, 2, 3, 5, 30, 0, 0);
+    this.randomTerrain(50, ret-260, ret-230 , ret-260 , ret, 1, 1, 5, 30, 0, 0);
+
+    this.randomTerrain(100, ret-260, ret , ret-260 , ret-230, 2, 3, 5, 30, 0, 0);
+    this.randomTerrain(50, ret-260, ret , ret-260 , ret-230, 1, 1, 5, 30, 0, 0);
+    //Ice Terrain
+    this.randomTerrain(50, ret-260, ret , ret-30 , ret, 3, 4, 5, 30, 59, 63);
+    this.randomTerrain(150, ret-260, ret , ret-60 , ret-30, 2, 3, 5, 30, 59, 63);
+    this.randomTerrain(250, ret-260, ret , ret-90 , ret-60, 2, 2, 5, 30, 59, 63);
     this.randomTerrain(200, ret-250, ret , ret-250 , ret, 1, 1, 5, 30, 59, 63);
+    this.randomTerrain(50, ret-260, ret , ret-260 , ret-230, 1, 3, 5, 30, 0, 0);
     /*
     this.colouring(0.3, ret-250, ret-1, ret-250, ret-1, 59, 63);
     this.colouring(0.6, ret-175, ret-1, ret-175, ret-1, 59, 63);
     this.colouring(1, ret-100, ret-1, ret-100, ret-1, 59, 63);
     */
   // Wind Palace
+    //Make Space
     this.makeTerrain(0, ret-250, 250, 250, 0, 0);
-    this.diamond(300, 0, 250, ret-250, ret, 10, 17, 10, 17, 55, 59);
+    //Borders    
+    this.diamond(1800, 230, 270, ret-270, ret, 17, 23, 17, 23, 0, 0);
+    this.diamond(1200, 230, 270, ret-270, ret, 14, 17, 14, 17, 0, 0);
+    this.diamond(800, 230, 270, ret-270, ret, 9, 11, 9, 11, 0, 0);
+
+    this.diamond(1800, 0, 270, ret-270, ret-230, 17, 23, 17, 23, 0, 0);
+    this.diamond(1200, 0, 270, ret-270, ret-230, 14, 17, 14, 17, 0, 0);
+    this.diamond(800, 0, 270, ret-270, ret-230, 9, 11, 9, 11, 0, 0);
+    //Wind Palace Terrain
+    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 17, 20);
+    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 17, 20);
+    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 17, 20);
+    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 17, 20);
+    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 17, 20);
+    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 17, 20);
     /*
     this.colouring(0.3, ret-250, ret-1, 0, 250, 31, 34);
     this.colouring(0.6, ret-175, ret-1, 0, 175, 31, 34);
@@ -462,10 +512,10 @@ exports.Map.prototype = {
     this.makeTerrain(0, ret-testRoomSize, testRoomSize, testRoomSize, 0, 0);
     */
   // Underground Passages
-    this.randomSnakes(3500, 0, 25, 50, 230, ret-230, 0, 260, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(3500, 0, 25, 50, 0, 260, 230, ret-230, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(3500, 0, 25, 50, 230, ret-230, ret-260, ret, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(3500, 0, 25, 50, ret-260, ret, 230, ret-230, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, 250, ret-250, 0, 260, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, 0, 260, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, 250, ret-250, ret-260, ret, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, ret-260, ret, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
   //Portal Spawn
   	this.portal(0,ret-24 ,0,ret-24,24,24,8);
   /*Ring Colour Coding
