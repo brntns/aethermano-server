@@ -37,8 +37,8 @@ exports.Map = function(){
     "tilewidth":16,
     "version":1,
     "width":16,
-    "portalPosx":1,
-    "portalPosy":1
+    "portalPosX":1,
+    "portalPosY":1
   };
   this.map = [];
   this.maps = [];
@@ -54,183 +54,317 @@ exports.Map.prototype = {
   	this.mapSize = null;
   	this.map = [];
 	},
-	randomTerrain: function randomTerrain(numb, pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_xMin, size_xMax, size_yMin, size_yMax, colourMin, colourMax) {
-		var TSize = (pos_xMax - pos_xMin)*(pos_yMax - pos_yMin);
+	randomTerrain: function randomTerrain(numb, posXMin, posXMax, posYMin, posYMax, sizeXMin, sizeXMax, sizeYMin, sizeYMax, colourMin, colourMax) {
+		var TSize = (posXMax - posXMin)*(posYMax - posYMin);
     var num = Math.floor(TSize/numb);
   	for (var y = 0; y < num; y++) {
-  		var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
-  		var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
-  		var Size_x = Math.floor(Math.random()*(size_xMax-size_xMin+1)+size_xMin);
-  		var Size_y = Math.floor(Math.random()*(size_yMax-size_yMin+1)+size_yMin);
-  		for (var z = 0; z < Size_x;z++){
-  			for (var i = 0; i < Size_y; i++){
+  		var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+  		var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
+  		var SizeX = Math.floor(Math.random()*(sizeXMax-sizeXMin+1)+sizeXMin);
+  		var SizeY = Math.floor(Math.random()*(sizeYMax-sizeYMin+1)+sizeYMin);
+  		for (var z = 0; z < SizeX;z++){
+  			for (var i = 0; i < SizeY; i++){
   				var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-  				this.map[Position_x+Position_y*ret+z+i*ret] = Colour;
+  				this.map[PosX+PosY*ret+z+i*ret] = Colour;
   			}
   		}
   	}
 	},
-  makeTerrain: function makeTerrain(pos_x, pos_y, size_x, size_y, colourMin, colourMax) {
-    for (var z = 0; z < size_x;z++){
-      for (var i = 0; i < size_y; i++){
+  makeTerrain: function makeTerrain(posX, posY, sizeX, sizeY, colourMin, colourMax) {
+    for (var z = 0; z < sizeX;z++){
+      for (var i = 0; i < sizeY; i++){
         var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-        this.map[pos_x+pos_y*ret+z+i*ret] = Colour;
+        this.map[posX+posY*ret+z+i*ret] = Colour;
       }
     }
-  },  	
-  portal: function portal(pos_xMin, pos_xMax, pos_yMin, pos_yMax, size_x, size_y, portalRadius) {
+  },
+  makeTerrainInBounds: function makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, sizeX, sizeY, colourMin, colourMax) {
+    if ((posX <= posXMax)&&(posY <= posYMax)&&(posX+sizeX > posXMin)&&(posY+sizeY > posYMin)) {
+      var PosX = posX;
+      var PosY = posY;
+      var SizeX = sizeX;
+      var SizeY = sizeY;
+      if (posX < posXMin) {
+        PosX = posXMin;
+      }
+      if (posY < posYMin) {
+        PosY = posYMin;
+      }
+      if (PosX+sizeX > posXMax) {
+        SizeX = posXMax-posX;
+      }
+      if (PosY+sizeY > posYMax) {
+        SizeY = posYMax-posY;
+      }
+      for (var z = 0; z < SizeX;z++){
+        for (var i = 0; i < SizeY; i++){
+          var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
+          this.map[PosX+PosY*ret+z+i*ret] = Colour;
+        }
+      }
+    }
+  },   	
+  portal: function portal(posXMin, posXMax, posYMin, posYMax, sizeX, sizeY, portalRadius) {
     console.log("generating portal. coordinates:");
-  	var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
-  	var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
-    this.mapData.portalPosx = Position_x;
-    this.mapData.portalPosy = Position_y;
-    console.log(Position_x, Position_y);
-  	for (var z = 0; z < size_x; z++){
-  		for (var i = 0; i < size_y; i++){
-  			if(Math.sqrt((z-size_x/2)*(z-size_x/2)+(i-size_y/2)*(i-size_y/2)) < portalRadius){
+  	var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+  	var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
+    this.mapData.portalPosX = PosX;
+    this.mapData.portalPosY = PosY;
+    console.log(PosX, PosY);
+  	for (var z = 0; z < sizeX; z++){
+  		for (var i = 0; i < sizeY; i++){
+  			if(Math.sqrt((z-sizeX/2)*(z-sizeX/2)+(i-sizeY/2)*(i-sizeY/2)) < portalRadius){
   				var portalColour = Math.floor(Math.random()*4+13);
-  				this.map[Position_x+Position_y*ret+z+i*ret] = portalColour;
+  				this.map[PosX+PosY*ret+z+i*ret] = portalColour;
   			}
   			else {
-  				this.map[Position_x+Position_y*ret+z+i*ret] = 0;
+  				this.map[PosX+PosY*ret+z+i*ret] = 0;
   			}
   		}
   	}
 	},
-  circle: function circle(numb, pos_xMin, pos_xMax, pos_yMin, pos_yMax, circleRadiusMin, circleRadiusMax, colourMin, colourMax) {
-    var TSize = (pos_xMax - pos_xMin)*(pos_yMax - pos_yMin);
+  circle: function circle(numb, posXMin, posXMax, posYMin, posYMax, circleRadiusMin, circleRadiusMax, colourMin, colourMax) {
+    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
     var num = Math.floor(TSize/numb);
     for (var y = 0; y < num; y++) {    
-      var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
-      var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
+      var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+      var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
       var radius = Math.floor(Math.random()*(circleRadiusMax-circleRadiusMin+1)+circleRadiusMin);
       for (var z = 0; z < 2*radius; z++){
         for (var i = 0; i < 2*radius; i++){
           if(Math.sqrt((z-radius)*(z-radius)+(i-radius)*(i-radius)) < radius){
             var circleColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-            this.map[Position_x+Position_y*ret+z+i*ret] = circleColour;
+            this.map[PosX+PosY*ret+z+i*ret] = circleColour;
           }
         }
       }
     }
   },
-  ring: function ring(pos_xMin, pos_xMax, pos_yMin, pos_yMax, minRadius, maxRadius, colourMin, colourMax) {
-    var Position_x = Math.floor(Math.random()*(pos_xMax-pos_xMin+1)+pos_xMin);
-    var Position_y = Math.floor(Math.random()*(pos_yMax-pos_yMin+1)+pos_yMin);
+  diamond: function diamond(numb, posXMin, posXMax, posYMin, posYMax, sizeXMin, sizeXMax, sizeYMin, sizeYMax, colourMin, colourMax) {
+    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
+    var num = Math.floor(TSize/numb);
+    for (var y = 0; y < num; y++) {    
+      var PosX = this.Random(posXMin,posXMax);
+      var PosY = this.Random(posYMin,posYMax);
+      var sizeX = this.Random(sizeXMin, sizeXMax);
+      var sizeY = this.Random(sizeYMin, sizeYMax);
+      for (var z = 0; z < sizeX; z++){
+        for (var i = 0; i < sizeY; i++){
+          var ecc = sizeY/sizeX;
+          if(ecc*Math.abs(z-sizeX/2) + Math.abs(i-sizeY/2) < sizeY/2){
+            var colour = this.Random(colourMax,colourMin);
+            this.map[PosX+PosY*ret+z+i*ret] = colour;
+          }
+        }
+      }
+    }
+  },
+  ring: function ring(posXMin, posXMax, posYMin, posYMax, minRadius, maxRadius, colourMin, colourMax) {
+    var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+    var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
     for (var z = -maxRadius; z < maxRadius; z++){
       for (var i = -maxRadius; i < maxRadius; i++){
         var rad = Math.sqrt(z*z+i*i);
         if(rad > minRadius && rad <= maxRadius){
           var ringColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-          if (this.map[Position_x+Position_y*ret+z+i*ret] != 0 && Position_x+z <= 639 && Position_y+z >= 0 && Position_y+i <= 639 && Position_y+i >= 0 ) {
-            this.map[Position_x+Position_y*ret+z+i*ret] = ringColour;
+          if (this.map[PosX+PosY*ret+z+i*ret] != 0 && PosX+z <= 639 && PosY+z >= 0 && PosY+i <= 639 && PosY+i >= 0 ) {
+            this.map[PosX+PosY*ret+z+i*ret] = ringColour;
           }
         }
       }
     }
-  },randomSnakes: function randomSnakes(numb, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+  },
+  randomSnakes: function randomSnakes(numb, bend, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
     var TSize = (posXMax - posXMin)*(posYMax - posYMin);
     var num = Math.floor(TSize/numb);
     for (var j = 0; j < num; j++) {
       var startX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
       var startY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
       var seg = Math.floor(Math.random()*(segMax-segMin+1)+segMin);
-      this.snake(seg, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
+      this.snake(seg, bend, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
     }
   },
-  snake: function snake(seg, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
-    var PosX = startX;
-    var PosY = startY;
-    var lastD = Math.floor(Math.random()*4);;
+  snake: function snake(seg, bend, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+    var posX = startX;
+    var posY = startY;
+    var lastD = Math.floor(Math.random()*4);
+    var bends = 0;
+    var direction = Math.floor(Math.random()*4);
     for (var i = 0; i < seg; i++) {
-      var direction = Math.floor(Math.random()*4);
-      var randColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-      var randLengthX = Math.floor(Math.random()*(lengthXMax-lengthXMin+1)+lengthXMin);
-      var randLengthY = Math.floor(Math.random()*(lengthYMax-lengthYMin+1)+lengthYMin);
+      //RIGHT
       if (direction === 0) {
-        if (lastD === 3) {
-          for (var x = 0; x < randLengthX; x++) {
-            for (var y = 0; y < thickY; y++) {
-              this.map[PosX+ret*PosY+x+ret*y] = randColour;
-            }
-          }
-          PosX = PosX + randLengthX - 1;
-          PosY = PosY;
+        //From DOWN
+        if ((lastD === 3)&&(bends > -bend-1)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends--;
+          posX = posX + randLengthX;
+          posY = posY;
           lastD = 0;
-        } else if (lastD === 1) {
-          for (var x = 0; x < randLengthX; x++) {
-            for (var y = 0; y < thickY; y++) {
-              this.map[PosX+thickX+ret*PosY+x+ret*y] = randColour;
-            }
-          }
-          PosX = PosX + randLengthX + thickX - 1;
-          PosY = PosY;
+        //From UP
+        } else if ((lastD === 1)&&(bends < bend+1)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends++;
+          posX = posX + randLengthX + thickX;
+          posY = posY;
           lastD = 0;
         } else {
           i--;
         }
+      //UP
       } else if (direction === 1) {
-        if (lastD === 0) {
-          for (var x = 0; x < thickX; x++) {
-            for (var y = 0; y < randLengthY; y++) {
-              this.map[PosX-thickX+ret*PosY+x-ret*y] = randColour;
-            }
-          }
-          PosX = PosX - thickX;
-          PosY = PosY - randLengthY + 1;
+        //From RIGHT
+        if ((lastD === 0)&&(bends > -1-bend)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+          bends--;
+          posX = posX - thickX;
+          posY = posY - randLengthY;
           lastD = 1;
-        } else if (lastD === 2) {
-          for (var x = 0; x < thickX; x++) {
-            for (var y = 0; y < randLengthY; y++) {
-              this.map[PosX+ret*PosY+x-ret*y] = randColour;
-            }
-          }
-          PosX = PosX;
-          PosY = PosY - randLengthY + 1;
+        //From LEFT
+        } else if ((lastD === 2)&&(bends < bend+1)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+          bends++;
+          posX = posX;
+          posY = posY - randLengthY;
           lastD = 1;
         } else {
           i--;
         }
+      //LEFT
+      } else if (direction === 2) {
+        //From UP
+        if ((lastD === 1)&&(bends > -1-bend)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends--;
+          posX = posX - randLengthX;
+          posY = posY;
+          lastD = 2;
+        //From DOWN
+        } else if ((lastD === 3)&&(bends < bend+1)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends++;
+          posX = posX - randLengthX + thickX;
+          posY = posY;
+          lastD = 2;
+        } else {
+          i--;
+        }
+      //DOWN
+      } else {
+        //From RIGHT
+        if ((lastD === 0)&&(bends < bend+1)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, thickX, randLengthY, colourMin, colourMax);
+          bends++;
+          posX = posX;
+          posY = posY + randLengthY;
+          lastD = 3;
+        //From LEFT
+        } else if ((lastD === 2)&&(bends > -1-bend)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY, thickX, randLengthY, colourMin, colourMax);
+          bends--;
+          posX = posX - thickX;
+          posY = posY + randLengthY;
+          lastD = 3;
+        } else {
+          i--;
+        }
+      }
+      var direction = Math.floor(Math.random()*4);
+    }
+  },
+  randomWorms: function randomWorms(numb, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
+    var num = Math.floor(TSize/numb);
+    for (var j = 0; j < num; j++) {
+      var startX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+      var startY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
+      var seg = Math.floor(Math.random()*(segMax-segMin+1)+segMin);
+      this.worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
+    }
+  },
+  worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+    var posX = startX;
+    var posY = startY;
+    var lastD = Math.floor(Math.random()*4);
+    var bends = 0;
+    for (var i = 0; i < seg; i++) {
+      console.log(bends);
+      var direction = Math.floor(Math.random()*4);
+      //RIGHT
+      if (direction === 0) {
+        //From UP
+        if (lastD === 3) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, randLengthX, thickY, colourMin, colourMax);
+          posX = posX + randLengthX;
+          posY = posY;
+          lastD = 0;
+        //From DOWN
+        } else if (lastD === 1) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+          posX = posX + randLengthX + thickX;
+          posY = posY;
+          lastD = 0;
+        } else {
+          i--;
+        }
+      //UP
+      } else if (direction === 1) {
+        //From RIGHT
+        if (lastD === 0) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+          posX = posX - thickX;
+          posY = posY - randLengthY;
+          lastD = 1;
+        //From LEFT
+        } else if (lastD === 2) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+          posX = posX;
+          posY = posY - randLengthY;
+          lastD = 1;
+        } else {
+          i--;
+        }
+      //LEFT
       } else if (direction === 2) {
         if (lastD === 1) {
-          for (var x = 0; x < randLengthX; x++) {
-            for (var y = 0; y < thickY; y++) {
-              this.map[PosX+ret*PosY-x+ret*y] = randColour;
-            }
-          }
-          PosX = PosX - randLengthX + 1;
-          PosY = PosY;
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX, posY, randLengthX, thickY, colourMin, colourMax);
+          posX = posX - randLengthX;
+          posY = posY;
           lastD = 2;
         } else if (lastD === 3) {
-          for (var x = 0; x < randLengthX; x++) {
-            for (var y = 0; y < thickY; y++) {
-              this.map[PosX+thickX+ret*PosY-x+ret*y] = randColour;
-            }
-          }
-          PosX = PosX - randLengthX + thickX + 1;
-          PosY = PosY;
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+          posX = posX - randLengthX + thickX;
+          posY = posY;
           lastD = 2;
         } else {
           i--;
         }
+      //DOWN
       } else {
         if (lastD === 0) {
-          for (var x = 0; x < thickX; x++) {
-            for (var y = 0; y < randLengthY; y++) {
-              this.map[PosX+ret*PosY+x+ret*y] = randColour;
-            }
-          }
-          PosX = PosX;
-          PosY = PosY + randLengthY - 1;
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, thickX, randLengthY, colourMin, colourMax);
+          posX = posX;
+          posY = posY + randLengthY;
           lastD = 3;
         } else if (lastD === 2) {
-          for (var x = 0; x < thickX; x++) {
-            for (var y = 0; y < randLengthY; y++) {
-              this.map[PosX-thickX+ret*PosY+x+ret*y] = randColour;
-            }
-          }
-          PosX = PosX - thickX;
-          PosY = PosY + randLengthY - 1;
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY, thickX, randLengthY, colourMin, colourMax);
+          posX = posX - thickX;
+          posY = posY + randLengthY;
           lastD = 3;
         } else {
           i--;
@@ -249,6 +383,10 @@ exports.Map.prototype = {
       }
     }
   },
+  Random: function Random(rndMin, rndMax) {
+    var x = Math.floor(Math.random()*(rndMax-rndMin+1)+rndMin);
+    return x;
+  },
 	generate: function generate(size) {
   	this.clear();
   	this.mapSize = size * size;
@@ -266,47 +404,76 @@ exports.Map.prototype = {
     this.randomTerrain(50, 230, ret-230, 230, ret-230, 1, 1, 1, 1, 0, 0);
     this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
   */
+  // Dungeon
     this.makeTerrain(0,0,ret,ret,17,45);
-    this.randomSnakes(1000, 5, 50, 0, ret, 0, ret, 6, 24, 4, 10, 3, 3, 0, 0);
-  /*
+    this.randomTerrain(3750, 0, ret, 0, ret, 24, 32, 24, 32, 0, 0);
+    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
+    //this.snake(200, 0, 400, 800, 400, 800, 600, 600, 4, 14, 4, 14, 3, 3, 0, 0);
+    //this.worm(200, 1000, 800, 4, 14, 4, 14, 3, 3, 0, 0);
+    //randomSnakes(numb, bend, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
+  // Center Part of the Map
+    this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 17, 45);
+    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
+    this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 17, 45);
+    this.randomTerrain(2500,250, ret-280 ,250 , ret-280, 30, 50, 30, 50, 0, 0); //Large Voids
+    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 17, 45);
   //Fire Kingdom
-    this.makeTerrain(0, 0, 160, 160, 0, 0);
-    this.circle(300,0, 160, 0, 160, 2, 9, 17, 45);
-    this.circle(100,0, 160, 0, 160, 2, 4, 17, 45);
+    this.makeTerrain(0, 0, 250, 250, 0, 0);
+    this.circle(2300,0, 250, 0, 250, 7, 12, 1, 4);    
+    this.circle(1700,0, 250, 0, 250, 4, 9, 1, 4);
+    this.circle(400,0, 250, 0, 250, 3, 5, 1, 4);
+    this.circle(300,0, 250, 0, 250, 1, 2, 1, 4);
+    /*
     this.colouring(0.3, 0, 250, 0, 250, 1, 4);
     this.colouring(0.6, 0, 175, 0, 175, 1, 4);
     this.colouring(1, 0, 100, 0, 100, 1, 4);
+    */
   //Ice Kingdom
-    this.makeTerrain(ret-250, ret-250, 250, 250, 17, 45);
-    this.snake(100, ret-125, ret-125, 5, 20, 5, 20, 3, 3, 0, 0);
+    this.makeTerrain(ret-250, ret-250, 250, 250, 0, 0);
+    this.randomTerrain(400, ret-250, ret , ret-250 , ret, 2, 3, 5, 30, 59, 63);
+    this.randomTerrain(200, ret-250, ret , ret-250 , ret, 1, 1, 5, 30, 59, 63);
+    /*
     this.colouring(0.3, ret-250, ret-1, ret-250, ret-1, 59, 63);
     this.colouring(0.6, ret-175, ret-1, ret-175, ret-1, 59, 63);
     this.colouring(1, ret-100, ret-1, ret-100, ret-1, 59, 63);
-  // Center Part of the Map
-  	this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 17, 45);
-  	this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
-  	this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 17, 45);
-    this.randomTerrain(2500,250, ret-280 ,250 , ret-280, 30, 50, 30, 50, 0, 0); //Large Voids
-    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 17, 45);
-  //Corner Colours
+    */
+  // Wind Palace
+    this.makeTerrain(0, ret-250, 250, 250, 0, 0);
+    this.diamond(300, 0, 250, ret-250, ret, 10, 17, 10, 17, 55, 59);
+    /*
     this.colouring(0.3, ret-250, ret-1, 0, 250, 31, 34);
     this.colouring(0.6, ret-175, ret-1, 0, 175, 31, 34);
     this.colouring(1, ret-100, ret, 0, 100, 31, 34);
+    */
+  // Jungle
+    this.makeTerrain(ret-250, 0, 250, 250, 0, 0);
+    this.randomSnakes(300, 0, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 1, 1, 31, 34);
+    this.randomWorms(300, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 2, 1, 31, 34);
+    this.randomSnakes(1000, 0, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 2, 2, 0, 0);
+    this.randomSnakes(1500, 0, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 3, 3, 0, 0);
+    /*
     this.colouring(0.3, 0, 250, ret-250, ret-1, 55, 59);
     this.colouring(0.6, 0, 175, ret-175, ret-1, 55, 59);
     this.colouring(1, 0, 100, ret-100, ret-1, 55, 59);
+    */
+    /*
     //Testing Room lower left corner
     var testRoomSize = 40
     this.makeTerrain(0, ret-testRoomSize, testRoomSize, testRoomSize, 0, 0);
     */
+  // Underground Passages
+    this.randomSnakes(3500, 0, 25, 50, 230, ret-230, 0, 260, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, 0, 260, 230, ret-230, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, 230, ret-230, ret-260, ret, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3500, 0, 25, 50, ret-260, ret, 230, ret-230, 6, 24, 4, 10, 3, 3, 0, 0);
   //Portal Spawn
   	this.portal(0,ret-24 ,0,ret-24,24,24,8);
   /*Ring Colour Coding
-    var ringMax = Math.max(this.mapData.portalPosx,this.mapData.portalPosy,ret-this.mapData.portalPosx,ret-this.mapData.portalPosy);
+    var ringMax = Math.max(this.mapData.portalPosX,this.mapData.portalPosY,ret-this.mapData.portalPosX,ret-this.mapData.portalPosY);
     var ringsteps = Math.floor((1.5*ringMax/20))+1;
     var ringstep = 20;
     for (var j = 0; j < ringsteps; j++) {
-      this.ring(this.mapData.portalPosx+12,this.mapData.portalPosx+12,this.mapData.portalPosy+12,this.mapData.portalPosy+12,(12+j*ringstep),(12+(j+1)*ringstep),(j+13),(j+13));
+      this.ring(this.mapData.portalPosX+12,this.mapData.portalPosX+12,this.mapData.portalPosY+12,this.mapData.portalPosY+12,(12+j*ringstep),(12+(j+1)*ringstep),(j+13),(j+13));
     };*/
     this.setMap();
 	},
