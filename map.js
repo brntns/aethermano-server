@@ -25,7 +25,7 @@ exports.Map = function(){
     "tilesets":[{
        "firstgid":1,
        "image":"tiles-1.png",
-       "imageheight":64,
+       "imageheight":128,
        "imagewidth":272,
        "margin":0,
        "name":"tiles-1",
@@ -405,7 +405,7 @@ exports.Map.prototype = {
   	}
   //Build Terrain
   // Dungeon
-    this.makeTerrain(0,0,ret,ret,17,45);
+    this.makeTerrain(0,0,ret,ret,132,136);
     this.randomTerrain(3750, 0, ret, 0, ret, 24, 32, 24, 32, 0, 0);
     this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
     //Underground Passages
@@ -414,11 +414,11 @@ exports.Map.prototype = {
     this.randomSnakes(3500, 0, 25, 50, 250, ret-250, ret-260, ret, 6, 24, 4, 10, 3, 3, 0, 0);
     this.randomSnakes(3500, 0, 25, 50, ret-260, ret, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
   // Center Part of the Map
-    this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 17, 45);
+    this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 122, 136);
     this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
-    this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 17, 45);
+    this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 122, 136);
     this.randomTerrain(2500,250, ret-280 ,250 , ret-280, 30, 50, 30, 50, 0, 0); //Large Voids
-    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 17, 45);
+    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 122, 136);
   // The Very Center
     this.ring(800, 800, 800, 800, 199, 199, 0, 0);
     //this.ring(800, 800, 800, 800, 199, 1, 17, 45);
@@ -484,12 +484,12 @@ exports.Map.prototype = {
     this.diamond(1200, 0, 270, ret-270, ret-230, 14, 17, 14, 17, 0, 0);
     this.diamond(800, 0, 270, ret-270, ret-230, 9, 11, 9, 11, 0, 0);
     //Wind Palace Terrain
-    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 17, 20);
-    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 17, 20);
-    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 17, 20);
-    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 17, 20);
-    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 17, 20);
-    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 17, 20);
+    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 122, 126);
+    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 122, 126);
+    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 122, 126);
+    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 122, 126);
+    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 122, 126);
+    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 122, 126);
     /*
     this.colouring(0.3, ret-250, ret-1, 0, 250, 31, 34);
     this.colouring(0.6, ret-175, ret-1, 0, 175, 31, 34);
