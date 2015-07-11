@@ -2,7 +2,7 @@ var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
-  	, gameItems = require('./items.js')
+  , gameItems = require('./items.js')
 	, gameMonster = require('./monster.js')
 
 var map = new gameMap.Map();
@@ -103,37 +103,37 @@ io.sockets.on('connection', function (socket) {
 	});
 });
 
-//block
-var fs = require('fs'),
-PNG = require('pngjs').PNG;
-
-function writeImg() {
-    var img = new PNG({
-      filterType: 4,
-      width: 1600,
-      height: 1600
-    });
-    for (var y = 0; y < img.height; y++) {
-      for (var x = 0; x < img.width; x++) {
-        var idx = (img.width * y + x) << 2;
-        // invert color
-        if (map.map[x+1600*y] == 0){
-          img.data[idx] = 255;
-          img.data[idx+1] = 255;
-          img.data[idx+2] = 255;
-          // and reduce opacity
-          img.data[idx+3] = 255;
-        } else {
-          img.data[idx] = 0;
-          img.data[idx+1] = 0;
-          img.data[idx+2] = 0;
-          // and reduce opacity
-          img.data[idx+3] = 255;
-        }
-      }
-    }
-
-    img.pack().pipe(fs.createWriteStream('out.png'));
-}
-
- writeImg();
+// //block
+// var fs = require('fs'),
+// PNG = require('pngjs').PNG;
+//
+// function writeImg() {
+//     var img = new PNG({
+//       filterType: 4,
+//       width: 1600,
+//       height: 1600
+//     });
+//     for (var y = 0; y < img.height; y++) {
+//       for (var x = 0; x < img.width; x++) {
+//         var idx = (img.width * y + x) << 2;
+//         // invert color
+//         if (map.map[x+1600*y] == 0){
+//           img.data[idx] = 255;
+//           img.data[idx+1] = 255;
+//           img.data[idx+2] = 255;
+//           // and reduce opacity
+//           img.data[idx+3] = 255;
+//         } else {
+//           img.data[idx] = 0;
+//           img.data[idx+1] = 0;
+//           img.data[idx+2] = 0;
+//           // and reduce opacity
+//           img.data[idx+3] = 255;
+//         }
+//       }
+//     }
+//
+//     img.pack().pipe(fs.createWriteStream('out.png'));
+// }
+//
+//  writeImg();
