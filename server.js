@@ -63,7 +63,7 @@ io.sockets.on('connection', function (socket) {
 		player.y = data.y;
 		player.status = data.status;
     player.level = data.level;
-    // console.log(data.level)
+    //console.log(data.level)
     socket.broadcast.to(data.level).emit('updatePlayers', [player]);
 	});
 	//update monsters
