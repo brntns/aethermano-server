@@ -2,7 +2,7 @@ var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
-  	, gameItems = require('./items.js')
+  , gameItems = require('./items.js')
 	, gameMonster = require('./monster.js')
 
 var map = new gameMap.Map();
@@ -14,18 +14,12 @@ map.create();
 
 var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
+console.log(map.mapSize);
 for (i = 0; i < monsterNum; i++) {
-	monster.create();
+	monster.create(map.mapSize);
 
 }
-var monsterSpawns = [];
-for (j = 0; j < monsterNum/2; j++) {
-	var X = Math.floor(Math.random()*1600*16);
-	var Y = Math.floor(Math.random()*1600*16);
-	var spawnPointeru = {x:X,y:Y};
-	monsterSpawns.push(spawnPointeru);
-}
-console.log(monsterSpawns);
+
 items.create();
 //app.listen(process.env.PORT);
 app.listen(8000);
@@ -54,9 +48,8 @@ io.sockets.on('connection', function (socket) {
 	// update Spawnpoints
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
-		socket.emit('monsterSpawns', monsterSpawns);
+		//socket.emit('monsterSpawns', monsterSpawns);
 	});
-	//console.log('Player Connected: ', player);
 	// update player postition
 	socket.on('newPlayerPosition', function (data) {
 		player.x = data.x;
@@ -73,8 +66,8 @@ io.sockets.on('connection', function (socket) {
 	});
 	//update level
   socket.on('requestLevelChange', function (level) {
-		console.log(level);
-		console.log(map.maps.length);
+		// console.log(level);
+		// console.log(map.maps.length);
 		if (map.maps.length <= level+1) {
 			map.create();
 		}
