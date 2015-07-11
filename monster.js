@@ -14,21 +14,22 @@ exports.Monster = function(){
   this.monsters = [];
 };
 exports.Monster.prototype = {
-	create: function (mapSize) {
+	create: function () {
 		console.log('Creating Monsters...');
 		this.genUuid();
-		this.spawnPoint(mapSize);
+		this.spawnPoint();
     this.gen();
 		console.log('Done Creating Monsters!');
 	},
   gen: function(){
 		this.monsters.push(this.monsterData);
   },
-	spawnPoint: function(mapSize){
-			var X = Math.floor(Math.random()*mapSize*16);
-			var Y = Math.floor(Math.random()*mapSize*16);
-			var spawnPointeru = {x:X,y:Y};
-			this.monsterData.spawn = spawnPointeru;
+	spawnPoint: function(){
+			var ret = 400; // TODO: pipe from map.js
+			var X = Math.floor(Math.random()*ret*16);
+			var Y = Math.floor(Math.random()*ret*16);
+			var spawnPointer = {x:X,y:Y};
+			this.monsterData.spawn = spawnPointer;
 	},
 	genUuid: function(){
     var d = new Date().getTime();
