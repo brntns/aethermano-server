@@ -8,7 +8,6 @@ exports.Monster = function(){
 
 	this.monsterData = {
 		"id":0,
-    "width":16,
 		"spawn":{}
   };
   this.monsters = [];
