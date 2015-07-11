@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var ret = 400;
+var ret = 1600;
 exports.Map = function(){
 
 	this.mapData = {
@@ -407,16 +407,7 @@ exports.Map.prototype = {
   // Bedrock
     this.makeTerrain(0,0,ret,ret,132,136);
     this.randomTerrain(3750, 0, ret, 0, ret, 24, 32, 24, 32, 0, 0);
-<<<<<<< HEAD
     this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
-=======
-    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0);
-    //Underground Passages
-    this.randomSnakes(3500, 0, 25, 50, 250, ret-250, 0, 260, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(3500, 0, 25, 50, 0, 260, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(3500, 0, 25, 50, 250, ret-250, ret-260, ret, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(3500, 0, 25, 50, ret-260, ret, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
->>>>>>> fc928b3d184a7be9d95f44383c0e0f5ed6e845b4
   // Center Part of the Map
     this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 122, 136);
     this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
