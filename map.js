@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var ret = 1600;
+var ret = 800;
 exports.Map = function(){
 
 	this.mapData = {
@@ -103,7 +103,7 @@ exports.Map.prototype = {
         }
       }
     }
-  },   	
+  },
   portal: function portal(posXMin, posXMax, posYMin, posYMax, sizeX, sizeY, portalRadius) {
     console.log("generating portal. coordinates:");
   	var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
@@ -126,7 +126,7 @@ exports.Map.prototype = {
   circle: function circle(numb, posXMin, posXMax, posYMin, posYMax, circleRadiusMin, circleRadiusMax, colourMin, colourMax) {
     var TSize = (posXMax - posXMin)*(posYMax - posYMin);
     var num = Math.floor(TSize/numb);
-    for (var y = 0; y < num; y++) {    
+    for (var y = 0; y < num; y++) {
       var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
       var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
       var radius = Math.floor(Math.random()*(circleRadiusMax-circleRadiusMin+1)+circleRadiusMin);
@@ -143,7 +143,7 @@ exports.Map.prototype = {
   diamond: function diamond(numb, posXMin, posXMax, posYMin, posYMax, sizeXMin, sizeXMax, sizeYMin, sizeYMax, colourMin, colourMax) {
     var TSize = (posXMax - posXMin)*(posYMax - posYMin);
     var num = Math.floor(TSize/numb);
-    for (var y = 0; y < num; y++) {    
+    for (var y = 0; y < num; y++) {
       var PosX = this.Random(posXMin,posXMax);
       var PosY = this.Random(posYMin,posYMax);
       var sizeX = this.Random(sizeXMin, sizeXMax);
@@ -407,7 +407,7 @@ exports.Map.prototype = {
   // Dungeon
     this.makeTerrain(0,0,ret,ret,132,136);
     this.randomTerrain(3750, 0, ret, 0, ret, 24, 32, 24, 32, 0, 0);
-    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
+    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0);
     //Underground Passages
     this.randomSnakes(3500, 0, 25, 50, 250, ret-250, 0, 260, 6, 24, 4, 10, 3, 3, 0, 0);
     this.randomSnakes(3500, 0, 25, 50, 0, 260, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
@@ -429,22 +429,22 @@ exports.Map.prototype = {
     //Make Space
     this.makeTerrain(0, 0, 250, 250, 0, 0);
     //Borders
-    this.circle(300, 0, 250, 230, 250, 7, 12, 0, 0);    
+    this.circle(300, 0, 250, 230, 250, 7, 12, 0, 0);
     this.circle(200, 0, 250, 230, 250, 4, 9, 0, 0);
     this.circle(100, 0, 250, 230, 250, 3, 5, 0, 0);
     this.circle(50, 230, 250, 0, 250, 1, 2, 0, 0);
 
-    this.circle(300, 230, 250, 0, 250, 7, 12, 0, 0);    
+    this.circle(300, 230, 250, 0, 250, 7, 12, 0, 0);
     this.circle(200, 230, 250, 0, 250, 4, 9, 0, 0);
     this.circle(100, 230, 250, 0, 250, 3, 5, 0, 0);
     this.circle(50, 230, 250, 0, 250, 1, 2, 0, 0);
     //Fire Terrain
-    this.circle(1000, 0, 250, 0, 250, 7, 12, 1, 4);    
+    this.circle(1000, 0, 250, 0, 250, 7, 12, 1, 4);
     this.circle(7500, 0, 250, 0, 250, 4, 9, 1, 4);
     this.circle(200, 0, 250, 0, 250, 3, 5, 1, 4);
 
-    this.circle(2000, 0, 250, 0, 250, 9, 13, 0, 0);    
-    this.circle(1000, 0, 250, 0, 250, 7, 10, 0, 0);    
+    this.circle(2000, 0, 250, 0, 250, 9, 13, 0, 0);
+    this.circle(1000, 0, 250, 0, 250, 7, 10, 0, 0);
     this.circle(750, 0, 250, 0, 250, 4, 7, 0, 0);
     //this.circle(300, 0, 250, 0, 250, 1, 2, 1, 4);
     /*
@@ -475,7 +475,7 @@ exports.Map.prototype = {
   // Wind Palace
     //Make Space
     this.makeTerrain(0, ret-250, 250, 250, 0, 0);
-    //Borders    
+    //Borders
     this.diamond(1800, 230, 270, ret-270, ret, 17, 23, 17, 23, 0, 0);
     this.diamond(1200, 230, 270, ret-270, ret, 14, 17, 14, 17, 0, 0);
     this.diamond(800, 230, 270, ret-270, ret, 9, 11, 9, 11, 0, 0);
