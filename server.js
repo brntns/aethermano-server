@@ -14,9 +14,9 @@ map.create();
 
 var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
-console.log(map.mapSize);
+
 for (i = 0; i < monsterNum; i++) {
-	monster.create(map.mapSize);
+	monster.create();
 
 }
 
