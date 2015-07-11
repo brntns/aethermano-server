@@ -7,24 +7,36 @@ var start = process.hrtime();
 exports.Monster = function(){
 
 	this.monsterData = {
-	    "width":16,
-	    "data":[]
+		"id":0,
+    "width":16,
+		"spawn":{}
   };
   this.monsters = [];
 };
 exports.Monster.prototype = {
-	create: function () {
+	create: function (mapSize) {
 		console.log('Creating Monsters...');
+		this.genUuid();
+		this.spawnPoint(mapSize);
     this.gen();
 		console.log('Done Creating Monsters!');
 	},
   gen: function(){
-    var uglymonster = {
-      "name":"Boba",
-      "boss": true
-    };
-
-    this.monsterData.data.push(uglymonster);
 		this.monsters.push(this.monsterData);
-  }
+  },
+	spawnPoint: function(mapSize){
+			var X = Math.floor(Math.random()*mapSize*16);
+			var Y = Math.floor(Math.random()*mapSize*16);
+			var spawnPointeru = {x:X,y:Y};
+			this.monsterData.spawn = spawnPointeru;
+	},
+	genUuid: function(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+  	this.monsterData.id = uuid;
+	}
 };
