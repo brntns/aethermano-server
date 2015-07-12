@@ -74,6 +74,14 @@ io.sockets.on('connection', function (socket) {
 			io.sockets.emit('updateMonsters', monsters[i]);
 		}
 	});
+	socket.on('monsterKill', function(monster){
+		console.log('killed' + monster.id)
+		for (var i = 0; i < monsters.length; i++) {
+			if(monsters[i].id === monster.id){
+					io.sockets.emit('removeMonster', monster.id);
+			}
+		}
+	});
 	//update level
   socket.on('requestLevelChange', function (level) {
 		// console.log(level);
@@ -102,9 +110,9 @@ io.sockets.on('connection', function (socket) {
 });
 // Monster Movement Loops
 function monsterMoveRight(monster){
-		monster.x++;
-		io.sockets.emit('updateMonsters', [monster])
-		console.log(monster);
+	monster.x++;
+	io.sockets.emit('updateMonsters', [monster])
+	console.log(monster);
 }
 function startMovement(monster){
 	var loop = new Infiniteloop();
