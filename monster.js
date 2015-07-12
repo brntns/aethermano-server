@@ -5,15 +5,12 @@ var debug = true;
 var start = process.hrtime();
 
 exports.Monster = function(){
-
-	this.monsterData = {
-		"id":0,
-		"spawn":{}
-  };
   this.monsters = [];
 };
 exports.Monster.prototype = {
 	create: function () {
+		this.monsterData = {
+		};
 		console.log('Creating Monsters...');
 		this.genUuid();
 		this.spawnPoint();
@@ -21,14 +18,15 @@ exports.Monster.prototype = {
 		console.log('Done Creating Monsters!');
 	},
   gen: function(){
+	//	console.log(this.monsterData);
 		this.monsters.push(this.monsterData);
   },
 	spawnPoint: function(){
 			var ret = 400; // TODO: pipe from map.js
-			var X = Math.floor(Math.random()*ret*16);
-			var Y = Math.floor(Math.random()*ret*16);
-			var spawnPointer = {x:X,y:Y};
-			this.monsterData.spawn = spawnPointer;
+			var X = 0// Math.floor(Math.random()*ret*16);
+			var Y = 0//Math.floor(Math.random()*ret*16);
+  		this.monsterData.x = X;
+      this.monsterData.y = Y;
 	},
 	genUuid: function(){
     var d = new Date().getTime();
