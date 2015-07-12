@@ -9,16 +9,16 @@ var Infiniteloop = require('infinite-loop');
 var map = new gameMap.Map();
 var items = new gameItems.Items();
 var monster = new gameMonster.Monster();
-
+var monsters = monster.monsters;
 map.create();
 map.create();
 
 var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
 //
-//for (i = 0; i < monsterNum; i++) {
+for (i = 0; i < monsterNum; i++) {
 	monster.create();
-//}
+}
 //console.log(monster.monsters);
 items.create();
 //app.listen(process.env.PORT);
@@ -49,7 +49,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
 		// send Monster
-		socket.emit('updateMonsters',monster.monsters);
+		socket.emit('updateMonsters',monsters);
 	});
 	// update player postition
 	socket.on('newPlayerPosition', function (data) {
@@ -66,7 +66,13 @@ io.sockets.on('connection', function (socket) {
 	//update monsters
 	socket.on('monsterUpdate', function (data) {
     console.log(data);
-    io.sockets.emit('updateMonsters', [data])
+		for (var i = 0; i < monsters.length; i++) {
+			if(monsters[i].id === data.id){
+				monsters[i].x = data.x;
+				monsters[i].y = data.y;
+			}
+			io.sockets.emit('updateMonsters', monsters[i]);
+		}
 	});
 	//update level
   socket.on('requestLevelChange', function (level) {

@@ -2,15 +2,14 @@
 //var fs = require('fs');
 var _ = require('lodash');
 var debug = true;
-var start = process.hrtime();
+//var start = process.hrtime();
 
 exports.Monster = function(){
   this.monsters = [];
 };
 exports.Monster.prototype = {
 	create: function () {
-		this.monsterData = {
-		};
+		this.monsterData = {};
 		console.log('Creating Monsters...');
 		this.genUuid();
 		this.spawnPoint();
@@ -23,8 +22,8 @@ exports.Monster.prototype = {
   },
 	spawnPoint: function(){
 			var ret = 400; // TODO: pipe from map.js
-			var X = 0// Math.floor(Math.random()*ret*16);
-			var Y = 0//Math.floor(Math.random()*ret*16);
+			var X =  Math.floor(Math.random()*ret*16);
+			var Y = Math.floor(Math.random()*ret*16);
   		this.monsterData.x = X;
       this.monsterData.y = Y;
 	},
