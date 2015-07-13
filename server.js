@@ -95,8 +95,8 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('mapUpdated', function(){
     console.log('mapupdated');
-    var spawnx = Math.random()*1600*16;
-    var spawny = Math.random()*1600*16;
+    var spawnx = Math.random()*map.ret*16;
+    var spawny = Math.random()*map.ret*16;
     var respawnPoint = {x: spawnx, y: spawny};
     socket.emit('playerRepawn', respawnPoint);
   });
@@ -126,14 +126,14 @@ PNG = require('pngjs').PNG;
 function writeImg() {
   var img = new PNG({
     filterType: 4,
-    width: 1600,
-    height: 1600
+    width: map.ret,
+    height: map.ret
   });
   for (var y = 0; y < img.height; y++) {
     for (var x = 0; x < img.width; x++) {
       var idx = (img.width * y + x) << 2;
       // invert color
-      if (map.map[x+1600*y] == 0){
+      if (map.map[x+map.ret*y] == 0){
         img.data[idx] = 255;
         img.data[idx+1] = 255;
         img.data[idx+2] = 255;
@@ -149,6 +149,7 @@ function writeImg() {
     }
   }
   img.pack().pipe(fs.createWriteStream('out.png'));
+  console.log('map.ret: '+map.ret);
 }
 
  writeImg();

@@ -40,6 +40,7 @@ exports.Map = function(){
     "portalPosX":1,
     "portalPosY":1
   };
+  this.ret = ret;
   this.map = [];
   this.maps = [];
 };
@@ -403,124 +404,110 @@ exports.Map.prototype = {
   	for (var y = 0; y < this.mapSize; y++) {
     		this.map[y] = 0;
   	}
-  //Build Terrain
-  // Bedrock
-    this.makeTerrain(0,0,ret,ret,132,136);
-    this.randomTerrain(3750, 0, ret, 0, ret, 24, 32, 24, 32, 0, 0);
-    this.makeTerrain(260, 260, ret-520, ret-520, 0, 0); 
-  // Center Part of the Map
-    this.randomTerrain(100,250, ret-250 ,250 , ret-250, 3, 30, 1, 2, 122, 136);
-    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 3, 30, 3, 30, 0, 0);
-    this.randomTerrain(700,250, ret-250 ,250 , ret-250, 1, 10, 1, 1, 122, 136);
-    this.randomTerrain(2500,250, ret-280 ,250 , ret-280, 30, 50, 30, 50, 0, 0); //Large Voids
-    this.randomTerrain(1000,250, ret-250 ,250 , ret-250, 1, 2, 1, 1, 122, 136);
-  // Underground Passages
-    this.randomSnakes(2500, 0, 25, 50, 250, ret-250, 0, 260, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(2500, 0, 25, 50, 0, 260, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(2500, 0, 25, 50, 250, ret-250, ret-260, ret, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(2500, 0, 25, 50, ret-260, ret, 250, ret-250, 6, 24, 4, 10, 3, 3, 0, 0);
-  // The Very Center
-    this.ring(800, 800, 800, 800, 199, 199, 0, 0);
-    //this.ring(800, 800, 800, 800, 199, 1, 17, 45);
-    this.ring(800, 800, 800, 800, 100, 100, 40, 45);
-    this.randomRings(600, 675, 925, 675, 925, 7, 28, 1, 4, 40, 45);
-    this.randomRings(500, 700, 900, 700, 900, 6, 38, 1, 4, 0, 0);
-  // Fire Kingdom
-    //Make Space
-    this.makeTerrain(0, 0, 250, 250, 0, 0);
-    //Borders
-    this.circle(300, 0, 250, 230, 250, 7, 12, 0, 0);
-    this.circle(200, 0, 250, 230, 250, 4, 9, 0, 0);
-    this.circle(100, 0, 250, 230, 250, 3, 5, 0, 0);
-    this.circle(50, 230, 250, 0, 250, 1, 2, 0, 0);
+    if (ret < 300) {
+      this.makeTerrain(0, 0, ret, ret, 0, 0);
+      this.portal(ret-24,ret-24 ,ret-24,ret-24,24,24,8);
+    } else {
+    //Set Values
+      var Outer = Math.floor(ret/6);
+      var Inner = Math.floor(ret/8);
+      var HalfInner = Math.floor(Inner/2);
+      var StepInner = HalfInner + Math.floor(HalfInner/4);
+      var Realms = Math.floor(ret/6.5);
+      var Overlap = Math.floor(ret/100);
+      var Center = Math.floor(ret/2);
+      var IceHeight = Math.floor(Realms/7);
+    //Build Terrain
+    // Bedrock
+      this.makeTerrain(0,0,ret,ret,132,136);
+      this.randomTerrain(3750, 0, ret, 0, ret, 24, 32, 24, 32, 0, 0);
+      this.makeTerrain(Outer, Outer, ret-2*Outer, ret-2*Outer, 0, 0); 
+    // Center Part of the Map
+      this.randomTerrain(100,Outer, ret-Outer, Outer , ret-Outer, 3, 30, 1, 2, 122, 136);
+      this.randomTerrain(1000,Outer-Overlap, ret-Outer+Overlap, Outer-Overlap , ret-Outer+Overlap, 3, 30, 3, 30, 0, 0);
+      this.randomTerrain(700,Outer, ret-Outer, Outer , ret-Outer, 1, 10, 1, 1, 122, 136);
+      this.randomTerrain(2500,Outer-Overlap, ret-Outer+Overlap, Outer-Overlap, ret-Outer+Overlap, 30, 50, 30, 50, 0, 0); //Large Voids
+      this.randomTerrain(1000,Outer, ret-Outer, Outer , ret-Outer, 1, 2, 1, 1, 122, 136);
+    // Underground Passages
+      this.randomSnakes(2500, 0, 25, 50, Realms-Overlap, ret-Realms+Overlap, 0, Outer+Overlap, 6, 24, 4, 10, 3, 3, 0, 0);
+      this.randomSnakes(2500, 0, 25, 50, 0, Outer+Overlap, Realms-Overlap, ret-Realms+Overlap, 6, 24, 4, 10, 3, 3, 0, 0);
+      this.randomSnakes(2500, 0, 25, 50, Realms-Overlap, ret-Realms+Overlap, ret-Outer+Overlap, ret, 6, 24, 4, 10, 3, 3, 0, 0);
+      this.randomSnakes(2500, 0, 25, 50, ret-Outer-Overlap, ret, Realms-Overlap, ret-Realms+Overlap, 6, 24, 4, 10, 3, 3, 0, 0);
+      this.randomSnakes(12500, 0, 5, 10, Realms-Overlap, ret-Realms+Overlap, 0, Outer+Overlap, 30, 40, 4, 10, 3, 3, 0, 0);
+      this.randomSnakes(12500, 0, 5, 10, 0, Outer+Overlap, Realms-Overlap, ret-Realms+Overlap, 30, 40, 4, 10, 3, 3, 0, 0);
+      this.randomSnakes(12500, 0, 5, 10, Realms-Overlap, ret-Realms+Overlap, ret-Outer+Overlap, ret, 30, 40, 4, 10, 3, 3, 0, 0);
+      this.randomSnakes(12500, 0, 5, 10, ret-Outer-Overlap, ret, Realms-Overlap, ret-Realms+Overlap, 30, 40, 4, 10, 3, 3, 0, 0);
+    // The Very Center
+      this.ring(Center, Center, Center, Center, Inner, Inner, 0, 0);
+      this.ring(Center, Center, Center, Center, HalfInner, HalfInner, 40, 45);
+      this.randomRings(600, Center-HalfInner, Center+HalfInner, Center-HalfInner, Center+HalfInner, 7, 28, 1, 4, 40, 45);
+      this.randomRings(500, Center-StepInner, Center+StepInner, Center-StepInner, Center+StepInner, 6, 38, 1, 4, 0, 0);
+    // Fire Kingdom
+      //Make Space
+      this.makeTerrain(0, 0, Realms, Realms, 0, 0);
+      //Borders
+      this.circle(300, 0, Realms+Overlap, Realms-Overlap, Realms+Overlap, 7, 12, 0, 0);
+      this.circle(200, 0, Realms+Overlap, Realms-Overlap, Realms+Overlap, 4, 9, 0, 0);
+      this.circle(100, 0, Realms+Overlap, Realms-Overlap, Realms+Overlap, 3, 5, 0, 0);
+      this.circle(50, 0, Realms+Overlap, Realms-Overlap, Realms+Overlap, 1, 2, 0, 0);
 
-    this.circle(300, 230, 250, 0, 250, 7, 12, 0, 0);
-    this.circle(200, 230, 250, 0, 250, 4, 9, 0, 0);
-    this.circle(100, 230, 250, 0, 250, 3, 5, 0, 0);
-    this.circle(50, 230, 250, 0, 250, 1, 2, 0, 0);
-    //Fire Terrain
-    this.circle(1000, 0, 250, 0, 250, 7, 12, 1, 4);
-    this.circle(7500, 0, 250, 0, 250, 4, 9, 1, 4);
-    this.circle(200, 0, 250, 0, 250, 3, 5, 1, 4);
+      this.circle(300, Realms-Overlap, Realms+Overlap, 0, Realms+Overlap, 7, 12, 0, 0);
+      this.circle(200, Realms-Overlap, Realms+Overlap, 0, Realms+Overlap, 4, 9, 0, 0);
+      this.circle(100, Realms-Overlap, Realms+Overlap, 0, Realms+Overlap, 3, 5, 0, 0);
+      this.circle(50, Realms-Overlap, Realms+Overlap, 0, Realms+Overlap, 1, 2, 0, 0);
+      //Fire Terrain
+      this.circle(1000, 0, Realms, 0, Realms, 7, 12, 1, 4);
+      this.circle(7500, 0, Realms, 0, Realms, 4, 9, 1, 4);
+      this.circle(200, 0, Realms, 0, Realms, 3, 5, 1, 4);
 
-    this.circle(2000, 0, 250, 0, 250, 9, 13, 0, 0);
-    this.circle(1000, 0, 250, 0, 250, 7, 10, 0, 0);
-    this.circle(750, 0, 250, 0, 250, 4, 7, 0, 0);
-    //this.circle(300, 0, 250, 0, 250, 1, 2, 1, 4);
-    /*
-    this.colouring(0.3, 0, 250, 0, 250, 1, 4);
-    this.colouring(0.6, 0, 175, 0, 175, 1, 4);
-    this.colouring(1, 0, 100, 0, 100, 1, 4);
-    */
-  //Ice Kingdom
-    //Make Space
-    this.makeTerrain(ret-250, ret-250, 250, 250, 0, 0);
-    //Borders
-    this.randomTerrain(100, ret-260, ret-230 , ret-260 , ret, 2, 3, 5, 30, 0, 0);
-    this.randomTerrain(50, ret-260, ret-230 , ret-260 , ret, 1, 1, 5, 30, 0, 0);
+      this.circle(2000, 0, Realms, 0, Realms, 9, 13, 0, 0);
+      this.circle(1000, 0, Realms, 0, Realms, 7, 10, 0, 0);
+      this.circle(750, 0, Realms, 0, Realms, 4, 7, 0, 0);
+    //Ice Kingdom
+      //Make Space
+      this.makeTerrain(ret-Realms, ret-Realms, Realms, Realms, 0, 0);
+      //Borders
+      this.randomTerrain(100, ret-Realms-Overlap, ret-Realms+Overlap, ret-Realms-Overlap, ret, 2, 3, 5, 30, 0, 0);
+      this.randomTerrain(50, ret-Realms-Overlap, ret-Realms+Overlap, ret-Realms-Overlap, ret, 1, 1, 5, 30, 0, 0);
 
-    this.randomTerrain(100, ret-260, ret , ret-260 , ret-230, 2, 3, 5, 30, 0, 0);
-    this.randomTerrain(50, ret-260, ret , ret-260 , ret-230, 1, 1, 5, 30, 0, 0);
-    //Ice Terrain
-    this.randomTerrain(50, ret-260, ret , ret-30 , ret, 3, 4, 5, 30, 59, 63);
-    this.randomTerrain(150, ret-260, ret , ret-60 , ret-30, 2, 3, 5, 30, 59, 63);
-    this.randomTerrain(250, ret-260, ret , ret-90 , ret-60, 2, 2, 5, 30, 59, 63);
-    this.randomTerrain(200, ret-250, ret , ret-250 , ret, 1, 1, 5, 30, 59, 63);
-    this.randomTerrain(50, ret-260, ret , ret-260 , ret-230, 1, 3, 5, 30, 0, 0);
-    /*
-    this.colouring(0.3, ret-250, ret-1, ret-250, ret-1, 59, 63);
-    this.colouring(0.6, ret-175, ret-1, ret-175, ret-1, 59, 63);
-    this.colouring(1, ret-100, ret-1, ret-100, ret-1, 59, 63);
-    */
-  // Wind Palace
-    //Make Space
-    this.makeTerrain(0, ret-250, 250, 250, 0, 0);
-    //Borders
-    this.diamond(1800, 230, 270, ret-270, ret, 17, 23, 17, 23, 0, 0);
-    this.diamond(1200, 230, 270, ret-270, ret, 14, 17, 14, 17, 0, 0);
-    this.diamond(800, 230, 270, ret-270, ret, 9, 11, 9, 11, 0, 0);
+      this.randomTerrain(100, ret-Realms-Overlap, ret, ret-Realms-Overlap, ret-Realms+Overlap, 2, 3, 5, 30, 0, 0);
+      this.randomTerrain(50, ret-Realms-Overlap, ret, ret-Realms-Overlap, ret-Realms+Overlap, 1, 1, 5, 30, 0, 0);
+      //Ice Terrain
+      this.randomTerrain(50, ret-Realms-Overlap, ret, ret-IceHeight, ret, 3, 4, 5, 30, 59, 63);
+      this.randomTerrain(150, ret-Realms-Overlap, ret, ret-2*IceHeight , ret-IceHeight, 2, 3, 5, 30, 59, 63);
+      this.randomTerrain(250, ret-Realms-Overlap, ret , ret-3*IceHeight , ret-2*IceHeight, 2, 2, 5, 30, 59, 63);
+      this.randomTerrain(200, ret-Realms-Overlap, ret , ret-Realms-Overlap, ret, 1, 1, 5, 30, 59, 63);
+      this.randomTerrain(50, ret-Realms-Overlap, ret , ret-Realms-Overlap , ret-Realms-Overlap+IceHeight, 1, 3, 5, 30, 0, 0);
+    // Wind Palace
+      //Make Space
+      this.makeTerrain(0, ret-Realms, Realms, Realms, 0, 0);
+      //Borders
+      this.diamond(800, Realms-Overlap, Realms+Overlap, ret-Realms-Overlap, ret, 17, 23, 17, 23, 0, 0);
+      this.diamond(600, Realms-Overlap, Realms+Overlap, ret-Realms-Overlap, ret, 14, 17, 14, 17, 0, 0);
+      this.diamond(400, Realms-Overlap, Realms+Overlap, ret-Realms-Overlap, ret, 9, 11, 9, 11, 0, 0);
 
-    this.diamond(1800, 0, 270, ret-270, ret-230, 17, 23, 17, 23, 0, 0);
-    this.diamond(1200, 0, 270, ret-270, ret-230, 14, 17, 14, 17, 0, 0);
-    this.diamond(800, 0, 270, ret-270, ret-230, 9, 11, 9, 11, 0, 0);
-    //Wind Palace Terrain
-    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 122, 126);
-    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 122, 126);
-    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 122, 126);
-    this.diamond(1800, 0, 250, ret-250, ret, 17, 23, 17, 23, 122, 126);
-    this.diamond(1200, 0, 250, ret-250, ret, 14, 17, 14, 17, 122, 126);
-    this.diamond(800, 0, 250, ret-250, ret, 9, 11, 9, 11, 122, 126);
-    /*
-    this.colouring(0.3, ret-250, ret-1, 0, 250, 31, 34);
-    this.colouring(0.6, ret-175, ret-1, 0, 175, 31, 34);
-    this.colouring(1, ret-100, ret, 0, 100, 31, 34);
-    */
-  // Jungle
-    this.makeTerrain(ret-250, 0, 250, 250, 0, 0);
-    this.randomSnakes(300, 0, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 1, 1, 31, 34);
-    this.randomWorms(300, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 2, 1, 31, 34);
-    this.randomSnakes(1000, 0, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 2, 2, 0, 0);
-    this.randomSnakes(1500, 0, 15, 30, ret-250, ret, 0, 250, 3, 12, 4, 16, 3, 3, 0, 0);
-    /*
-    this.colouring(0.3, 0, 250, ret-250, ret-1, 55, 59);
-    this.colouring(0.6, 0, 175, ret-175, ret-1, 55, 59);
-    this.colouring(1, 0, 100, ret-100, ret-1, 55, 59);
-    */
-    /*
-    //Testing Room lower left corner
-    var testRoomSize = 40
-    this.makeTerrain(0, ret-testRoomSize, testRoomSize, testRoomSize, 0, 0);
-    */
-  //Portal Spawn
-  	this.portal(0,ret-24 ,0,ret-24,24,24,8);
-  /*Ring Colour Coding
-    var ringMax = Math.max(this.mapData.portalPosX,this.mapData.portalPosY,ret-this.mapData.portalPosX,ret-this.mapData.portalPosY);
-    var ringsteps = Math.floor((1.5*ringMax/20))+1;
-    var ringstep = 20;
-    for (var j = 0; j < ringsteps; j++) {
-      this.ring(this.mapData.portalPosX+12,this.mapData.portalPosX+12,this.mapData.portalPosY+12,this.mapData.portalPosY+12,(12+j*ringstep),(12+(j+1)*ringstep),(j+13),(j+13));
-    };*/
-    this.setMap();
+      this.diamond(800, 0, Realms+Overlap, ret-Realms-Overlap, ret-Realms+Overlap, 17, 23, 17, 23, 0, 0);
+      this.diamond(600, 0, Realms+Overlap, ret-Realms-Overlap, ret-Realms+Overlap, 14, 17, 14, 17, 0, 0);
+      this.diamond(400, 0, Realms+Overlap, ret-Realms-Overlap, ret-Realms+Overlap, 9, 11, 9, 11, 0, 0);
+      //Wind Palace Terrain
+      this.diamond(1800, 0, Realms+Overlap, ret-Realms-Overlap, ret, 17, 23, 17, 23, 122, 126);
+      this.diamond(1200, 0, Realms+Overlap, ret-Realms-Overlap, ret, 14, 17, 14, 17, 122, 126);
+      this.diamond(800, 0, Realms+Overlap, ret-Realms-Overlap, ret, 9, 11, 9, 11, 122, 126);
+      this.diamond(1800, 0, Realms+Overlap, ret-Realms-Overlap, ret, 17, 23, 17, 23, 122, 126);
+      this.diamond(1200, 0, Realms+Overlap, ret-Realms-Overlap, ret, 14, 17, 14, 17, 122, 126);
+      this.diamond(800, 0, Realms+Overlap, ret-Realms-Overlap, ret, 9, 11, 9, 11, 122, 126);
+      // Jungle
+      //Make Space
+      this.makeTerrain(ret-Realms, 0, Realms, Realms, 0, 0);
+      //Jungle Terrain
+      this.randomSnakes(300, 0, 15, 30, ret-Realms-Overlap, ret, 0, Realms+Overlap, 3, 12, 4, 16, 1, 1, 31, 34);
+      this.randomWorms(300, 15, 30, ret-Realms-Overlap, ret, 0, Realms+Overlap, 3, 12, 4, 16, 2, 1, 31, 34);
+      this.randomSnakes(1000, 0, 15, 30, ret-Realms-Overlap, ret, 0, Realms+Overlap, 3, 12, 4, 16, 2, 2, 0, 0);
+      this.randomSnakes(1500, 0, 15, 30, ret-Realms-Overlap, ret, 0, Realms+Overlap, 3, 12, 4, 16, 3, 3, 0, 0);
+    //Portal Spawn
+    	this.portal(0,ret-24 ,0,ret-24,24,24,8);
+    }
+      this.setMap();
 	},
 	setMap: function(){
      this.mapData.layers[0].data = this.map;
