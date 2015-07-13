@@ -16,9 +16,9 @@ map.create();
 var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
 //
-for (i = 0; i < monsterNum; i++) {
+//for (i = 0; i < monsterNum; i++) {
 	monster.create();
-}
+//}
 //console.log(monster.monsters);
 items.create();
 //app.listen(process.env.PORT);
@@ -63,6 +63,19 @@ io.sockets.on('connection', function (socket) {
 		// send Monster
 		startMovement(monster);
 	});
+	socket.on('monsterSlashed', function(monster){
+		// send Monster
+		console.log(monster);
+		for (var i = 0; i < monsters.length; i++) {
+			if(monsters[i].id === monster.id){
+				monsters[i].x = monster.x;
+				monsters[i].y = monster.y;
+				monsters[i].velox = monster.velox;
+				monsters[i].veloy = monster.veloy;
+			}
+			io.sockets.emit('updateMonsters', monsters[i]);
+		}
+	});
 	//update monsters
 	socket.on('monsterUpdate', function (data) {
     console.log(data);
@@ -70,6 +83,8 @@ io.sockets.on('connection', function (socket) {
 			if(monsters[i].id === data.id){
 				monsters[i].x = data.x;
 				monsters[i].y = data.y;
+				monsters[i].velox = data.velox;
+				monsters[i].veloy = data.veloy;
 			}
 			io.sockets.emit('updateMonsters', monsters[i]);
 		}
@@ -78,7 +93,7 @@ io.sockets.on('connection', function (socket) {
 		console.log('killed' + monster.id)
 		for (var i = 0; i < monsters.length; i++) {
 			if(monsters[i].id === monster.id){
-					io.sockets.emit('removeMonster', monster.id);
+				io.sockets.emit('removeMonster', monster.id);
 			}
 		}
 	});
