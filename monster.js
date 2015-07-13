@@ -22,10 +22,12 @@ exports.Monster.prototype = {
   },
 	spawnPoint: function(){
 			var ret = 400; // TODO: pipe from map.js
-			var X =  Math.floor(Math.random()*ret*16);
-			var Y = Math.floor(Math.random()*ret*16);
+			var X =  300;//Math.floor(Math.random()*ret*16);
+			var Y = 300;//Math.floor(Math.random()*ret*16);
   		this.monsterData.x = X;
       this.monsterData.y = Y;
+      this.monsterData.velox = 0;
+      this.monsterData.veloy = 0;
 	},
 	genUuid: function(){
     var d = new Date().getTime();
