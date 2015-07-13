@@ -4,7 +4,7 @@ var app = require('http').createServer()
 	, gameMap = require('./map.js')
   , gameItems = require('./items.js')
 	, gameMonster = require('./monster.js');
-var Infiniteloop = require('infinite-loop');
+//var Infiniteloop = require('infinite-loop');
 
 
 var map = new gameMap.Map();
@@ -129,17 +129,17 @@ io.sockets.on('connection', function (socket) {
 	});
 });
 
-// Monster Movement Loops
-function monsterMoveRight(monster){
-	monster.x++;
-	io.sockets.emit('updateMonsters', [monster])
-	console.log(monster);
-}
-function startMovement(monster){
-	var loop = new Infiniteloop();
-	loop.add(monsterMoveRight,monster);
-	loop.setInterval(150).run();
-}
+// // Monster Movement Loops
+// function monsterMoveRight(monster){
+// 	monster.x++;
+// 	io.sockets.emit('updateMonsters', [monster])
+// 	console.log(monster);
+// }
+// function startMovement(monster){
+// 	var loop = new Infiniteloop();
+// 	loop.add(monsterMoveRight,monster);
+// 	loop.setInterval(150).run();
+// }
 //block
 // var fs = require('fs'),
 // PNG = require('pngjs').PNG;
