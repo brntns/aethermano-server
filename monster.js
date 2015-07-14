@@ -12,7 +12,7 @@ exports.Monster.prototype = {
 		this.monsterData = {};
 		console.log('Creating Monsters...');
 		this.genUuid();
-		this.spawnPoint();
+		this.monsterBio();
     this.gen();
 		console.log('Done Creating Monsters!');
 	},
@@ -20,7 +20,7 @@ exports.Monster.prototype = {
 	//	console.log(this.monsterData);
 		this.monsters.push(this.monsterData);
   },
-	spawnPoint: function(){
+	monsterBio: function(){
 			var ret = 400; // TODO: pipe from map.js
 			var X =  300;//Math.floor(Math.random()*ret*16);
 			var Y = 300;//Math.floor(Math.random()*ret*16);
@@ -28,6 +28,7 @@ exports.Monster.prototype = {
       this.monsterData.y = Y;
       this.monsterData.velox = 0;
       this.monsterData.veloy = 0;
+      this.monsterData.hp = 15;
 	},
 	genUuid: function(){
     var d = new Date().getTime();
