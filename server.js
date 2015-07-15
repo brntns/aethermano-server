@@ -14,10 +14,10 @@ map.create();
 map.create();
 
 var monsterPerScreen = 0.1;
-var monsterNum = 2;//monsterPerScreen*map.mapSize/3072;
+var monsterNum = monsterPerScreen*map.mapSize/3072;
 //
 for (i = 0; i < monsterNum; i++) {
-	monster.create();
+	monster.create(map.ret);
 }
 //console.log(monster.monsters);
 items.create();
@@ -101,8 +101,8 @@ io.sockets.on('connection', function (socket) {
 				io.sockets.emit('removeMonster', monster.id);
 
 	});
-	socket.on('requestMonster', function(){
-		monster.create();
+	socket.on('requestMonster', function(data){
+		monster.spawn(data);
   	io.sockets.emit('updateMonsters',monsters);
   });
 	//update level
