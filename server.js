@@ -138,55 +138,6 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('removePlayer', player.id);
 	});
 });
-<<<<<<< HEAD
-=======
-// Monster Movement Loops
-function monsterMoveRight(monster){
-	io.sockets.emit('updateMonsters', [monster])
-	console.log(monster);
-}
-function monsterMoveLeft(monster){
-	io.sockets.emit('updateMonsters', [monster])
-	console.log(monster);
-}
-function startMovement(monster){
-	var loop = new Infiniteloop();
-	loop.add(monsterMoveRight,monster);
-	loop.setInterval(150).run();
-}
-//block
-var fs = require('fs'),
-PNG = require('pngjs').PNG;
-
-function writeImg() {
-  var img = new PNG({
-    filterType: 4,
-    width: map.ret,
-    height: map.ret
-  });
-  for (var y = 0; y < img.height; y++) {
-    for (var x = 0; x < img.width; x++) {
-      var idx = (img.width * y + x) << 2;
-      // invert color
-      if (map.map[x+map.ret*y] == 0){
-        img.data[idx] = 255;
-        img.data[idx+1] = 255;
-        img.data[idx+2] = 255;
-        // and reduce opacity
-        img.data[idx+3] = 255;
-      } else {
-        img.data[idx] = 0;
-        img.data[idx+1] = 0;
-        img.data[idx+2] = 0;
-        // and reduce opacity
-        img.data[idx+3] = 255;
-      }
-    }
-  }
-  img.pack().pipe(fs.createWriteStream('out.png'));
-  console.log('map.ret: '+map.ret);
-}
->>>>>>> development
 
 // // Monster Movement Loops
 // function monsterMoveRight(monster){
