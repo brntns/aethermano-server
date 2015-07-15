@@ -8,11 +8,19 @@ exports.Monster = function(){
   this.monsters = [];
 };
 exports.Monster.prototype = {
-	create: function () {
+	create: function (ret) {
 		this.monsterData = {};
 		console.log('Creating Monsters...');
 		this.genUuid();
-		this.spawnPoint();
+		this.monsterBio(ret);
+    this.gen();
+		console.log('Done Creating Monsters!');
+	},
+  spawn: function (data) {
+		this.monsterData = {};
+		console.log('Creating Monsters...');
+		this.genUuid();
+		this.monsterBio(data);
     this.gen();
 		console.log('Done Creating Monsters!');
 	},
@@ -20,14 +28,19 @@ exports.Monster.prototype = {
 	//	console.log(this.monsterData);
 		this.monsters.push(this.monsterData);
   },
-	spawnPoint: function(){
-			var ret = 400; // TODO: pipe from map.js
-			var X =  300;//Math.floor(Math.random()*ret*16);
-			var Y = 300;//Math.floor(Math.random()*ret*16);
-  		this.monsterData.x = X;
-      this.monsterData.y = Y;
-      this.monsterData.velox = 0;
-      this.monsterData.veloy = 0;
+	monsterBio: function(data){
+    if(data.x){
+      var X = data.x;
+      var Y = data.y;
+    } else {
+      var X = Math.floor(Math.random()*data*16);// 300;
+      var Y = Math.floor(Math.random()*data*16);//300
+    }
+		this.monsterData.x = X;
+    this.monsterData.y = Y;
+    this.monsterData.velox = 0;
+    this.monsterData.veloy = 0;
+    this.monsterData.hp = 15;
 	},
 	genUuid: function(){
     var d = new Date().getTime();
