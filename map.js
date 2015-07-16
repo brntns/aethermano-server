@@ -309,91 +309,90 @@ exports.Map.prototype = {
 		var seg = Math.floor(Math.random()*(segMax-segMin+1)+segMin);
 		this.worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
 	}
-},
-worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
-	var posX = startX;
-	var posY = startY;
-	var lastD = Math.floor(Math.random()*4);
-	var bends = 0;
-	for (var i = 0; i < seg; i++) {
-		console.log(bends);
-		var direction = Math.floor(Math.random()*4);
-		//RIGHT
-		if (direction === 0) {
-			//From UP
-			if (lastD === 3) {
-				var randLengthX = this.Random(lengthXMin, lengthXMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, randLengthX, thickY, colourMin, colourMax);
-				posX = posX + randLengthX;
-				posY = posY;
-				lastD = 0;
-			//From DOWN
-			} else if (lastD === 1) {
-				var randLengthX = this.Random(lengthXMin, lengthXMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
-				posX = posX + randLengthX + thickX;
-				posY = posY;
-				lastD = 0;
-			} else {
-				i--;
-			}
-		//UP
-		} else if (direction === 1) {
-			//From RIGHT
-			if (lastD === 0) {
-				var randLengthY = this.Random(lengthYMin, lengthYMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
-				posX = posX - thickX;
-				posY = posY - randLengthY;
-				lastD = 1;
-			//From LEFT
-			} else if (lastD === 2) {
-				var randLengthY = this.Random(lengthYMin, lengthYMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
-				posX = posX;
-				posY = posY - randLengthY;
-				lastD = 1;
-			} else {
-				i--;
-			}
-		//LEFT
-		} else if (direction === 2) {
-			if (lastD === 1) {
-				var randLengthX = this.Random(lengthXMin, lengthXMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX, posY, randLengthX, thickY, colourMin, colourMax);
-				posX = posX - randLengthX;
-				posY = posY;
-				lastD = 2;
-			} else if (lastD === 3) {
-				var randLengthX = this.Random(lengthXMin, lengthXMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
-				posX = posX - randLengthX + thickX;
-				posY = posY;
-				lastD = 2;
-			} else {
-				i--;
-			}
-		//DOWN
-		} else {
-			if (lastD === 0) {
-				var randLengthY = this.Random(lengthYMin, lengthYMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, thickX, randLengthY, colourMin, colourMax);
-				posX = posX;
-				posY = posY + randLengthY;
-				lastD = 3;
-			} else if (lastD === 2) {
-				var randLengthY = this.Random(lengthYMin, lengthYMax);
-				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY, thickX, randLengthY, colourMin, colourMax);
-				posX = posX - thickX;
-				posY = posY + randLengthY;
-				lastD = 3;
-			} else {
-				i--;
-			}
-		}
-	}
-},
-
+  },
+  worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+  	var posX = startX;
+  	var posY = startY;
+  	var lastD = Math.floor(Math.random()*4);
+  	var bends = 0;
+  	for (var i = 0; i < seg; i++) {
+  		console.log(bends);
+  		var direction = Math.floor(Math.random()*4);
+  		//RIGHT
+  		if (direction === 0) {
+  			//From UP
+  			if (lastD === 3) {
+  				var randLengthX = this.Random(lengthXMin, lengthXMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, randLengthX, thickY, colourMin, colourMax);
+  				posX = posX + randLengthX;
+  				posY = posY;
+  				lastD = 0;
+  			//From DOWN
+  			} else if (lastD === 1) {
+  				var randLengthX = this.Random(lengthXMin, lengthXMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+  				posX = posX + randLengthX + thickX;
+  				posY = posY;
+  				lastD = 0;
+  			} else {
+  				i--;
+  			}
+  		//UP
+  		} else if (direction === 1) {
+  			//From RIGHT
+  			if (lastD === 0) {
+  				var randLengthY = this.Random(lengthYMin, lengthYMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+  				posX = posX - thickX;
+  				posY = posY - randLengthY;
+  				lastD = 1;
+  			//From LEFT
+  			} else if (lastD === 2) {
+  				var randLengthY = this.Random(lengthYMin, lengthYMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+  				posX = posX;
+  				posY = posY - randLengthY;
+  				lastD = 1;
+  			} else {
+  				i--;
+  			}
+  		//LEFT
+  		} else if (direction === 2) {
+  			if (lastD === 1) {
+  				var randLengthX = this.Random(lengthXMin, lengthXMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX, posY, randLengthX, thickY, colourMin, colourMax);
+  				posX = posX - randLengthX;
+  				posY = posY;
+  				lastD = 2;
+  			} else if (lastD === 3) {
+  				var randLengthX = this.Random(lengthXMin, lengthXMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+  				posX = posX - randLengthX + thickX;
+  				posY = posY;
+  				lastD = 2;
+  			} else {
+  				i--;
+  			}
+  		//DOWN
+  		} else {
+  			if (lastD === 0) {
+  				var randLengthY = this.Random(lengthYMin, lengthYMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, thickX, randLengthY, colourMin, colourMax);
+  				posX = posX;
+  				posY = posY + randLengthY;
+  				lastD = 3;
+  			} else if (lastD === 2) {
+  				var randLengthY = this.Random(lengthYMin, lengthYMax);
+  				this.makeTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY, thickX, randLengthY, colourMin, colourMax);
+  				posX = posX - thickX;
+  				posY = posY + randLengthY;
+  				lastD = 3;
+  			} else {
+  				i--;
+  			}
+  		}
+  	}
+  },
   colouring: function colouring(prob, posXMin, posXMax, posYMin, posYMax, colourMin, colourMax) {
     for (var x = posXMin; x < posXMax+1;x++) {
       for (var y = posYMin; y < posYMax; y++) {
@@ -417,6 +416,21 @@ worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, len
         for (var i = 0; i < SizeY; i++){
           var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
           this.ladders[PosX+PosY*ret+z+i*ret] = Colour;
+        }
+      }
+    }
+  },
+  ladderRing: function ladderRing(posXMin, posXMax, posYMin, posYMax, radius, thick, colourMin, colourMax) {
+    var PosX = this.Random(posXMin,posXMax);
+    var PosY = this.Random(posYMin,posYMax);
+    for (var z = -radius; z < radius; z++){
+      for (var i = -radius; i < radius; i++){
+        var rad = Math.sqrt(z*z+i*i);
+        if(rad > radius-thick && rad <= radius){
+          var ringColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
+          if (PosX+z <= ret-1 && PosX+z >= 0 && PosY+i <= ret-1 && PosY+i >= 0 ) {
+            this.ladders[PosX+PosY*ret+z+i*ret] = ringColour;
+          }
         }
       }
     }
@@ -543,7 +557,8 @@ worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, len
       this.randomSnakes(1500, 0, 15, 30, size-Realms-Overlap, size, 0, Realms+Overlap, 3, 12, 4, 16, 3, 3, 0, 0);
     //Portal Spawn
     	this.portal(0,size-24 ,0,size-24,24,24,8);
-      this.randomLadders(750, 0, size, 0, size, 1, 2, 24, 32, 13, 16);
+      this.randomLadders(750, Outer, size-Outer, Outer, size-Outer, 1, 2, 24, 32, 13, 16);
+      this.ladderRing(Center, Center, Center, Center, Inner, Inner, 0, 0);
     }
       this.setMap();
 	},
