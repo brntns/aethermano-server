@@ -8,31 +8,41 @@ exports.Map = function(){
 
 	this.mapData = {
     "height":16,
-       "layers":[{
-       "data":[],
-        "height":ret,
-        "name":"Tile Layer 1",
-        "opacity":1,
-        "type":"tilelayer",
-        "visible":true,
-        "width":ret,
-        "x":2,
-        "y":2
+    "layers":[{
+      "data":[],
+      "height":ret,
+      "name":"Tile Layer 1",
+      "opacity":1,
+      "type":"tilelayer",
+      "visible":true,
+      "width":ret,
+      "x":2,
+      "y":2
+    },
+    { "data":[],
+      "height":ret,
+      "name":"Tile Layer 2",
+      "opacity":1,
+      "type":"tilelayer",
+      "visible":true,
+      "width":ret,
+      "x":2,
+      "y":2
     }],
     "orientation":"orthogonal",
     "properties":{},
     "tileheight":16,
     "tilesets":[{
-       "firstgid":1,
-       "image":"tiles-1.png",
-       "imageheight":128,
-       "imagewidth":272,
-       "margin":0,
-       "name":"tiles-1",
-       "properties":{},
-       "spacing":0,
-       "tileheight":16,
-       "tilewidth":16
+      "firstgid":1,
+      "image":"tiles-1.png",
+      "imageheight":128,
+      "imagewidth":272,
+      "margin":0,
+      "name":"tiles-1",
+      "properties":{},
+      "spacing":0,
+      "tileheight":16,
+      "tilewidth":16
     }],
     "tilewidth":16,
     "version":1,
@@ -42,6 +52,7 @@ exports.Map = function(){
   };
   this.ret = ret;
   this.map = [];
+  this.ladders = [];
   this.maps = [];
 };
 exports.Map.prototype = {
@@ -394,6 +405,30 @@ worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, len
       }
     }
   },
+  randomLadders: function randomLadders(numb, posXMin, posXMax, posYMin, posYMax, sizeXMin, sizeXMax, sizeYMin, sizeYMax, colourMin, colourMax) {
+    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
+    var num = Math.floor(TSize/numb);
+    for (var y = 0; y < num; y++) {
+      var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+      var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
+      var SizeX = Math.floor(Math.random()*(sizeXMax-sizeXMin+1)+sizeXMin);
+      var SizeY = Math.floor(Math.random()*(sizeYMax-sizeYMin+1)+sizeYMin);
+      for (var z = 0; z < SizeX;z++){
+        for (var i = 0; i < SizeY; i++){
+          var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
+          this.ladders[PosX+PosY*ret+z+i*ret] = Colour;
+        }
+      }
+    }
+  },
+  makeLadders: function makeLadders(posX, posY, sizeX, sizeY, colourMin, colourMax) {
+    for (var z = 0; z < sizeX;z++){
+      for (var i = 0; i < sizeY; i++){
+        var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
+        this.ladders[posX+posY*ret+z+i*ret] = Colour;
+      }
+    }
+  },
   Random: function Random(rndMin, rndMax) {
     var x = Math.floor(Math.random()*(rndMax-rndMin+1)+rndMin);
     return x;
@@ -404,6 +439,7 @@ worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, len
   //Clear Terrain
   	for (var y = 0; y < this.mapSize; y++) {
     		this.map[y] = 0;
+        this.ladders[y] = 0;
   	}
     if (size < 300) {
       this.makeTerrain(0, 0, size, size, 0, 0);
@@ -507,11 +543,13 @@ worm: function worm(seg, posXMin, posXMax, posYMin, posYMax, startX, startY, len
       this.randomSnakes(1500, 0, 15, 30, size-Realms-Overlap, size, 0, Realms+Overlap, 3, 12, 4, 16, 3, 3, 0, 0);
     //Portal Spawn
     	this.portal(0,size-24 ,0,size-24,24,24,8);
+      this.randomLadders(750, 0, size, 0, size, 1, 2, 24, 32, 13, 16);
     }
       this.setMap();
 	},
 	setMap: function(){
      this.mapData.layers[0].data = this.map;
+     this.mapData.layers[1].data = this.ladders;
      this.maps.push(this.mapData);
 //      console.log(this.maps);
 	}
