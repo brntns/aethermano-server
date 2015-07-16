@@ -105,7 +105,7 @@ exports.Map.prototype = {
       }
     }
   },
-  portal: function portal(posXMin, posXMax, posYMin, posYMax, sizeX, sizeY, portalRadius) {
+  portal: function portal(posXMin, posXMax, posYMin, posYMax, sizeX, sizeY, portalRadius, colourMin, colourMax) {
     console.log("generating portal. coordinates:");
   	var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
   	var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
@@ -115,7 +115,7 @@ exports.Map.prototype = {
   	for (var z = 0; z < sizeX; z++){
   		for (var i = 0; i < sizeY; i++){
   			if(Math.sqrt((z-sizeX/2)*(z-sizeX/2)+(i-sizeY/2)*(i-sizeY/2)) < portalRadius){
-  				var portalColour = Math.floor(Math.random()*4+13);
+  				var portalColour = this.Random(colourMin, colourMax)
   				this.map[PosX+PosY*ret+z+i*ret] = portalColour;
   			}
   			else {
@@ -426,7 +426,9 @@ exports.Map.prototype = {
       this.randomTerrain(3750, 0, size, 0, size, 24, 32, 24, 32, 0, 0);
       this.makeTerrain(Outer, Outer, size-2*Outer, size-2*Outer, 0, 0);
     // Center Part of the Map
+      //Ladders
       this.randomTerrain(750, Outer, size-Outer, Outer, size-Outer, 1, 2, 24, 32, 13, 16);
+      //Terrain
       this.randomTerrain(100,Outer, size-Outer, Outer , size-Outer, 3, 30, 1, 2, 122, 136);
       this.randomTerrain(1000,Outer-Overlap, size-Outer+Overlap, Outer-Overlap , size-Outer+Overlap, 3, 30, 3, 30, 0, 0);
       this.randomTerrain(700,Outer, size-Outer, Outer , size-Outer, 1, 10, 1, 1, 122, 136);
@@ -509,7 +511,7 @@ exports.Map.prototype = {
       this.randomSnakes(1000, 0, 15, 30, size-Realms-Overlap, size, 0, Realms+Overlap, 3, 12, 4, 16, 2, 2, 0, 0);
       this.randomSnakes(1500, 0, 15, 30, size-Realms-Overlap, size, 0, Realms+Overlap, 3, 12, 4, 16, 3, 3, 0, 0);
     //Portal Spawn
-    	this.portal(0,size-24 ,0,size-24,24,24,8);
+    	this.portal(0,size-24 ,0,size-24,24,24,8, 13, 16);
     }
       this.setMap();
 	},
