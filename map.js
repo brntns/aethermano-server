@@ -18,16 +18,6 @@ exports.Map = function(){
       "width":ret,
       "x":2,
       "y":2
-    },
-    { "data":[],
-      "height":ret,
-      "name":"Tile Layer 2",
-      "opacity":1,
-      "type":"tilelayer",
-      "visible":true,
-      "width":ret,
-      "x":2,
-      "y":2
     }],
     "orientation":"orthogonal",
     "properties":{},
@@ -52,7 +42,6 @@ exports.Map = function(){
   };
   this.ret = ret;
   this.map = [];
-  this.ladders = [];
   this.maps = [];
 };
 exports.Map.prototype = {
@@ -404,45 +393,6 @@ exports.Map.prototype = {
       }
     }
   },
-  randomLadders: function randomLadders(numb, posXMin, posXMax, posYMin, posYMax, sizeXMin, sizeXMax, sizeYMin, sizeYMax, colourMin, colourMax) {
-    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
-    var num = Math.floor(TSize/numb);
-    for (var y = 0; y < num; y++) {
-      var PosX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
-      var PosY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
-      var SizeX = Math.floor(Math.random()*(sizeXMax-sizeXMin+1)+sizeXMin);
-      var SizeY = Math.floor(Math.random()*(sizeYMax-sizeYMin+1)+sizeYMin);
-      for (var z = 0; z < SizeX;z++){
-        for (var i = 0; i < SizeY; i++){
-          var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-          this.ladders[PosX+PosY*ret+z+i*ret] = Colour;
-        }
-      }
-    }
-  },
-  ladderRing: function ladderRing(posXMin, posXMax, posYMin, posYMax, radius, thick, colourMin, colourMax) {
-    var PosX = this.Random(posXMin,posXMax);
-    var PosY = this.Random(posYMin,posYMax);
-    for (var z = -radius; z < radius; z++){
-      for (var i = -radius; i < radius; i++){
-        var rad = Math.sqrt(z*z+i*i);
-        if(rad > radius-thick && rad <= radius){
-          var ringColour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-          if (PosX+z <= ret-1 && PosX+z >= 0 && PosY+i <= ret-1 && PosY+i >= 0 ) {
-            this.ladders[PosX+PosY*ret+z+i*ret] = ringColour;
-          }
-        }
-      }
-    }
-  },
-  makeLadders: function makeLadders(posX, posY, sizeX, sizeY, colourMin, colourMax) {
-    for (var z = 0; z < sizeX;z++){
-      for (var i = 0; i < sizeY; i++){
-        var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
-        this.ladders[posX+posY*ret+z+i*ret] = Colour;
-      }
-    }
-  },
   Random: function Random(rndMin, rndMax) {
     var x = Math.floor(Math.random()*(rndMax-rndMin+1)+rndMin);
     return x;
@@ -453,7 +403,6 @@ exports.Map.prototype = {
   //Clear Terrain
   	for (var y = 0; y < this.mapSize; y++) {
     		this.map[y] = 0;
-        this.ladders[y] = 0;
   	}
     if (size < 300) {
       this.makeTerrain(0, 0, size, size, 17, 43);
@@ -477,6 +426,7 @@ exports.Map.prototype = {
       this.randomTerrain(3750, 0, size, 0, size, 24, 32, 24, 32, 0, 0);
       this.makeTerrain(Outer, Outer, size-2*Outer, size-2*Outer, 0, 0);
     // Center Part of the Map
+      this.randomTerrain(750, Outer, size-Outer, Outer, size-Outer, 1, 2, 24, 32, 13, 16);
       this.randomTerrain(100,Outer, size-Outer, Outer , size-Outer, 3, 30, 1, 2, 122, 136);
       this.randomTerrain(1000,Outer-Overlap, size-Outer+Overlap, Outer-Overlap , size-Outer+Overlap, 3, 30, 3, 30, 0, 0);
       this.randomTerrain(700,Outer, size-Outer, Outer , size-Outer, 1, 10, 1, 1, 122, 136);
@@ -560,14 +510,11 @@ exports.Map.prototype = {
       this.randomSnakes(1500, 0, 15, 30, size-Realms-Overlap, size, 0, Realms+Overlap, 3, 12, 4, 16, 3, 3, 0, 0);
     //Portal Spawn
     	this.portal(0,size-24 ,0,size-24,24,24,8);
-      this.randomLadders(750, Outer, size-Outer, Outer, size-Outer, 1, 2, 24, 32, 13, 16);
-      this.ladderRing(Center, Center, Center, Center, Inner, Inner, 0, 0);
     }
       this.setMap();
 	},
 	setMap: function(){
      this.mapData.layers[0].data = this.map;
-     this.mapData.layers[1].data = this.ladders;
      this.maps.push(this.mapData);
 //      console.log(this.maps);
 	}
