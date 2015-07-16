@@ -409,7 +409,7 @@ exports.Map.prototype = {
       this.makeTerrain(5, 5, size-5, size-5, 0, 0);
       this.makeTerrain(10,size-10,3,7,17,43);
       this.makeTerrain(10,size-10,7,2,17,43);
-      this.portal(size-24, size-24, size-24, size-24,24,24,8);
+      this.portal(size-24, size-24, size-24, size-24,24,24,8,13,16);
     } else {
     //Set Values
       var Outer = Math.floor(size/6);
