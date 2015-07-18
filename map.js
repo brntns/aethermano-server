@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var ret = 400;
+var ret = 800;
 exports.Map = function(){
 
 	this.mapData = {
@@ -413,8 +413,8 @@ exports.Map.prototype = {
     //Jungle Terrain
     this.randomSnakes(300, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 1, 1, 31, 34);
     this.randomSnakes(300, 30, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 1, 31, 34);
-    this.randomSnakes(1000, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 2, 0, 0);
-    this.randomSnakes(1500, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 3, 3, 0, 0);
+    this.randomSnakes(2000, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 2, 0, 0);
+    this.randomSnakes(3000, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 3, 3, 0, 0);
   },
   Bedrock: function Bedrock(x, y, width, height, overlap) {
     //Bedrock
@@ -424,8 +424,8 @@ exports.Map.prototype = {
     this.makeTerrain(x,y,width,height,132,136);
     this.randomTerrain(3250, x-overlap, x+width+overlap, y-overlap, y+width+overlap, 14, 32, 14, 32, 0, 0);
     //Underground Passages
-    this.randomSnakes(1100, 0, 25, 50, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(7500, 0, 5, 10, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 30, 40, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(7200, 0, 25, 50, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(25000, 0, 5, 10, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 30, 40, 4, 10, 3, 3, 0, 0);
   },
   FireKingdom: function FireKingdom(x, y, width, height, overlap) {
     //Fire Kingdom
@@ -454,7 +454,7 @@ exports.Map.prototype = {
     //Fire Terrain
     this.circle2(2500, x, y, width, height, 2, 6, 1, 3);
     this.circle2(750, x, y, width, height, 4, 3, 1, 3);
-    this.circle2(175, x, y, width, height, 2, 3, 1, 3);
+    this.circle2(275, x, y, width, height, 2, 3, 1, 3);
 
     this.circle2(2500, x, y, width, height, 6, 2, 0, 0);
     this.circle2(1500, x, y, width, height, 4, 3, 0, 0);
@@ -595,9 +595,10 @@ exports.Map.prototype = {
       this.diamond(800, 0, Realms+Overlap, size-Realms-Overlap, size, 9, 11, 9, 11, 122, 126); */
     //Ninth Circle (It's cold there!)
     //Bedrock
-      this.Bedrock(0, 2*Realms, size, 2*Realms, Overlap);
+      this.Bedrock(0, 2*Realms, size, Realms, Overlap);
+      this.Bedrock(0, 4*Realms, size, Realms, Overlap);
     //Hell
-      this.FireKingdom(0, 4*Realms, size, Realms, Overlap);
+      this.FireKingdom(0, 3*Realms, size, Realms, Overlap);
     //Forest
       this.Jungle(0, Realms, size, Realms, Overlap);
     //Cloud Palace
