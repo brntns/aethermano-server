@@ -154,41 +154,41 @@ function startMovement(monster){
 	loop.setInterval(150).run();
 }
 //block
-var fs = require('fs'),
-PNG = require('pngjs').PNG;
-var colormap = require('./colormap');
-
-function writeImg() {
-  var img = new PNG({
-    filterType: 4,
-    width: map.ret,
-    height: map.ret
-  });
-  for (var y = 0; y < img.height; y++) {
-    for (var x = 0; x < img.width; x++) {
-      var idx = (img.width * y + x) << 2;
-      // invert color
-      var colourN = 0;
-      if (map.map[x+map.ret*y] < 69){
-      	colourN = map.map[x+map.ret*y]
-        img.data[idx] = colormap[colourN].r;
-        img.data[idx+1] = colormap[colourN].g;
-        img.data[idx+2] = colormap[colourN].b;
-        // and reduce opacity
-        img.data[idx+3] = 255;
-      } else {
-      	colourN = map.map[x+map.ret*y] - 34;
-        img.data[idx] = colormap[colourN].r;
-        img.data[idx+1] = colormap[colourN].g;
-        img.data[idx+2] = colormap[colourN].b;
-        // and reduce opacity
-        img.data[idx+3] = 255;
-      }
-    }
-  }
-  img.pack().pipe(fs.createWriteStream('out.png'));
-  console.log('map.ret: '+map.ret);
-}
+// var fs = require('fs'),
+// PNG = require('pngjs').PNG;
+// var colormap = require('./colormap');
+//
+// function writeImg() {
+//   var img = new PNG({
+//     filterType: 4,
+//     width: map.ret,
+//     height: map.ret
+//   });
+//   for (var y = 0; y < img.height; y++) {
+//     for (var x = 0; x < img.width; x++) {
+//       var idx = (img.width * y + x) << 2;
+//       // invert color
+//       var colourN = 0;
+//       if (map.map[x+map.ret*y] < 69){
+//       	colourN = map.map[x+map.ret*y]
+//         img.data[idx] = colormap[colourN].r;
+//         img.data[idx+1] = colormap[colourN].g;
+//         img.data[idx+2] = colormap[colourN].b;
+//         // and reduce opacity
+//         img.data[idx+3] = 255;
+//       } else {
+//       	colourN = map.map[x+map.ret*y] - 34;
+//         img.data[idx] = colormap[colourN].r;
+//         img.data[idx+1] = colormap[colourN].g;
+//         img.data[idx+2] = colormap[colourN].b;
+//         // and reduce opacity
+//         img.data[idx+3] = 255;
+//       }
+//     }
+//   }
+//   img.pack().pipe(fs.createWriteStream('out.png'));
+//   console.log('map.ret: '+map.ret);
+// }
 
 
 // // Monster Movement Loops
