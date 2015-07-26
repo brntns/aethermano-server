@@ -40,8 +40,8 @@ io.sockets.on('connection', function (socket) {
 	socket.room = 1;
 	socket.join(1);
 	//spawn points
-	var spawnx = 0;//Math.random()*map.ret*16;//10;
-	var spawny = 0;//Math.random()*map.ret*16;//640*16-10;
+	var spawnx = Math.floor(0.4*Math.random()*map.ret*16+0.3*map.ret);
+	var spawny = Math.floor(0.4*Math.random()*map.ret*16+0.3*map.ret);
 	var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
 	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
 	// add player
@@ -138,6 +138,58 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('removePlayer', player.id);
 	});
 });
+
+// Monster Movement Loops
+function monsterMoveRight(monster){
+	io.sockets.emit('updateMonsters', [monster])
+	console.log(monster);
+}
+function monsterMoveLeft(monster){
+	io.sockets.emit('updateMonsters', [monster])
+	console.log(monster);
+}
+function startMovement(monster){
+	var loop = new Infiniteloop();
+	loop.add(monsterMoveRight,monster);
+	loop.setInterval(150).run();
+}
+//block
+var fs = require('fs'),
+PNG = require('pngjs').PNG;
+var colormap = require('./colormap');
+
+function writeImg() {
+  var img = new PNG({
+    filterType: 4,
+    width: map.ret,
+    height: map.ret
+  });
+  for (var y = 0; y < img.height; y++) {
+    for (var x = 0; x < img.width; x++) {
+      var idx = (img.width * y + x) << 2;
+      // invert color
+      var colourN = 0;
+      if (map.map[x+map.ret*y] < 69){
+      	colourN = map.map[x+map.ret*y]
+        img.data[idx] = colormap[colourN].r;
+        img.data[idx+1] = colormap[colourN].g;
+        img.data[idx+2] = colormap[colourN].b;
+        // and reduce opacity
+        img.data[idx+3] = 255;
+      } else {
+      	colourN = map.map[x+map.ret*y] - 34;
+        img.data[idx] = colormap[colourN].r;
+        img.data[idx+1] = colormap[colourN].g;
+        img.data[idx+2] = colormap[colourN].b;
+        // and reduce opacity
+        img.data[idx+3] = 255;
+      }
+    }
+  }
+  img.pack().pipe(fs.createWriteStream('out.png'));
+  console.log('map.ret: '+map.ret);
+}
+
 
 // // Monster Movement Loops
 // function monsterMoveRight(monster){
