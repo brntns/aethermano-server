@@ -116,6 +116,34 @@ exports.Map.prototype = {
       }
     }
   },
+  addTerrainInBounds: function addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, sizeX, sizeY, colourMin, colourMax) {
+    if ((posX <= posXMax)&&(posY <= posYMax)&&(posX+sizeX > posXMin)&&(posY+sizeY > posYMin)) {
+      var PosX = posX;
+      var PosY = posY;
+      var SizeX = sizeX;
+      var SizeY = sizeY;
+      if (posX < posXMin) {
+        PosX = posXMin;
+      }
+      if (posY < posYMin) {
+        PosY = posYMin;
+      }
+      if (PosX+sizeX > posXMax) {
+        SizeX = posXMax-posX;
+      }
+      if (PosY+sizeY > posYMax) {
+        SizeY = posYMax-posY;
+      }
+      for (var z = 0; z < SizeX;z++){
+        for (var i = 0; i < SizeY; i++){
+          if (this.map[PosX+PosY*ret+z+i*ret] === 0) {
+            var Colour = Math.floor(Math.random()*(colourMax-colourMin+1)+colourMin);
+            this.map[PosX+PosY*ret+z+i*ret] = Colour;
+          }
+        }
+      }
+    }
+  },
   makeTerrainInBounds2: function makeTerrainInBounds2(x, y, width, height, posX, posY, sizeX, sizeY, colour, dcolour) {
     if ((posX <= x+width)&&(posY <= y+height)&&(posX+sizeX > x)&&(posY+sizeY > y)) {
       var PosX = posX;
@@ -138,6 +166,34 @@ exports.Map.prototype = {
         for (var i = 0; i < SizeY; i++){
           var Colour = this.Random(colour,colour+dcolour);
           this.map[PosX+PosY*ret+j+i*ret] = Colour;
+        }
+      }
+    }
+  },
+  addTerrainInBounds2: function addTerrainInBounds2(x, y, width, height, posX, posY, sizeX, sizeY, colour, dcolour) {
+    if ((posX <= x+width)&&(posY <= y+height)&&(posX+sizeX > x)&&(posY+sizeY > y)) {
+      var PosX = posX;
+      var PosY = posY;
+      var SizeX = sizeX;
+      var SizeY = sizeY;
+      if (posX < x) {
+        PosX = x;
+      }
+      if (posY < y) {
+        PosY = y;
+      }
+      if (PosX+sizeX > x+width) {
+        SizeX = x+width-PosX;
+      }
+      if (PosY+sizeY > y+height) {
+        SizeY = y+height-PosY;
+      }
+      for (var j = 0; j < SizeX; j++){
+        for (var i = 0; i < SizeY; i++){
+          if (this.map[PosX+PosY*ret+j+i*ret] === 0) {
+            var Colour = this.Random(colour,colour+dcolour);
+            this.map[PosX+PosY*ret+j+i*ret] = Colour;
+          }
         }
       }
     }
@@ -267,6 +323,16 @@ exports.Map.prototype = {
       this.snake(seg, bend, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
     }
   },
+  addRandomSnakes: function addRandomSnakes(numb, bend, segMin, segMax, posXMin, posXMax, posYMin, posYMax, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+    var TSize = (posXMax - posXMin)*(posYMax - posYMin);
+    var num = Math.floor(TSize/numb);
+    for (var j = 0; j < num; j++) {
+      var startX = Math.floor(Math.random()*(posXMax-posXMin+1)+posXMin);
+      var startY = Math.floor(Math.random()*(posYMax-posYMin+1)+posYMin);
+      var seg = Math.floor(Math.random()*(segMax-segMin+1)+segMin);
+      this.addSnake(seg, bend, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax);
+    }
+  },
   snake: function snake(seg, bend, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
     var posX = startX;
     var posY = startY;
@@ -362,6 +428,101 @@ exports.Map.prototype = {
       var direction = Math.floor(Math.random()*4);
     }
   },
+ addSnake: function addSnake(seg, bend, posXMin, posXMax, posYMin, posYMax, startX, startY, lengthXMin, lengthXMax, lengthYMin, lengthYMax, thickX, thickY, colourMin, colourMax) {
+    var posX = startX;
+    var posY = startY;
+    var lastD = Math.floor(Math.random()*4);
+    var bends = 0;
+    var direction = Math.floor(Math.random()*4);
+    for (var i = 0; i < seg; i++) {
+      //RIGHT
+      if (direction === 0) {
+        //From DOWN
+        if ((lastD === 3)&&(bends > -bend-1)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends--;
+          posX = posX + randLengthX;
+          posY = posY;
+          lastD = 0;
+        //From UP
+        } else if ((lastD === 1)&&(bends < bend+1)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends++;
+          posX = posX + randLengthX + thickX;
+          posY = posY;
+          lastD = 0;
+        } else {
+          i--;
+        }
+      //UP
+      } else if (direction === 1) {
+        //From RIGHT
+        if ((lastD === 0)&&(bends > -1-bend)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+          bends--;
+          posX = posX - thickX;
+          posY = posY - randLengthY;
+          lastD = 1;
+        //From LEFT
+        } else if ((lastD === 2)&&(bends < bend+1)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY-randLengthY, thickX, randLengthY, colourMin, colourMax);
+          bends++;
+          posX = posX;
+          posY = posY - randLengthY;
+          lastD = 1;
+        } else {
+          i--;
+        }
+      //LEFT
+      } else if (direction === 2) {
+        //From UP
+        if ((lastD === 1)&&(bends > -1-bend)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends--;
+          posX = posX - randLengthX;
+          posY = posY;
+          lastD = 2;
+        //From DOWN
+        } else if ((lastD === 3)&&(bends < bend+1)) {
+          var randLengthX = this.Random(lengthXMin, lengthXMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-randLengthX+thickX, posY, randLengthX, thickY, colourMin, colourMax);
+          bends++;
+          posX = posX - randLengthX + thickX;
+          posY = posY;
+          lastD = 2;
+        } else {
+          i--;
+        }
+      //DOWN
+      } else {
+        //From RIGHT
+        if ((lastD === 0)&&(bends < bend+1)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX, posY, thickX, randLengthY, colourMin, colourMax);
+          bends++;
+          posX = posX;
+          posY = posY + randLengthY;
+          lastD = 3;
+        //From LEFT
+        } else if ((lastD === 2)&&(bends > -1-bend)) {
+          var randLengthY = this.Random(lengthYMin, lengthYMax);
+          this.addTerrainInBounds(posXMin, posXMax, posYMin, posYMax, posX-thickX, posY, thickX, randLengthY, colourMin, colourMax);
+          bends--;
+          posX = posX - thickX;
+          posY = posY + randLengthY;
+          lastD = 3;
+        } else {
+          i--;
+        }
+      }
+      var direction = Math.floor(Math.random()*4);
+    }
+  },
   colouring: function colouring(prob, posXMin, posXMax, posYMin, posYMax, colourMin, colourMax) {
     for (var x = posXMin; x < posXMax+1;x++) {
       for (var y = posYMin; y < posYMax; y++) {
@@ -398,13 +559,20 @@ exports.Map.prototype = {
     this.diamond2(800, x-overlap, y-overlap, 2*overlap, height+2*overlap, 14, 3, 14, 3, 0, 0);
     this.diamond2(800, x-overlap, y-overlap, 2*overlap, height+2*overlap, 9, 2, 9, 2, 0, 0);
 
+    //Background
+    this.diamond2(2800, x, y, width, height, 17, 6, 17, 6, 110, 4);
+    this.diamond2(2200, x, y, width, height, 14, 3, 14, 3, 110, 4);
+    this.diamond2(1800, x, y, width, height, 9, 2, 9, 2, 110, 4);
+    this.diamond2(2800, x, y, width, height, 17, 6, 17, 6, 110, 4);
+    this.diamond2(2200, x, y, width, height, 14, 3, 14, 3, 110, 4);
+    this.diamond2(1800, x, y, width, height, 9, 2, 9, 2, 110, 4);
     //Wind Palace Terrain
-    this.diamond2(1800, x, y, width, height, 17, 6, 17, 6, 122, 4);
-    this.diamond2(1200, x, y, width, height, 14, 3, 14, 3, 122, 4);
-    this.diamond2(800, x, y, width, height, 9, 2, 9, 2, 122, 4);
-    this.diamond2(1800, x, y, width, height, 17, 6, 17, 6, 122, 4);
-    this.diamond2(1200, x, y, width, height, 14, 3, 14, 3, 122, 4);
-    this.diamond2(800, x, y, width, height, 9, 2, 9, 2, 122, 4);
+    this.diamond2(2800, x, y, width, height, 17, 6, 17, 6, 122, 4);
+    this.diamond2(2200, x, y, width, height, 14, 3, 14, 3, 122, 4);
+    this.diamond2(1800, x, y, width, height, 9, 2, 9, 2, 122, 4);
+    this.diamond2(2800, x, y, width, height, 17, 6, 17, 6, 122, 4);
+    this.diamond2(2200, x, y, width, height, 14, 3, 14, 3, 122, 4);
+    this.diamond2(1800, x, y, width, height, 9, 2, 9, 2, 122, 4);
   },
   Jungle: function Jungle(x, y, width, height, overlap) {
     // Jungle
@@ -415,6 +583,13 @@ exports.Map.prototype = {
     this.randomSnakes(300, 30, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 1, 31, 34);
     this.randomSnakes(2000, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 2, 0, 0);
     this.randomSnakes(3000, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 3, 3, 0, 0);
+    //Background
+    this.addRandomSnakes(300, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 1, 1, 99, 102);
+    this.addRandomSnakes(300, 30, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 1, 99, 102);
+    this.randomTerrain(150, x-overlap, x+width+overlap, y-overlap, y+overlap, 3, 10, 3, 10, 0, 0);
+    this.randomTerrain(100, x-overlap, x+width+overlap, y-overlap, y, 3, 10, 3, 10, 0, 0);
+    this.randomTerrain(50, x-overlap, x+width+overlap, y-3*Math.floor(overlap/2), y-Math.floor(overlap/2), 5, 15, 5, 15, 0, 0);
+    this.randomTerrain(50, x-overlap, x+width+overlap, y-3*Math.floor(overlap/2), y-Math.floor(overlap/2), 6, 8, 6, 8, 0, 0);
   },
   Bedrock: function Bedrock(x, y, width, height, overlap) {
     //Bedrock
@@ -424,8 +599,9 @@ exports.Map.prototype = {
     this.makeTerrain(x,y,width,height,132,136);
     this.randomTerrain(3250, x-overlap, x+width+overlap, y-overlap, y+width+overlap, 14, 32, 14, 32, 0, 0);
     //Underground Passages
-    this.randomSnakes(7200, 0, 25, 50, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 6, 24, 4, 10, 3, 3, 0, 0);
-    this.randomSnakes(25000, 0, 5, 10, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 30, 40, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(3200, 0, 25, 50, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 6, 24, 4, 10, 3, 3, 0, 0);
+    this.randomSnakes(15000, 0, 5, 10, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 30, 40, 4, 10, 3, 3, 0, 0);
+    this.addTerrainInBounds2(x, y, width, height, x, y, width, height, 112, 0);
   },
   FireKingdom: function FireKingdom(x, y, width, height, overlap) {
     //Fire Kingdom
@@ -595,15 +771,16 @@ exports.Map.prototype = {
       this.diamond(800, 0, Realms+Overlap, size-Realms-Overlap, size, 9, 11, 9, 11, 122, 126); */
     //Ninth Circle (It's cold there!)
     //Bedrock
-      this.Bedrock(0, 2*Realms, size, Realms, Overlap);
-      this.Bedrock(0, 4*Realms, size, Realms, Overlap);
+      var buffer = Math.floor(Realms/3);
+      console.log(buffer);
+      this.Bedrock(0, 2*Realms+buffer, size, Realms, Overlap);
     //Hell
-      this.FireKingdom(0, 3*Realms, size, Realms, Overlap);
+      this.FireKingdom(0, 3*Realms+buffer, size, Realms, Overlap);
     //Forest
-      this.Jungle(0, Realms, size, Realms, Overlap);
+      this.Jungle(0, Realms+buffer, size, Realms, Overlap);
     //Cloud Palace
       this.WindPalace(0, 0, size, Realms, Overlap);
-      this.IceKingdom(0, 5*Realms, size, Realms, Overlap);
+      this.IceKingdom(0, 4*Realms+buffer, size, Realms, Overlap);
     /* Jungle
       //Make Space
       this.makeTerrain(size-Realms, 0, Realms, Realms, 0, 0);
