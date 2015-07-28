@@ -66,6 +66,9 @@ io.sockets.on('connection', function (socket) {
     player.level = data.level;
     socket.broadcast.to(data.level).emit('updatePlayers', [player]);
 	});
+	socket.on('userChat', function(data){
+			io.sockets.emit('updateChat', data);
+	});
 	socket.on('monsterSet', function(monster){
 		// send Monster
 		startMovement(monster);
