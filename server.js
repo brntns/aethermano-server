@@ -91,11 +91,12 @@ io.sockets.on('connection', function (socket) {
 				monsters[i].velox = data.velox;
 				monsters[i].veloy = data.veloy;
 				monsters[i].hp = data.hp;
-
+				monsters[i].aggro = data.aggro;
 			}
 			io.sockets.emit('updateMonsters', monsters[i]);
 		}
 	});
+
 	socket.on('monsterKill', function(monster){
 		console.log('killed' + monster.id)
 			_.remove(monsters, function(m) {
