@@ -4,7 +4,8 @@ var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
 
-var ret = 800;
+var ret = 600;
+
 exports.Map = function(){
 
 	this.mapData = {
@@ -44,6 +45,7 @@ exports.Map = function(){
   this.ret = ret;
   this.map = [];
   this.maps = [];
+	this.locationSprites= [];
 };
 exports.Map.prototype = {
 	create: function create() {
@@ -539,6 +541,15 @@ exports.Map.prototype = {
     var x = Math.floor(Math.random()*(rndMax-rndMin+1)+rndMin);
     return x;
   },
+  jungleHut: function jungleHut(x, y, width, height, overlap) {
+    if (overlap < 2*width && overlap < 2*height) {
+      var X = this.Random(x+overlap,x+width-overlap);
+      var Y = this.Random(y+overlap,y+width-overlap);
+      this.makeTerrainInBounds2(x, y, width, height, X, Y, 6, 4, 0, 0);
+      var hut = {"x":X,"y":Y,"i":1};
+      this.locationSprites.push(hut);
+    }
+  },
   WindPalace: function WindPalace(x, y, width, height, overlap) {
     // Wind Palace
     //Make Space
@@ -584,6 +595,8 @@ exports.Map.prototype = {
     this.randomSnakes(300, 30, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 1, 31, 34);
     this.randomSnakes(2000, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 2, 0, 0);
     this.randomSnakes(3000, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 3, 3, 0, 0);
+    //Native Hut
+    this.jungleHut(x, y, width, height, overlap);
     //Background
     this.addRandomSnakes(300, 0, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 1, 1, 99, 102);
     this.addRandomSnakes(300, 30, 15, 30, x-overlap, x+width+overlap, y-overlap, y+height+overlap, 3, 12, 4, 16, 2, 1, 99, 102);
@@ -801,6 +814,7 @@ exports.Map.prototype = {
 	setMap: function(){
      this.mapData.layers[0].data = this.map;
      this.maps.push(this.mapData);
+     console.log(this.mapData.locationSprites);
 //      console.log(this.maps);
 	}
 };
