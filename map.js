@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var ret = 200;
+var ret = 600;
 exports.Map = function(){
 
 	this.mapData = {
@@ -38,12 +38,12 @@ exports.Map = function(){
     "version":1,
     "width":16,
     "portalPosX":1,
-    "portalPosY":1
+    "portalPosY":1,
+    "locationSprites": []
   };
   this.ret = ret;
   this.map = [];
   this.maps = [];
-  this.locationSprites = null;
 };
 exports.Map.prototype = {
 	create: function create() {
@@ -541,10 +541,11 @@ exports.Map.prototype = {
   },
   jungleHut: function jungleHut(x, y, width, height, overlap) {
     if (overlap < 2*width && overlap < 2*height) {
-      var X = this.Random(x+overlap/,x+width-overlap);
-      var y = this.Random(y+overlap,y+width-overlap);
+      var X = this.Random(x+overlap,x+width-overlap);
+      var Y = this.Random(y+overlap,y+width-overlap);
       this.makeTerrainInBounds2(x, y, width, height, X, Y, 6, 4, 0, 0);
-      this.gameLocationSprites
+      var hut = {"x":X,"y":Y,"i":1};
+      this.mapData.locationSprites.push(hut);
     }
   },
   WindPalace: function WindPalace(x, y, width, height, overlap) {
@@ -808,6 +809,7 @@ exports.Map.prototype = {
 	setMap: function(){
      this.mapData.layers[0].data = this.map;
      this.maps.push(this.mapData);
+     console.log(this.mapData.locationSprites);
 //      console.log(this.maps);
 	}
 };
