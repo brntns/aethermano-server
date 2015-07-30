@@ -38,12 +38,12 @@ exports.Map = function(){
     "version":1,
     "width":16,
     "portalPosX":1,
-    "portalPosY":1,
-    "locationSprites": []
+    "portalPosY":1
   };
   this.ret = ret;
   this.map = [];
   this.maps = [];
+	this.locationSprites= [];
 };
 exports.Map.prototype = {
 	create: function create() {
@@ -545,7 +545,7 @@ exports.Map.prototype = {
       var Y = this.Random(y+overlap,y+width-overlap);
       this.makeTerrainInBounds2(x, y, width, height, X, Y, 6, 4, 0, 0);
       var hut = {"x":X,"y":Y,"i":1};
-      this.mapData.locationSprites.push(hut);
+      this.locationSprites.push(hut);
     }
   },
   WindPalace: function WindPalace(x, y, width, height, overlap) {
@@ -629,7 +629,7 @@ exports.Map.prototype = {
     this.circle2(200, x-overlap, y+height-overlap, width+2*overlap, 2*overlap, 4, 5, 0, 0);
     this.circle2(200, x-overlap, y+height-overlap, width+2*overlap, 2*overlap, 3, 2, 0, 0);
     this.circle2(50, x-overlap, y+height-overlap, width+2*overlap, 2*overlap,  1, 1, 0, 0);
-    
+
     this.circle2(300, x+width-overlap, y-overlap, 2*overlap, height+2*overlap, 7, 6, 0, 0);
     this.circle2(200, x+width-overlap, y-overlap, 2*overlap, height+2*overlap, 4, 5, 0, 0);
     this.circle2(200, x+width-overlap, y-overlap, 2*overlap, height+2*overlap, 3, 2, 0, 0);
