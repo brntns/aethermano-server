@@ -4,7 +4,7 @@ var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
 
-var ret = 600;
+var ret = 300;
 
 exports.Map = function(){
 
