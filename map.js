@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var ret = 600;
+var ret = 150;
 exports.Map = function(){
 
 	this.mapData = {
@@ -542,8 +542,16 @@ exports.Map.prototype = {
   jungleHut: function jungleHut(x, y, width, height, overlap) {
     if (overlap < 2*width && overlap < 2*height) {
       var X = this.Random(x+overlap,x+width-overlap);
-      var Y = this.Random(y+overlap,y+width-overlap);
+      var Y = this.Random(y+overlap,y+height-overlap);
       this.makeTerrainInBounds2(x, y, width, height, X, Y, 6, 4, 0, 0);
+      this.snake(8, 0, x, x + width, y, y + height, X + 3, Y + 2, 5, 10, 4, 6, 4, 4, 0, 0)
+      this.snake(8, 0, x, x + width, y, y + height, X + 3, Y + 2, 5, 10, 4, 6, 4, 4, 0, 0)
+      this.snake(8, 0, x, x + width, y, y + height, X + 3, Y + 2, 5, 10, 4, 6, 4, 4, 0, 0)
+      this.snake(8, 0, x, x + width, y, y + height, X + 3, Y + 2, 5, 10, 4, 6, 4, 4, 0, 0)
+      this.snake(8, 0, x, x + width, y, y + height, X + 3, Y + 2, 5, 10, 4, 6, 4, 4, 0, 0)
+      this.makeTerrainInBounds2(x, y, width, height, X, Y+4, 6, 1, 31, 3);
+      this.makeTerrainInBounds2(x, y, width, height, X + 1, Y+4, 4, 1, 31, 3);
+      //this.makeTerrain(X,0,4,Y,0,0);
       var hut = {"x":X,"y":Y,"i":1};
       this.locationSprites.push(hut);
     }
@@ -681,6 +689,7 @@ exports.Map.prototype = {
   //Clear Terrain
   	for (var y = 0; y < this.mapSize; y++) {
     		this.map[y] = 0;
+        this.locationSprites = [];
   	}
     if (size < 300) {
       this.makeTerrain(0, 0, size, size, 17, 43);
@@ -688,6 +697,7 @@ exports.Map.prototype = {
       this.makeTerrain(10,size-10,3,7,17,43);
       this.makeTerrain(10,size-10,7,2,17,43);
       this.portal(size-24, size-24, size-24, size-24,24,24,8,13,16);
+      this.jungleHut(10,size-20,10,10,0);
     } else {
     //Set Values
       var Outer = Math.floor(size/6);
@@ -809,7 +819,7 @@ exports.Map.prototype = {
 	setMap: function(){
      this.mapData.layers[0].data = this.map;
      this.maps.push(this.mapData);
-     console.log(this.mapData.locationSprites);
+     console.log(this.locationSprites);
 //      console.log(this.maps);
 	}
 };
