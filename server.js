@@ -17,10 +17,10 @@ var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
 //
 for (i = 0; i < monsterNum; i++) {
-	monster.create(map.ret);
+//	monster.create(map.ret);
 }
 //console.log(monster.monsters);
-items.create();
+//items.create();
 //app.listen(process.env.PORT);
 app.listen(8000);
 

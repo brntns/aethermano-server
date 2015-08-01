@@ -7,40 +7,7 @@ var mapWidth = 300;
 var mapHeight = 100;
 exports.Map = function(){
 
-	this.mapData = {
-    "height":16,
-    "layers":[{
-      "data":[],
-      "height":mapHeight,
-      "name":"Tile Layer 1",
-      "opacity":1,
-      "type":"tilelayer",
-      "visible":true,
-      "width":mapWidth,
-      "x":2,
-      "y":2
-    }],
-    "orientation":"orthogonal",
-    "properties":{},
-    "tileheight":16,
-    "tilesets":[{
-      "firstgid":1,
-      "image":"tiles-1.png",
-      "imageheight":128,
-      "imagewidth":272,
-      "margin":0,
-      "name":"tiles-1",
-      "properties":{},
-      "spacing":0,
-      "tileheight":16,
-      "tilewidth":16
-    }],
-    "tilewidth":16,
-    "version":1,
-    "width":16,
-    "portalPosX":1,
-    "portalPosY":1
-  };
+	this.mapData = {};
   this.mapWidth = mapWidth;
   this.mapHeight = mapHeight;
   this.map = [];
@@ -53,21 +20,23 @@ exports.Map = function(){
 exports.Map.prototype = {
   create: function create() {
     console.log('Creating New Map...');
-    this.generate(mapWidth, mapHeight);
+    this.generate(mapWidth, mapHeight,'level');
+		this.generate(50,30,'room');
       //this.setMap();
     console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
   },
   clear: function clear() {
+		this.mapData = {};
     this.mapSize = 0;
     this.map = [];
     this.locationSprites = [];
     this.locations = [];
     this.mapFeatures = [];
   },
-  makeTerrain: function makeTerrain(x, y, width, height, color) {
+  createRoom: function createRoom(x, y, width, height, color) {
     for (var z = 0; z < width; z++){
       for (var i = 0; i < height; i++){
-        this.map[x+y*mapWidth+z+i*mapWidth] = color;
+        this.map[x+y*width+z+i*width] = color;
       }
     }
   },
@@ -88,6 +57,13 @@ exports.Map.prototype = {
     };
     return feature;
   },
+	makeTerrain: function makeTerrain(x, y, width, height, color) {
+		for (var z = 0; z < width; z++){
+			for (var i = 0; i < height; i++){
+				this.map[x+y*mapWidth+z+i*mapWidth] = color;
+			}
+		}
+	},
   Random: function Random(rndMin, rndMax) {
     if (rndMin < rndMax) {
       var x = Math.floor(Math.random()*(rndMax-rndMin+1)+rndMin);
@@ -96,7 +72,7 @@ exports.Map.prototype = {
       return rndMin;
     }
   },
-  randomSpacing: function randomSpacing(value, coeff1, coeff2, buffer1, buffer2) { 
+  randomSpacing: function randomSpacing(value, coeff1, coeff2, buffer1, buffer2) {
     var Val = 0;
     var Values = [];
     var n = 0;
@@ -116,7 +92,7 @@ exports.Map.prototype = {
       return false;
     }
     return !(a.x + a.width < b.x || a.y + a.height < b.y || a.x > b.x + b.width || a.y > b.y + b.height);
-  };
+  },
   mainShafts: function mainShafts(x, y, width, height) {
     var X = 0;
     var Y = 0;
@@ -228,17 +204,58 @@ exports.Map.prototype = {
     this.branchShafts(x, y, width, height);
     this.writeToMap(this.mapFeatures);
   },
-  generate: function generate(mapWidth, mapHeight) {
+  generate: function generate(mapWidth, mapHeight, type) {
+
     this.mapSize = mapWidth * mapHeight;
     //Clear Terrain
-    this.clear();
+    //this.clear();
     for (var i = 0; i < this.mapSize; i++) {
       this.map[i] = 0;
     }
-    this.setMap();
-    this.Bedrock(0, 0, mapWidth, mapHeight);
+		if (type === 'room') {
+			this.setMap(mapWidth, mapHeight, this.maps.length + 1, 'room');
+			this.createRoom(0, 0,  mapWidth , mapHeight / 2 -5, 134)
+			this.createRoom(0, mapHeight / 2 +3 ,  mapWidth , mapHeight / 2 , 134)
+		} else {
+	    this.setMap(mapWidth, mapHeight,this.maps.length + 1,'level');
+	    this.Bedrock(0, 0, mapWidth, mapHeight);
+		}
   },
-  setMap: function(){
+  setMap: function(mapWidth, mapHeight, id, type){
+		this.mapData = {
+			"id": id,
+			"type":type,
+			"height":16,
+			"layers":[{
+				"data":[],
+				"height":mapHeight,
+				"name":"Tile Layer 1",
+				"opacity":1,
+				"type":"tilelayer",
+				"visible":true,
+				"width":mapWidth,
+				"x":2,
+				"y":2
+			}],
+			"orientation":"orthogonal",
+			"properties":{},
+			"tileheight":16,
+			"tilesets":[{
+				"firstgid":1,
+				"image":"tiles-1.png",
+				"imageheight":128,
+				"imagewidth":272,
+				"margin":0,
+				"name":"tiles-1",
+				"properties":{},
+				"spacing":0,
+				"tileheight":16,
+				"tilewidth":16
+			}],
+			"tilewidth":16,
+			"version":1,
+			"width":16
+		};
     this.mapData.layers[0].data = this.map;
     this.maps.push(this.mapData);
     this.locationSprites.push(this.locations);
@@ -246,13 +263,3 @@ exports.Map.prototype = {
     //console.log(this.maps);
   }
 };
-
-
-
-
-
-
-
-
-
-
