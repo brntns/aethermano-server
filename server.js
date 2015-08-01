@@ -17,7 +17,7 @@ var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
 //
 for (i = 0; i < monsterNum; i++) {
-	monster.create(map.ret);
+	//monster.create(map.ret);
 }
 //console.log(monster.monsters);
 items.create();
@@ -110,15 +110,12 @@ io.sockets.on('connection', function (socket) {
   	io.sockets.emit('updateMonsters',monsters);
   });
 	//update level
-  socket.on('requestLevelChange', function (level) {
-		// console.log(level);
-		if (map.maps.length <= level+1) {
-			map.create();
-		}
-    socket.leave(level);
-    socket.join(level + 1);
-    socket.room = level + 1;
-  	socket.emit('changeLevel', {level:socket.room, map:map.maps});
+  socket.on('requestLevelChange', function (data) {
+		console.log(data);
+		socket.leave(data.old);
+		socket.join(data.new);
+		socket.room = data.new;
+		socket.emit('changeLevel', {level:socket.room});
   });
   socket.on('mapUpdated', function(){
     console.log('mapupdated');
