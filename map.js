@@ -26,8 +26,9 @@ exports.Map.prototype = {
     console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
   },
   clear: function clear() {
-    this.mapSize = null;
+
 		this.mapData = {};
+    this.mapSize = 0;
     this.map = [];
     this.locationSprites = [];
     this.locations = [];
