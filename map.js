@@ -79,7 +79,7 @@ exports.Map.prototype = {
       return rndMin;
     }
   },
-  randomSpacing: function randomSpacing(value, coeff1, coeff2, buffer1, buffer2) {
+  randomSpacing: function randomSpacing(value, coeff1, coeff2, buffer1, buffer2) { 
     var Val = 0;
     var Values = [];
     var n = 0;
@@ -97,7 +97,7 @@ exports.Map.prototype = {
   mainShafts: function mainShafts(x, y, width, height) {
     var X = 0;
     var Y = 0;
-    var Width = 5;
+    var Width = 8;
     var Height = 0;
     var boundLeft = 0;
     var boundRight = 0;
@@ -213,13 +213,11 @@ exports.Map.prototype = {
     }
     this.setMap();
     this.Bedrock(0, 0, mapWidth, mapHeight);
-    var Testy = this.randomSpacing(100,40,20,5,10);
-    console.log(Testy);
   },
   setMap: function(){
     this.mapData.layers[0].data = this.map;
     this.maps.push(this.mapData);
-    //this.locationsSprites.push(this.locations);
+    this.locationSprites.push(this.locations);
     //console.log(this.locationSprites);
     //console.log(this.maps);
   }
