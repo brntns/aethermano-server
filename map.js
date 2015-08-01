@@ -34,13 +34,20 @@ exports.Map.prototype = {
     this.locations = [];
     this.mapFeatures = [];
   },
-  makeTerrain: function makeTerrain(x, y, width, height, color) {
+  makeRoom: function makeRoom(x, y, width, height, color) {
     for (var z = 0; z < width; z++){
       for (var i = 0; i < height; i++){
-        this.map[x+y*mapWidth+z+i*mapWidth] = color;
+        this.map[x+y*width+z+i*width] = color;
       }
     }
   },
+	makeTerrain: function makeTerrain(x, y, width, height, color) {
+		for (var z = 0; z < width; z++){
+			for (var i = 0; i < height; i++){
+				this.map[x+y*mapWidth+z+i*mapWidth] = color;
+			}
+		}
+	},
   Random: function Random(rndMin, rndMax) {
     if (rndMin < rndMax) {
       var x = Math.floor(Math.random()*(rndMax-rndMin+1)+rndMin);
@@ -183,15 +190,18 @@ exports.Map.prototype = {
       this.map[i] = 0;
     }
 		if (type === 'room') {
-			this.setMap(mapWidth, mapHeight, 'room'+ (this.maps.length + 1));
+			this.setMap(mapWidth, mapHeight,this.maps.length + 1, 'room');
+			this.makeRoom(0, 0,  mapWidth , mapHeight / 2 -5, 134)
+			this.makeRoom(0, mapHeight / 2 +3 ,  mapWidth , mapHeight / 2 , 134)
 		} else {
-	    this.setMap(mapWidth, mapHeight, 'level'+ (this.maps.length + 1));
+	    this.setMap(mapWidth, mapHeight,this.maps.length + 1,'level');
 	    this.Bedrock(0, 0, mapWidth, mapHeight);
 		}
   },
-  setMap: function(mapWidth, mapHeight,id){
+  setMap: function(mapWidth, mapHeight,id,type){
 		this.mapData = {
 			"id": id,
+			"type":type,
 			"height":16,
 			"layers":[{
 				"data":[],
