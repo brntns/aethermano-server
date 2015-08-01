@@ -6,7 +6,6 @@ var start = process.hrtime();
 var mapWidth = 300;
 var mapHeight = 100;
 exports.Map = function(){
-
 	this.mapData = {};
   this.mapWidth = mapWidth;
   this.mapHeight = mapHeight;
@@ -198,14 +197,11 @@ exports.Map.prototype = {
   Bedrock: function Bedrock(x, y, width, height) {
     this.makeTerrain(x, y, width, height, 134);
     this.mainShafts(x, y, width, height);
-    console.log(this.shafts);
     this.connectShafts(x, y, width, height);
-    //console.log(this.shafts);
     this.branchShafts(x, y, width, height);
     this.writeToMap(this.mapFeatures);
   },
   generate: function generate(mapWidth, mapHeight, type) {
-
     this.mapSize = mapWidth * mapHeight;
     //Clear Terrain
     //this.clear();
