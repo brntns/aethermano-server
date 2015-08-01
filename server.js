@@ -11,7 +11,7 @@ var items = new gameItems.Items();
 var monster = new gameMonster.Monster();
 var monsters = monster.monsters;
 map.create();
-map.create();
+//map.create();
 
 var monsterPerScreen = 0.1;
 var monsterNum = monsterPerScreen*map.mapSize/3072;
@@ -33,8 +33,8 @@ io.sockets.on('connection', function (socket) {
 	socket.room = 1;
 	socket.join(1);
 	//spawn points
-	var spawnx = Math.floor(0.4*Math.random()*map.ret*16+0.3*map.ret);
-	var spawny = Math.floor(0.4*Math.random()*map.ret*16+0.3*map.ret);
+	var spawnx = Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
+	var spawny = Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
 	var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
 	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
 	// add player
@@ -44,7 +44,7 @@ io.sockets.on('connection', function (socket) {
 	//push map
 	socket.emit('getMap', map.maps, map.locationSprites);
 	//update player
-  socket.broadcast.to('level1').emit('updatePlayers', [player])
+  	socket.broadcast.to('level1').emit('updatePlayers', [player])
 	// update Spawnpoints
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
@@ -122,8 +122,8 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('mapUpdated', function(){
     console.log('mapupdated');
-    var spawnx = Math.random()*map.ret*16;
-    var spawny = Math.random()*map.ret*16;
+	var spawnx = Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
+	var spawny = Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
     var respawnPoint = {x: spawnx, y: spawny};
     socket.emit('playerRepawn', respawnPoint);
   });
@@ -157,23 +157,23 @@ var colormap = require('./colormap');
 function writeImg() {
   var img = new PNG({
     filterType: 4,
-    width: map.ret,
-    height: map.ret
+    width: map.mapWidth,
+    height: map.mapHeight
   });
   for (var y = 0; y < img.height; y++) {
     for (var x = 0; x < img.width; x++) {
       var idx = (img.width * y + x) << 2;
       // invert color
       var colourN = 0;
-      if (map.map[x+map.ret*y] < 69){
-      	colourN = map.map[x+map.ret*y]
+      if (map.map[x+map.mapWidth*y] < 69){
+      	colourN = map.map[x+map.mapWidth*y]
         img.data[idx] = colormap[colourN].r;
         img.data[idx+1] = colormap[colourN].g;
         img.data[idx+2] = colormap[colourN].b;
         // and reduce opacity
         img.data[idx+3] = 255;
       } else {
-      	colourN = map.map[x+map.ret*y] - 34;
+      	colourN = map.map[x+map.mapWidth*y] - 34;
         img.data[idx] = colormap[colourN].r;
         img.data[idx+1] = colormap[colourN].g;
         img.data[idx+2] = colormap[colourN].b;
@@ -183,7 +183,8 @@ function writeImg() {
     }
   }
   img.pack().pipe(fs.createWriteStream('out.png'));
-  console.log('map.ret: '+map.ret);
+  console.log('mapWidth: '+map.mapWidth);
+  console.log('mapHeight: '+map.mapHeight);
 }
 
  writeImg();

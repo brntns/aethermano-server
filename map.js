@@ -3,8 +3,8 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var mapWidth = 500;
-var mapHeight = 200;
+var mapWidth = 300;
+var mapHeight = 100;
 exports.Map = function(){
 
 	this.mapData = {
@@ -95,7 +95,6 @@ exports.Map.prototype = {
     return Values;
   },
   mainShafts: function mainShafts(x, y, width, height) {
-    var n = 0;
     var X = 0;
     var Y = 0;
     var Width = 5;
@@ -103,13 +102,13 @@ exports.Map.prototype = {
     var boundLeft = 0;
     var boundRight = 0;
     var shaft = {};
-    var shaftStarts = this.randomSpacing(width,75,37,10,15);
+    var shaftStarts = this.randomSpacing(width,125,75,10,15);
     for (var i = 0; i < shaftStarts.length; i++) {
       X = shaftStarts[i];
       Height = this.Random(Math.floor(height/1.5),height-10);
       this.makeTerrain(X,Y,Width,Height,0);
-      boundLeft = x+i*Math.floor(width/n);
-      boundRight = x+(i+1)*Math.floor(width/n);
+      boundLeft = x+i*Math.floor(width/shaftStarts.length);
+      boundRight = x+(i+1)*Math.floor(width/shaftStarts.length);
       shaft = {
         "x":X,
         "y":Y,
@@ -123,7 +122,6 @@ exports.Map.prototype = {
     }
   },
   connectShafts: function connectShafts(x, y, width, height) {
-    var n = 0;
     var X = 0;
     var Y = 0;
     var Width = 0;
@@ -155,20 +153,56 @@ exports.Map.prototype = {
     var X = 0;
     var Y = 0;
     var Width = 0;
-    var Height = 4;
+    var Height = 3;
     var branch = {};
+    var branches = [];
     if (this.shafts.length > 1) {
-      for (var i = 0; i < this.shafts.length-1; i++) {
-        var branchStarts = this.randomSpacing(this.shafts[i].height, 20, 10, 0, 3);        
+      for (var i = 0; i < this.shafts.length; i++) {
+        branches = [];
+        var branchStartsLeft = this.randomSpacing(this.shafts[i].height, 30, 15, 3, 6);
+        for (var j = 0; j < branchStartsLeft.length; j++) {
+          X = this.Random(this.shafts[i].boundLeft + 5, this.shafts[i].x - 5);
+          Y = branchStartsLeft[j];
+          Width = this.shafts[i].x - X;
+          branch = {
+            "x":X,
+            "y":Y,
+            "width":Width,
+            "height": Height
+          };
+          branches.push(branch);
+          this.mapFeatures.push(branch);
+          //console.log("pushed branch left");
+        }
+        var branchStartsRight = this.randomSpacing(this.shafts[i].height, 40, 20, 3, 6);
+        for (var j = 0; j < branchStartsRight.length; j++) {
+          X = this.shafts[i].x + this.shafts[i].width;
+          Y = branchStartsRight[j];
+          Width = this.Random(5, this.shafts[i].boundRight - X);
+          branch = {
+            "x":X,
+            "y":Y,
+            "width":Width,
+            "height": Height
+          };
+          branches.push(branch);
+          this.mapFeatures.push(branch);
+          //console.log("pushed branch right");
+        }
+        //console.log(branches);
+        for (var j = 0; j < branches.length; j++) {
+          this.makeTerrain(branches[j].x, branches[j].y, branches[j].width, branches[j].height, 0);
+        }
       }
     }
   },
   Bedrock: function Bedrock(x, y, width, height) {
     this.makeTerrain(x, y, width, height, 134);
     this.mainShafts(x, y, width, height);
+    console.log(this.shafts);
     this.connectShafts(x, y, width, height);
     //console.log(this.shafts);
-    //this.branchShafts(x, y, width, height);
+    this.branchShafts(x, y, width, height);
   },
   generate: function generate(mapWidth, mapHeight) {
     this.mapSize = mapWidth * mapHeight;
