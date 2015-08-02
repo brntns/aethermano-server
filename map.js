@@ -221,7 +221,7 @@ exports.Map.prototype = {
   Bedrock: function Bedrock(x, y, width, height, mapWidth, mapHeight) {
     this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 134);
     //this.makeTerrain(100, 25, 100, 50, mapWidth, mapHeight, 0);
-    this.mainShafts(x, y, width, height);
+    this.mainShafts(x, y-3, width, height);
     this.connectShafts(x, y, width, height);
     this.branchShafts(x, y, width, height, mapWidth, mapHeight);
     //console.log(this.mapFeatures);
