@@ -5,6 +5,7 @@ var debug = true;
 var start = process.hrtime();
 var mapWidth = 300;
 var mapHeight = 100;
+
 exports.Map = function(){
 	this.mapData = {};
   this.mapWidth = mapWidth;
@@ -253,7 +254,7 @@ exports.Map.prototype = {
 			"width":16
 		};
     this.mapData.layers[0].data = this.map;
-    this.maps.push(this.mapData);
+  // this.maps.push(this.mapData);
     this.locationSprites.push(this.locations);
     //console.log(this.locationSprites);
     //console.log(this.maps);

@@ -11,9 +11,16 @@ exports.World = function(){
 };
 exports.World.prototype = {
 	create: function () {
-		map.generate(43, 32,'level');
+		var mapWrap = {
+			map: [],
+			locations:[]
+		};
+
+		map.generate(300, 100,'level');
+	//	map.generate(43, 32,'room');
 	//	map.create();
 	//	console.log(map.maps);
-		this.maps.push(map.maps);
+		mapWrap.map.push(map.mapData);
+		this.maps.push(mapWrap);
 	}
 };

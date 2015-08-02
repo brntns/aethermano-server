@@ -152,10 +152,10 @@ function startMovement(monster){
 	loop.setInterval(150).run();
 }
 // //block
-// var fs = require('fs'),
-// PNG = require('pngjs').PNG;
-// var colormap = require('./colormap');
-//
+var fs = require('fs'),
+PNG = require('pngjs').PNG;
+var colormap = require('./colormap');
+
 // function writeImg() {
 //   var img = new PNG({
 //     filterType: 4,
@@ -188,5 +188,5 @@ function startMovement(monster){
 //   console.log('mapWidth: '+map.mapWidth);
 //   console.log('mapHeight: '+map.mapHeight);
 // }
-//
-//  writeImg();
+
+ //writeImg();
