@@ -13,29 +13,41 @@ exports.World = function(){
 };
 exports.World.prototype = {
 	create: function () {
+
+		this.build(0,'level',300,100);
+		this.build(1,'room',50,30);
+		this.build(2,'room',50,30);
+		this.build(3,'room',50,30);
+		this.build(4,'room',50,30);
+		this.build(5,'level',300,100);
+		this.build(6,'level',300,100);
+		console.log(this.maps);
+
+	},
+	build: function build(id,type,width,height){
 		var mapWrap = {
-			id:'',
+			id:id,
 			map: [],
 			locations:[],
 			spawnpoints:[]
 		};
-		//level 1
-		map.generate(300, 100,'level');
-		mapWrap.map.push(map.mapData);
-		var X = map.rooms[0].x;
-		var Y = map.rooms[0].y + map.rooms[0].height - 4;
-		// console.log(Y);
-		// console.log(X);
-		items.createItem(X,Y,'door');
+		//level
+		map.generate(width,height,type);
+		//door
+		console.log(map.rooms[id]);
+		if(type === 'level'){
+			var doorX = map.rooms[id].x;
+			var doorY = map.rooms[id].y + map.rooms[id].height - 4;
+		}else{
+			var doorX = width / 2;
+			var doorY = height / 2;
+		}
+		items.createItem(doorX,doorY,'door',id + 1);
 		// push and clear
+		mapWrap.map.push(map.mapData);
 		mapWrap.locations.push(items.itemData);
 		this.maps.push(mapWrap);
 		map.clear();
-		//room 1
-		map.generate(50, 30,'room');
-		mapWrap.map.push(map.mapData);
-		this.maps.push(mapWrap);
-		map.clear();
-		console.log(map.rooms);
+		items.clear();
 	}
 };

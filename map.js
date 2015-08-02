@@ -21,6 +21,7 @@ exports.Map.prototype = {
 		this.mapData = {};
     this.mapSize = 0;
     this.map = [];
+		this.rooms = [];
     this.locationSprites = [];
     this.locations = [];
     this.mapFeatures = [];

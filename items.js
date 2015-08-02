@@ -8,12 +8,16 @@ exports.Items = function(){
 
 };
 exports.Items.prototype = {
-  createItem: function(x,y,type){
+  createItem: function(x,y,type,loc){
     var item = {
       "type":type,
 			"x":x,
 			"y":y,
+			"location":loc
     };
-    this.itemData = (item);
-  }
+    this.itemData = item;
+  },
+	clear: function clear(){
+			this.itemData = {};
+	}
 };
