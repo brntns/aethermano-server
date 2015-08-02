@@ -137,7 +137,7 @@ exports.Map.prototype = {
       }
     }
   },
-  branchShafts: function branchShafts(x, y, width, height) {
+  branchShafts: function branchShafts(x, y, width, height, mapWidth, mapHeight) {
     var n = 0;
     var X = 0;
     var Y = 0;
@@ -161,8 +161,8 @@ exports.Map.prototype = {
           var testBranch = this.makeFeature(X, Y, Width-1, Height, 0, 0, 0, 0, 0, 3, 0);
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(room, this.mapFeatures)
-          && this.inMapBounds(branch)
-          && this.inMapBounds(room)) {
+          && this.inMapBounds(branch, mapWidth, mapHeight)
+          && this.inMapBounds(room, mapWidth, mapHeight)) {
             branches.push(branch);
             rooms.push(room);
             this.mapFeatures.push(branch);
@@ -179,8 +179,8 @@ exports.Map.prototype = {
           var testRoom = this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 4, 0)
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(room, this.mapFeatures)
-          && this.inMapBounds(branch)
-          && this.inMapBounds(room)) {
+          && this.inMapBounds(branch, mapWidth, mapHeight)
+          && this.inMapBounds(room, mapWidth, mapHeight)) {
             branches.push(branch);
             rooms.push(room);
             this.mapFeatures.push(branch);
@@ -220,12 +220,12 @@ exports.Map.prototype = {
   },
   Bedrock: function Bedrock(x, y, width, height, mapWidth, mapHeight) {
     this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 134);
-    this.makeTerrain(100, 25, 100, 50, mapWidth, mapHeight, 0);
+    //this.makeTerrain(100, 25, 100, 50, mapWidth, mapHeight, 0);
     this.mainShafts(x, y, width, height);
     this.connectShafts(x, y, width, height);
-    this.branchShafts(x, y, width, height);
+    this.branchShafts(x, y, width, height, mapWidth, mapHeight);
     //console.log(this.mapFeatures);
-    this.writeToMap(this.mapFeatures);
+    this.writeToMap(this.mapFeatures, mapWidth, mapHeight);
   },
   generate: function generate(mapWidth, mapHeight, type) {
     this.mapSize = mapWidth * mapHeight;
