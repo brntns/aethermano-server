@@ -44,7 +44,7 @@ io.sockets.on('connection', function (socket) {
 	// connect player
 	socket.emit('playerConnected', player);
 	//push map
-	socket.emit('getMap', world.maps, map.locationSprites);
+	socket.emit('getMap', world.maps);
 	//update player
   	socket.broadcast.to('level1').emit('updatePlayers', [player])
 	// update Spawnpoints
@@ -192,4 +192,3 @@ function writeImg() {
 }
 writeImg();
 */
-
