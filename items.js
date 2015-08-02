@@ -4,40 +4,16 @@ var debug = true;
 var start = process.hrtime();
 
 exports.Items = function(){
-	this.itemData = {
-    "width":16,
-    "data":[]
-  };
+	this.itemData = {};
 
 };
 exports.Items.prototype = {
-	create: function () {
-		console.log('Creating Items...');
-    this.createItem();
-		console.log('Done Creating Items!');
-	},
-  createItem: function(){
-    var phaseboots = {
-      "name":"phaseers",
-      "awesome": true
+  createItem: function(x,y,type){
+    var item = {
+      "type":type,
+			"x":x,
+			"y":y,
     };
-
-    this.itemData.data.push(phaseboots)
+    this.itemData = (item);
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

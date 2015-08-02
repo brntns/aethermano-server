@@ -3,12 +3,10 @@ var app = require('http').createServer()
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
 	, gameWorld = require('./world.js')
-  , gameItems = require('./items.js')
 	, gameMonster = require('./monster.js');
 var Infiniteloop = require('infinite-loop');
 
 var map = new gameMap.Map();
-var items = new gameItems.Items();
 var world = new gameWorld.World();
 var monster = new gameMonster.Monster();
 var monsters = monster.monsters;

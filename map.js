@@ -122,7 +122,7 @@ exports.Map.prototype = {
     var X = 0;
     var Y = 0;
     var Width = 0;
-    var Height = 4;
+    var Height = 8;
     var connector = {};
     if (this.shafts.length > 1) {
       for (var i = 0; i < this.shafts.length-1; i++) {
@@ -144,7 +144,7 @@ exports.Map.prototype = {
     var X = 0;
     var Y = 0;
     var Width = 0;
-    var Height = 3;
+    var Height = 7;
     var branch = {};
     var room = {};
     var sizeX = 0;
@@ -154,8 +154,8 @@ exports.Map.prototype = {
         var branchStarts = this.randomSpacing(this.shafts[i].height, 10, 5, 3, 3 + Height);
         for (var j = 0; j < branchStarts.length; j++) {
           branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 0);
-          sizeX = this.Random(14,30);
-          sizeY = this.Random(7,sizeX+2);
+          sizeX = this.Random(18,32);
+          sizeY = this.Random(12,sizeX+2);
           var offset = this.Random(0,3);
           room = this.makeRoom(branch, sizeX, sizeY, offset);
           var testBranch = this.makeFeature(branch.x-1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
@@ -174,7 +174,7 @@ exports.Map.prototype = {
         for (var j = 0; j < branchStarts.length; j++) {
           branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 1);
           sizeX = this.Random(14,30);
-          sizeY = this.Random(7,sizeX+2);
+          sizeY = this.Random(12,sizeX+2);
           var offset = this.Random(0,3);
           room = this.makeRoom(branch, sizeX, sizeY, offset);
           var testBranch = this.makeFeature(branch.x+1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
@@ -269,8 +269,8 @@ exports.Map.prototype = {
 			"tilesets":[{
 				"firstgid":1,
 				"image":"tiles-1.png",
-				"imageheight":128,
-				"imagewidth":272,
+				"imageheight":16,
+				"imagewidth":304,
 				"margin":0,
 				"name":"tiles-1",
 				"properties":{},
