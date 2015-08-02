@@ -8,6 +8,8 @@ exports.Map = function(){
   this.map = [];
   this.maps = [];
   this.shafts = [];
+  this.branches = [];
+  this.rooms = [];
 	this.locationSprites = [];
   this.locations = [];
   this.mapFeatures = [];
@@ -144,14 +146,11 @@ exports.Map.prototype = {
     var Width = 0;
     var Height = 3;
     var branch = {};
-    var branches = [];
     var room = {};
-    var rooms = [];
     var sizeX = 0;
     var sizeY = 0;
     if (this.shafts.length > 1) {
       for (var i = 0; i < this.shafts.length; i++) {
-        branches = [];
         var branchStarts = this.randomSpacing(this.shafts[i].height, 10, 5, 3, 6);
         for (var j = 0; j < branchStarts.length; j++) {
           branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 0);
@@ -163,8 +162,8 @@ exports.Map.prototype = {
           && !this.intersectAll(room, this.mapFeatures)
           && this.inMapBounds(branch, mapWidth, mapHeight)
           && this.inMapBounds(room, mapWidth, mapHeight)) {
-            branches.push(branch);
-            rooms.push(room);
+            this.branches.push(branch);
+            this.rooms.push(room);
             this.mapFeatures.push(branch);
             this.mapFeatures.push(room);
           }
@@ -181,8 +180,8 @@ exports.Map.prototype = {
           && !this.intersectAll(room, this.mapFeatures)
           && this.inMapBounds(branch, mapWidth, mapHeight)
           && this.inMapBounds(room, mapWidth, mapHeight)) {
-            branches.push(branch);
-            rooms.push(room);
+            this.branches.push(branch);
+            this.rooms.push(room);
             this.mapFeatures.push(branch);
             this.mapFeatures.push(room);
           }
