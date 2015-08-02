@@ -20,7 +20,7 @@ exports.Map.prototype = {
   create: function create() {
     console.log('Creating New Map...');
     this.generate(mapWidth, mapHeight,'level');
-		//this.generate(50,30,'room');
+	//	this.generate(50,30,'room');
       //this.setMap();
     console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
   },

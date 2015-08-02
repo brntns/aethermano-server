@@ -2,15 +2,17 @@ var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
 	, gameMap = require('./map.js')
+	, gameWorld = require('./world.js')
   , gameItems = require('./items.js')
 	, gameMonster = require('./monster.js');
 var Infiniteloop = require('infinite-loop');
 
 var map = new gameMap.Map();
 var items = new gameItems.Items();
+var world = new gameWorld.World();
 var monster = new gameMonster.Monster();
 var monsters = monster.monsters;
-map.create();
+world.create();
 //map.create();
 
 var monsterPerScreen = 0.1;
@@ -42,7 +44,7 @@ io.sockets.on('connection', function (socket) {
 	// connect player
 	socket.emit('playerConnected', player);
 	//push map
-	socket.emit('getMap', map.maps, map.locationSprites);
+	socket.emit('getMap', world.maps, map.locationSprites);
 	//update player
   	socket.broadcast.to('level1').emit('updatePlayers', [player])
 	// update Spawnpoints
@@ -149,42 +151,42 @@ function startMovement(monster){
 	loop.add(monsterMoveRight,monster);
 	loop.setInterval(150).run();
 }
-//block
-var fs = require('fs'),
-PNG = require('pngjs').PNG;
-var colormap = require('./colormap');
-
-function writeImg() {
-  var img = new PNG({
-    filterType: 4,
-    width: map.mapWidth,
-    height: map.mapHeight
-  });
-  for (var y = 0; y < img.height; y++) {
-    for (var x = 0; x < img.width; x++) {
-      var idx = (img.width * y + x) << 2;
-      // invert color
-      var colourN = 0;
-      if (map.map[x+map.mapWidth*y] < 69){
-      	colourN = map.map[x+map.mapWidth*y]
-        img.data[idx] = colormap[colourN].r;
-        img.data[idx+1] = colormap[colourN].g;
-        img.data[idx+2] = colormap[colourN].b;
-        // and reduce opacity
-        img.data[idx+3] = 255;
-      } else {
-      	colourN = map.map[x+map.mapWidth*y] - 34;
-        img.data[idx] = colormap[colourN].r;
-        img.data[idx+1] = colormap[colourN].g;
-        img.data[idx+2] = colormap[colourN].b;
-        // and reduce opacity
-        img.data[idx+3] = 255;
-      }
-    }
-  }
-  img.pack().pipe(fs.createWriteStream('out.png'));
-  console.log('mapWidth: '+map.mapWidth);
-  console.log('mapHeight: '+map.mapHeight);
-}
-
- writeImg();
+// //block
+// var fs = require('fs'),
+// PNG = require('pngjs').PNG;
+// var colormap = require('./colormap');
+//
+// function writeImg() {
+//   var img = new PNG({
+//     filterType: 4,
+//     width: map.mapWidth,
+//     height: map.mapHeight
+//   });
+//   for (var y = 0; y < img.height; y++) {
+//     for (var x = 0; x < img.width; x++) {
+//       var idx = (img.width * y + x) << 2;
+//       // invert color
+//       var colourN = 0;
+//       if (map.map[x+map.mapWidth*y] < 69){
+//       	colourN = map.map[x+map.mapWidth*y]
+//         img.data[idx] = colormap[colourN].r;
+//         img.data[idx+1] = colormap[colourN].g;
+//         img.data[idx+2] = colormap[colourN].b;
+//         // and reduce opacity
+//         img.data[idx+3] = 255;
+//       } else {
+//       	colourN = map.map[x+map.mapWidth*y] - 34;
+//         img.data[idx] = colormap[colourN].r;
+//         img.data[idx+1] = colormap[colourN].g;
+//         img.data[idx+2] = colormap[colourN].b;
+//         // and reduce opacity
+//         img.data[idx+3] = 255;
+//       }
+//     }
+//   }
+//   img.pack().pipe(fs.createWriteStream('out.png'));
+//   console.log('mapWidth: '+map.mapWidth);
+//   console.log('mapHeight: '+map.mapHeight);
+// }
+//
+//  writeImg();
