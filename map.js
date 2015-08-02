@@ -3,12 +3,8 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var mapWidth = 300;
-var mapHeight = 100;
 exports.Map = function(){
 	this.mapData = {};
-  this.mapWidth = mapWidth;
-  this.mapHeight = mapHeight;
   this.map = [];
   this.maps = [];
   this.shafts = [];
@@ -17,13 +13,8 @@ exports.Map = function(){
   this.mapFeatures = [];
 };
 exports.Map.prototype = {
-  create: function create() {
-    console.log('Creating New Map...');
-    this.generate(mapWidth, mapHeight,'level');
-	//	this.generate(50,30,'room');
-      //this.setMap();
-    console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
-  },
+    //console.log('Creating New Map...');
+    //console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
   clear: function clear() {
 		this.mapData = {};
     this.mapSize = 0;
@@ -56,7 +47,7 @@ exports.Map.prototype = {
     };
     return feature;
   },
-	makeTerrain: function makeTerrain(x, y, width, height, color) {
+	makeTerrain: function makeTerrain(x, y, width, height, mapWidth, mapHeight, color) {
 		for (var z = 0; z < width; z++){
 			for (var i = 0; i < height; i++){
 				this.map[x+y*mapWidth+z+i*mapWidth] = color;
@@ -100,7 +91,7 @@ exports.Map.prototype = {
     }
     return false;
   },
-  inMapBounds: function inMapBounds (object) {
+  inMapBounds: function inMapBounds (object, mapWidth, mapHeight) {
     if (object.x < 0 || object.x + object.width > mapWidth || object.y < 0 || object.y + object.height > mapHeight) {
       return false;
     }
@@ -222,13 +213,13 @@ exports.Map.prototype = {
     var Height = sizeY;
     return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 4, 0);
   },
-  writeToMap: function writeToMap(array) {
+  writeToMap: function writeToMap(array, mapWidth, mapHeight) {
     for (var j = 0; j < array.length; j++) {
-      this.makeTerrain(array[j].x, array[j].y, array[j].width, array[j].height, array[j].color);
+      this.makeTerrain(array[j].x, array[j].y, array[j].width, array[j].height, mapWidth, mapHeight, array[j].color);
     }
   },
-  Bedrock: function Bedrock(x, y, width, height) {
-    this.makeTerrain(x, y, width, height, 134);
+  Bedrock: function Bedrock(x, y, width, height, mapWidth, mapHeight) {
+    this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 134);
     this.mainShafts(x, y, width, height);
     this.connectShafts(x, y, width, height);
     this.branchShafts(x, y, width, height);
@@ -247,7 +238,7 @@ exports.Map.prototype = {
 			this.createRoom(0, mapHeight / 2 +3 ,  mapWidth , mapHeight / 2 , 134)
 		} else {
 	    this.setMap(mapWidth, mapHeight,this.maps.length + 1,'level');
-	    this.Bedrock(0, 0, mapWidth, mapHeight);
+	    this.Bedrock(0, 0, mapWidth, mapHeight, mapWidth, mapHeight);
 		}
   },
   setMap: function(mapWidth, mapHeight, id, type){
