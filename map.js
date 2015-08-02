@@ -20,7 +20,7 @@ exports.Map.prototype = {
   create: function create() {
     console.log('Creating New Map...');
     this.generate(mapWidth, mapHeight,'level');
-		this.generate(50,30,'room');
+		//this.generate(50,30,'room');
       //this.setMap();
     console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
   },
@@ -92,6 +92,20 @@ exports.Map.prototype = {
     }
     return !(a.x + a.width < b.x || a.y + a.height < b.y || a.x > b.x + b.width || a.y > b.y + b.height);
   },
+  intersectAll: function intersectAll(object, group) {
+    for (var i = 0; i < group.length; i++) {
+      if (this.intersect(object, group[i])) {
+        return true;
+      }
+    }
+    return false;
+  },
+  inMapBounds: function inMapBounds (object) {
+    if (object.x < 0 || object.x + object.width > mapWidth || object.y < 0 || object.y + object.height > mapHeight) {
+      return false;
+    }
+    return true;
+  },
   mainShafts: function mainShafts(x, y, width, height) {
     var X = 0;
     var Y = 0;
@@ -147,44 +161,63 @@ exports.Map.prototype = {
     if (this.shafts.length > 1) {
       for (var i = 0; i < this.shafts.length; i++) {
         branches = [];
-        var branchStartsLeft = this.randomSpacing(this.shafts[i].height, 30, 15, 3, 6);
-        for (var j = 0; j < branchStartsLeft.length; j++) {
-          X = this.Random(this.shafts[i].boundLeft + 5, this.shafts[i].x - 5);
-          Y = branchStartsLeft[j];
-          Width = this.shafts[i].x - X;
-          branch = this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 3, 0);
-          branches.push(branch);
-          sizeX = this.Random(5,15);
-          sizeY = this.Random(5,10);
-          room = this.makeRoom(branch, sizeX, sizeY);
-          rooms.push(room);
-          this.mapFeatures.push(branch);
-          this.mapFeatures.push(room);
+        var branchStarts = this.randomSpacing(this.shafts[i].height, 10, 5, 3, 6);
+        for (var j = 0; j < branchStarts.length; j++) {
+          branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 0);
+          sizeX = this.Random(8,30);
+          sizeY = this.Random(7,25);
+          room = this.makeRoom(branch, sizeX, sizeY, 5);
+          var testBranch = this.makeFeature(X, Y, Width-1, Height, 0, 0, 0, 0, 0, 3, 0);
+          if (!this.intersectAll(testBranch, this.mapFeatures)
+          && !this.intersectAll(room, this.mapFeatures)
+          && this.inMapBounds(branch)
+          && this.inMapBounds(room)) {
+            branches.push(branch);
+            rooms.push(room);
+            this.mapFeatures.push(branch);
+            this.mapFeatures.push(room);
+          }
         }
-        var branchStartsRight = this.randomSpacing(this.shafts[i].height, 40, 20, 3, 6);
-        for (var j = 0; j < branchStartsRight.length; j++) {
-          X = this.shafts[i].x + this.shafts[i].width;
-          Y = branchStartsRight[j];
-          Width = this.Random(5, this.shafts[i].boundRight - X);
-          branch = this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 3, 1);
-          branches.push(branch);
-          sizeX = this.Random(7,15);
-          sizeY = this.Random(5,9);
-          room = this.makeRoom(branch, sizeX, sizeY);
-          rooms.push(room);
-          this.mapFeatures.push(branch);
-          this.mapFeatures.push(room);
+        var branchStarts = this.randomSpacing(this.shafts[i].height, 10, 5, 3, 6);
+        for (var j = 0; j < branchStarts.length; j++) {
+          branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 1);
+          sizeX = this.Random(8,30);
+          sizeY = this.Random(7,25);
+          room = this.makeRoom(branch, sizeX, sizeY, 5);
+          var testBranch = this.makeFeature(X+1, Y - 1, Width, Height + 2, 0, 0, 0, 0, 0, 3, 1);
+          var testRoom = this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 4, 0)
+          if (!this.intersectAll(testBranch, this.mapFeatures)
+          && !this.intersectAll(room, this.mapFeatures)
+          && this.inMapBounds(branch)
+          && this.inMapBounds(room)) {
+            branches.push(branch);
+            rooms.push(room);
+            this.mapFeatures.push(branch);
+            this.mapFeatures.push(room);
+          }
         }
       }
     }
+    console.log(rooms);
   },
-  makeRoom: function makeRoom(object, sizeX, sizeY) {
+  makeBranch: function makeBranch(shafts, branchStarts, X, Y, Width, Height, orientation) {
+    if (orientation === 0) {
+      X = this.Random(shafts.boundLeft + 5, shafts.x - 5);
+      Width = shafts.x - X;
+    } else {
+      X = shafts.x + shafts.width;
+      Width = this.Random(5, shafts.boundRight - X);
+    }
+    Y = branchStarts;
+    return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 3, orientation);
+  },
+  makeRoom: function makeRoom(object, sizeX, sizeY, offset) {
     if (object.subtype === 0) {
       var X = object.x - sizeX;
     } else {
       var X = object.x + object.width;
     }
-    var Y = object.y - sizeY + object.height;
+    var Y = this.Random(object.y - sizeY + object.height, object.y - sizeY + object.height + offset);
     var Width = sizeX;
     var Height = sizeY;
     return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 4, 0);
