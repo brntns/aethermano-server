@@ -156,14 +156,10 @@ exports.Map.prototype = {
           branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 0);
           sizeX = this.Random(14,30);
           sizeY = this.Random(7,sizeX+2);
-          var offset = this.Random(0,5);
+          var offset = this.Random(0,3);
           room = this.makeRoom(branch, sizeX, sizeY, offset);
-          console.log(branch.x);
-          var testBranch = branch;
-          testBranch.x += 1;
-          console.log(branch.x);
-          var testRoom = this.makeRoom(testBranch, sizeX, sizeY, offset);
-          console.log(testBranch);
+          var testBranch = this.makeFeature(branch.x-1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
+          var testRoom = this.makeRoom(testBranch, sizeX + 4, sizeY + 4, offset + 2);
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(testRoom, this.mapFeatures)
           && this.inMapBounds(branch, mapWidth, mapHeight)
@@ -179,10 +175,10 @@ exports.Map.prototype = {
           branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 1);
           sizeX = this.Random(14,30);
           sizeY = this.Random(7,sizeX+2);
-          var offset = this.Random(0,5);
+          var offset = this.Random(0,3);
           room = this.makeRoom(branch, sizeX, sizeY, offset);
-          var testBranch = this.makeFeature(X+1, Y - 1, Width-1, Height + 2, 0, 0, 0, 0, 0, 3, 1);
-          var testRoom = this.makeRoom(testBranch, sizeX + 2, sizeY + 2, offset);
+          var testBranch = this.makeFeature(branch.x+1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
+          var testRoom = this.makeRoom(testBranch, sizeX + 4, sizeY + 4, offset + 2);
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(testRoom, this.mapFeatures)
           && this.inMapBounds(branch, mapWidth, mapHeight)
