@@ -151,7 +151,7 @@ function startMovement(monster){
 	loop.add(monsterMoveRight,monster);
 	loop.setInterval(150).run();
 }
-//block
+// //block
 var fs = require('fs'),
 PNG = require('pngjs').PNG;
 var colormap = require('./colormap');
@@ -189,5 +189,5 @@ function writeImg() {
   console.log('poop');
   console.log('mapHeight: '+world.maps[0].map.mapData.mapWidth);
 }
+writeImg();
 
- writeImg();
