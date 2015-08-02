@@ -12,15 +12,20 @@ exports.World = function(){
 exports.World.prototype = {
 	create: function () {
 		var mapWrap = {
+			id:'',
 			map: [],
-			locations:[]
+			locations:[],
+			spawnpoints:[]
 		};
-
+		//level 1
 		map.generate(300, 100,'level');
-	//	map.generate(43, 32,'room');
-	//	map.create();
-	//	console.log(map.maps);
 		mapWrap.map.push(map.mapData);
 		this.maps.push(mapWrap);
+		map.clear();
+		//room 1
+		map.generate(50, 30,'room');
+		mapWrap.map.push(map.mapData);
+		this.maps.push(mapWrap);
+			map.clear();
 	}
 };

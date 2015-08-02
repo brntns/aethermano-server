@@ -219,7 +219,7 @@ exports.Map.prototype = {
     }
   },
   Bedrock: function Bedrock(x, y, width, height, mapWidth, mapHeight) {
-    this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 134);
+    this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 13);
     //this.makeTerrain(100, 25, 100, 50, mapWidth, mapHeight, 0);
     this.mainShafts(x, y-3, width, height);
     this.connectShafts(x, y, width, height);
@@ -230,14 +230,13 @@ exports.Map.prototype = {
   generate: function generate(mapWidth, mapHeight, type) {
     this.mapSize = mapWidth * mapHeight;
     //Clear Terrain
-    //this.clear();
     for (var i = 0; i < this.mapSize; i++) {
       this.map[i] = 0;
     }
 		if (type === 'room') {
 			this.setMap(mapWidth, mapHeight, this.maps.length + 1, 'room');
-			this.createRoom(0, 0,  mapWidth , mapHeight / 2 -5, 134)
-			this.createRoom(0, mapHeight / 2 +3 ,  mapWidth , mapHeight / 2 , 134)
+			this.makeTerrain(0,0, mapWidth ,mapHeight, mapWidth, mapHeight, 13);
+			this.makeTerrain(mapWidth / 2 -12 ,mapHeight / 2 -8, mapWidth / 2 ,mapHeight /2 , mapWidth, mapHeight, 0);
 		} else {
       this.Bedrock(0, 0, mapWidth, mapHeight, mapWidth, mapHeight);
 	    this.setMap(mapWidth, mapHeight,this.maps.length + 1,'level');
