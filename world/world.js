@@ -2,9 +2,10 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var gameMap = require('./map.js');
+var gameMines = require('./templates/mines.js');
+var treasureroom = require('./templates/treasureroom.js');
 var gameItems = require('./items.js')
-var map = new gameMap.Map();
+var mines = new gameMines.Map();
 var items = new gameItems.Items();
 
 exports.World = function(){
@@ -32,7 +33,7 @@ exports.World.prototype = {
 			spawnpoints:[]
 		};
 		//level
-		map.generate(width,height,type);
+		mines.generate(width,height,type);
 		//door
 		/*console.log(map.rooms[id]);
 		if(type === 'level'){
@@ -44,10 +45,10 @@ exports.World.prototype = {
 		}
 		items.createItem(doorX,doorY,'door',id + 1); */
 		// push and clear
-		mapWrap.map.push(map.mapData);
+		mapWrap.map.push(mines.mapData);
 		mapWrap.locations.push(items.itemData);
 		this.maps.push(mapWrap);
-		map.clear();
+		mines.clear();
 		items.clear();
 	}
 };

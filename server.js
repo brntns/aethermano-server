@@ -1,12 +1,11 @@
 var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
-	, gameMap = require('./map.js')
-	, gameWorld = require('./world.js')
-	, gameMonster = require('./monster.js');
+	, gameWorld = require('./world/world.js')
+	, gameMonster = require('./world/monster.js');
 var Infiniteloop = require('infinite-loop');
 
-var map = new gameMap.Map();
+
 var world = new gameWorld.World();
 var monster = new gameMonster.Monster();
 var monsters = monster.monsters;
@@ -14,11 +13,11 @@ world.create();
 //map.create();
 
 var monsterPerScreen = 0.1;
-var monsterNum = monsterPerScreen*map.mapSize/3072;
+//var monsterNum = monsterPerScreen*map.mapSize/3072;
 //
-for (i = 0; i < monsterNum; i++) {
+// for (i = 0; i < monsterNum; i++) {
 //	monster.create(map.ret);
-}
+//}
 //console.log(monster.monsters);
 //items.create();
 //app.listen(process.env.PORT);
@@ -33,8 +32,8 @@ io.sockets.on('connection', function (socket) {
 	socket.room = 1;
 	socket.join(1);
 	//spawn points
-	var spawnx = Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
-	var spawny = Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
+	var spawnx = 10;//Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
+	var spawny = 10;//Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
 	var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
 	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
 	// add player
@@ -122,8 +121,8 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('mapUpdated', function(){
     console.log('mapupdated');
-	var spawnx = Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
-	var spawny = Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
+	var spawnx = 10;//Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
+	var spawny = 10;//Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
     var respawnPoint = {x: spawnx, y: spawny};
     socket.emit('playerRepawn', respawnPoint);
   });
