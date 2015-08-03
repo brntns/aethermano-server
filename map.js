@@ -199,9 +199,9 @@ exports.Map.prototype = {
           sizeX = this.Random(18,32);
           sizeY = this.Random(12,sizeX+2);
           var offset = this.Random(0,3);
-          room = this.makeRoom(branch, sizeX, sizeY, offset);
+          room = this.makeRoom(branch, sizeX, sizeY, offset, 0);
           var testBranch = this.makeFeature(branch.x-1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
-          var testRoom = this.makeRoom(testBranch, sizeX + 6, sizeY + 6, offset);
+          var testRoom = this.makeRoom(testBranch, sizeX + 6, sizeY + 6, offset, 0);
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(testRoom, this.mapFeatures)
           && this.inMapBounds(testBranch, mapWidth, mapHeight)
@@ -218,9 +218,9 @@ exports.Map.prototype = {
           sizeX = this.Random(14,30);
           sizeY = this.Random(12,sizeX+2);
           var offset = this.Random(0,3);
-          room = this.makeRoom(branch, sizeX, sizeY, offset);
+          room = this.makeRoom(branch, sizeX, sizeY, offset, 1);
           var testBranch = this.makeFeature(branch.x+1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
-          var testRoom = this.makeRoom(testBranch, sizeX + 6, sizeY + 6, offset);
+          var testRoom = this.makeRoom(testBranch, sizeX + 6, sizeY + 6, offset, 1);
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(testRoom, this.mapFeatures)
           && this.inMapBounds(testBranch, mapWidth, mapHeight)
@@ -235,19 +235,19 @@ exports.Map.prototype = {
     }
     //console.log(this.rooms);
   },
-  makeBranch: function makeBranch(shafts, branchStarts, X, Y, Width, Height, orientation) {
+  makeBranch: function makeBranch(object, branchStarts, X, Y, Width, Height, orientation) {
     if (orientation === 0) {
-      X = this.Random(shafts.x - 20, shafts.x - 5);
-      Width = shafts.x - X;
+      X = this.Random(object.x - 20, object.x - 5);
+      Width = object.x - X;
     } else {
-      X = shafts.x + shafts.width;
+      X = object.x + object.width;
       Width = this.Random(5, 20);
     }
     Y = branchStarts;
-    return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 3, orientation);
+    return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 3, object.subtype + 1);
   },
-  makeRoom: function makeRoom(object, sizeX, sizeY, offset) {
-    if (object.subtype === 0) {
+  makeRoom: function makeRoom(object, sizeX, sizeY, offset, orientation) {
+    if (orientation === 0) {
       var X = object.x - sizeX;
     } else {
       var X = object.x + object.width;
@@ -255,7 +255,7 @@ exports.Map.prototype = {
     var Y = object.y - sizeY + object.height + offset;
     var Width = sizeX;
     var Height = sizeY;
-    return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 4, 0);
+    return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 4, object.subtype);
   },
   writeToMap: function writeToMap(array, mapWidth, mapHeight) {
     for (var j = 0; j < array.length; j++) {
@@ -303,7 +303,7 @@ exports.Map.prototype = {
     this.mainShafts(x, y+3, width, height-3);
     this.connectShafts(x, y+3, width, height-3, mapWidth, mapHeight);
     this.makeConnectorRooms(x, y+3, width, height-3, mapWidth, mapHeight);
-    console.log(this.connectorRooms);
+    //console.log(this.connectorRooms);
     this.branchFeature(this.shafts, x, y+3, width, height-3, mapWidth, mapHeight);
     this.branchFeature(this.connectorRooms, x, y+3, width, height-3, mapWidth, mapHeight);
     this.branchFeature(this.rooms, x, y+3, width, height-3, mapWidth, mapHeight);
@@ -312,6 +312,23 @@ exports.Map.prototype = {
     this.randomTerrain(100, x, y, width, height, mapWidth, mapHeight, 14)
     this.writeTiles(mapWidth,mapHeight);
     this.randomTerrain(500, x, y, width, height, mapWidth, mapHeight, 14)
+    var N = this.countRooms(this.mapFeatures);
+    console.log(N);
+  },
+  countRooms: function countRooms (array) {
+    var n = 0;
+    var N = [];
+    loop:
+    for (var j = 0; j < 12; j++) {
+      n = 0;
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].type === 4 && array[i].subtype === j) {
+          n++;
+        }
+      }
+      N.push(n);
+    }
+    return N;
   },
   generate: function generate(mapWidth, mapHeight, type) {
     this.mapSize = mapWidth * mapHeight;
