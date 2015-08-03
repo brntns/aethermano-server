@@ -337,6 +337,21 @@ exports.Map.prototype = {
       }
     }
   },
+  countRooms: function countRooms (array) {
+    var n = 0;
+    var N = [];
+    loop:
+    for (var j = 0; j < 12; j++) {
+      n = 0;
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].type === 4 && array[i].subtype === j) {
+          n++;
+        }
+      }
+      N.push(n);
+    }
+    return N;
+  },
   Bedrock: function Bedrock(x, y, width, height, mapWidth, mapHeight) {
     this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 1);
     //this.makeTerrain(100, 25, 100, 50, mapWidth, mapHeight, 0);
@@ -354,21 +369,6 @@ exports.Map.prototype = {
     this.randomTerrain(500, x, y, width, height, mapWidth, mapHeight, 14)
     var N = this.countRooms(this.mapFeatures);
     console.log(N);
-  },
-  countRooms: function countRooms (array) {
-    var n = 0;
-    var N = [];
-    loop:
-    for (var j = 0; j < 12; j++) {
-      n = 0;
-      for (var i = 0; i < array.length; i++) {
-        if (array[i].type === 4 && array[i].subtype === j) {
-          n++;
-        }
-      }
-      N.push(n);
-    }
-    return N;
   },
   generate: function generate(mapWidth, mapHeight, type) {
     this.mapSize = mapWidth * mapHeight;
