@@ -8,6 +8,8 @@ exports.Map = function(){
   this.map = [];
   this.maps = [];
   this.shafts = [];
+  this.connectors = [];
+  this.connectorRooms = [];
   this.branches = [];
   this.rooms = [];
 	this.locationSprites = [];
@@ -65,6 +67,18 @@ exports.Map.prototype = {
       return rndMin;
     }
   },
+  randomTerrain: function randomTerrain(n, x, y, width, height, mapWidth, mapHeight, color) {
+    var N = Math.floor((mapHeight*mapWidth)/n);
+    var X = 0;
+    var Y = 0;
+    for (var i = 0; i < N; i++) {
+      X = this.Random(x,x+width);
+      Y = this.Random(y,y+height);
+      if (this.map[X + mapWidth*Y] !== 0) {
+        this.map[X + mapWidth*Y] = color;
+      }
+    }
+  },
   randomSpacing: function randomSpacing(value, coeff1, coeff2, buffer1, buffer2) {
     var Val = 0;
     var Values = [];
@@ -102,13 +116,13 @@ exports.Map.prototype = {
   },
   mainShafts: function mainShafts(x, y, width, height) {
     var X = 0;
-    var Y = 0;
-    var Width = 8;
+    var Y = y;
+    var Width = 12;
     var Height = 0;
     var boundLeft = 0;
     var boundRight = 0;
     var shaft = {};
-    var shaftStarts = this.randomSpacing(width, 125, 75, 10, 10 + Width);
+    var shaftStarts = this.randomSpacing(width - Width, 175, 125, 50, 50);
     for (var i = 0; i < shaftStarts.length; i++) {
       X = shaftStarts[i];
       Height = this.Random(Math.floor(height/1.5),height-10);
@@ -119,7 +133,7 @@ exports.Map.prototype = {
       this.mapFeatures.push(shaft);
     }
   },
-  connectShafts: function connectShafts(x, y, width, height) {
+  connectShafts: function connectShafts(x, y, width, height, mapWidth, mapHeight) {
     var X = 0;
     var Y = 0;
     var Width = 0;
@@ -129,18 +143,45 @@ exports.Map.prototype = {
       for (var i = 0; i < this.shafts.length-1; i++) {
         var boundary1 = Math.max(this.shafts[i].y,this.shafts[i+1].y,10);
         var boundary2 = Math.min(this.shafts[i].y + this.shafts[i].height - 10, this.shafts[i+1].y + this.shafts[i+1].height - 10);
-        var connectorStarts = this.randomSpacing(boundary2-boundary1, 50, 30, 5, 5 + Height);
+        var connectorStarts = this.randomSpacing(boundary2-boundary1 - Height, 100, 50, 15, 15);
         for (var j = 0; j < connectorStarts.length; j++) {
           X = this.shafts[i].x + this.shafts[i].width;
           Y = connectorStarts[j];
           Width = this.shafts[i+1].x - this.shafts[i].x - this.shafts[i].width;
           connector = this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 2, 0);
+          this.connectors.push(connector);
           this.mapFeatures.push(connector);
         }
       }
     }
   },
-  branchShafts: function branchShafts(x, y, width, height, mapWidth, mapHeight) {
+  makeConnectorRooms: function makeConnectorRooms(x, y, width, height, mapWidth, mapHeight) {
+    var X = 0;
+    var Y = 0;
+    var Width = 0;
+    var Height = 0;
+    var room = {};
+    if (this.connectors.length > 0) {
+      for (var i = 0; i < this.connectors.length; i++) {
+        var connectorRoomStarts = this.randomSpacing(this.connectors[i].width, 75, 50, 5, 5);
+        for (var j = 0; j < connectorRoomStarts.length; j++) {
+          X = this.connectors[i].x + connectorRoomStarts[j];
+          Width = this.Random(12,35);
+          Y = this.connectors[i].y + this.connectors[i].height - this.Random(12,Width);
+          Height = this.connectors[i].y - Y + this.connectors[i].height;
+          room = this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 5, 0);
+          var testRoom = this.makeFeature(X-3, Y-3, Width+6, Height+6, 0, 0, 0, 0, 0, 5, 0);
+          if (!this.intersectAll(testRoom, this.shafts)
+          && !this.intersectAll(testRoom, this.connectorRooms)
+          && this.inMapBounds(testRoom, mapWidth, mapHeight)) {
+            this.connectorRooms.push(room);
+            this.mapFeatures.push(room);
+          }
+        }
+      }
+    }
+  },
+  branchFeature: function branchFeature(array, x, y, width, height, mapWidth, mapHeight) {
     var n = 0;
     var X = 0;
     var Y = 0;
@@ -150,40 +191,40 @@ exports.Map.prototype = {
     var room = {};
     var sizeX = 0;
     var sizeY = 0;
-    if (this.shafts.length > 1) {
-      for (var i = 0; i < this.shafts.length; i++) {
-        var branchStarts = this.randomSpacing(this.shafts[i].height, 10, 5, 3, 3 + Height);
+    if (array.length > 1) {
+      for (var i = 0; i < array.length; i++) {
+        var branchStarts = this.randomSpacing(array[i].height-Height, 10, 5, 3, 3);
         for (var j = 0; j < branchStarts.length; j++) {
-          branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 0);
+          branch = this.makeBranch(array[i], branchStarts[j]+array[i].y, X, Y, Width, Height, 0);
           sizeX = this.Random(18,32);
           sizeY = this.Random(12,sizeX+2);
           var offset = this.Random(0,3);
           room = this.makeRoom(branch, sizeX, sizeY, offset);
           var testBranch = this.makeFeature(branch.x-1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
-          var testRoom = this.makeRoom(testBranch, sizeX + 4, sizeY + 4, offset + 2);
+          var testRoom = this.makeRoom(testBranch, sizeX + 6, sizeY + 6, offset);
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(testRoom, this.mapFeatures)
-          && this.inMapBounds(branch, mapWidth, mapHeight)
-          && this.inMapBounds(room, mapWidth, mapHeight)) {
+          && this.inMapBounds(testBranch, mapWidth, mapHeight)
+          && this.inMapBounds(testRoom, mapWidth, mapHeight)) {
             this.branches.push(branch);
             this.rooms.push(room);
             this.mapFeatures.push(branch);
             this.mapFeatures.push(room);
           }
         }
-        var branchStarts = this.randomSpacing(this.shafts[i].height, 10, 5, 3, 3 + Height);
+        var branchStarts = this.randomSpacing(array[i].height - Height, 10, 5, 3, 3);
         for (var j = 0; j < branchStarts.length; j++) {
-          branch = this.makeBranch(this.shafts[i], branchStarts[j], X, Y, Width, Height, 1);
+          branch = this.makeBranch(array[i], branchStarts[j]+array[i].y, X, Y, Width, Height, 1);
           sizeX = this.Random(14,30);
           sizeY = this.Random(12,sizeX+2);
           var offset = this.Random(0,3);
           room = this.makeRoom(branch, sizeX, sizeY, offset);
           var testBranch = this.makeFeature(branch.x+1, branch.y-2, branch.width-2, branch.height + 4, 0, 0, 0, 0, 0, branch.type, branch.subtype);
-          var testRoom = this.makeRoom(testBranch, sizeX + 4, sizeY + 4, offset + 2);
+          var testRoom = this.makeRoom(testBranch, sizeX + 6, sizeY + 6, offset);
           if (!this.intersectAll(testBranch, this.mapFeatures)
           && !this.intersectAll(testRoom, this.mapFeatures)
-          && this.inMapBounds(branch, mapWidth, mapHeight)
-          && this.inMapBounds(room, mapWidth, mapHeight)) {
+          && this.inMapBounds(testBranch, mapWidth, mapHeight)
+          && this.inMapBounds(testRoom, mapWidth, mapHeight)) {
             this.branches.push(branch);
             this.rooms.push(room);
             this.mapFeatures.push(branch);
@@ -194,16 +235,13 @@ exports.Map.prototype = {
     }
     //console.log(this.rooms);
   },
-  branchRooms: function branchRooms () {
-    //
-  },
   makeBranch: function makeBranch(shafts, branchStarts, X, Y, Width, Height, orientation) {
     if (orientation === 0) {
-      X = this.Random(shafts.boundLeft + 5, shafts.x - 5);
+      X = this.Random(shafts.x - 20, shafts.x - 5);
       Width = shafts.x - X;
     } else {
       X = shafts.x + shafts.width;
-      Width = this.Random(5, shafts.boundRight - X);
+      Width = this.Random(5, 20);
     }
     Y = branchStarts;
     return this.makeFeature(X, Y, Width, Height, 0, 0, 0, 0, 0, 3, orientation);
@@ -224,14 +262,56 @@ exports.Map.prototype = {
       this.makeTerrain(array[j].x, array[j].y, array[j].width, array[j].height, mapWidth, mapHeight, array[j].color);
     }
   },
+  writeTiles: function writeTiles (mapWidth, mapHeight) {
+    for (var i = 1; i < mapWidth-1; i++) {
+      for (var j = 1; j < mapHeight-1; j++) {
+        if (this.map[i+mapWidth*j] !== 0) {
+          if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
+            if (this.map[(i-1)+mapWidth*(j+1)] === 0 && this.map[(i-1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j+1)] !== 0) {
+              this.map[i+mapWidth*j] = 3;
+            } else if (this.map[(i-1)+mapWidth*(j+1)] !== 0 && this.map[(i-1)+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j+1)] !== 0) {
+              this.map[i+mapWidth*j] = 2;
+            } else if (this.map[(i-1)+mapWidth*(j+1)] !== 0 && this.map[(i-1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*(j+1)] !== 0) {
+              this.map[i+mapWidth*j] = 5;
+            } else if (this.map[(i-1)+mapWidth*(j+1)] !== 0 && this.map[(i-1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j+1)] === 0) {
+              this.map[i+mapWidth*j] = 4;
+            }
+          } else if (this.map[(i-1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
+            this.map[i+mapWidth*j] = 6;
+          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] === 0) {
+            this.map[i+mapWidth*j] = 7;
+          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j+1)] !== 0) {
+            this.map[i+mapWidth*j] = 8;
+          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
+            this.map[i+mapWidth*j] = 9;
+          } else if (this.map[(i-1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
+            this.map[i+mapWidth*j] = 10;
+          } else if (this.map[(i-1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] === 0) {
+            this.map[i+mapWidth*j] = 11;
+          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j+1)] === 0) {
+            this.map[i+mapWidth*j] = 12;
+          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j+1)] !== 0) {
+            this.map[i+mapWidth*j] = 13;
+          } 
+        }
+      }
+    }
+  },
   Bedrock: function Bedrock(x, y, width, height, mapWidth, mapHeight) {
-    this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 13);
+    this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 1);
     //this.makeTerrain(100, 25, 100, 50, mapWidth, mapHeight, 0);
-    this.mainShafts(x, y-3, width, height);
-    this.connectShafts(x, y, width, height);
-    this.branchShafts(x, y, width, height, mapWidth, mapHeight);
+    this.mainShafts(x, y+3, width, height-3);
+    this.connectShafts(x, y+3, width, height-3, mapWidth, mapHeight);
+    this.makeConnectorRooms(x, y+3, width, height-3, mapWidth, mapHeight);
+    console.log(this.connectorRooms);
+    this.branchFeature(this.shafts, x, y+3, width, height-3, mapWidth, mapHeight);
+    this.branchFeature(this.connectorRooms, x, y+3, width, height-3, mapWidth, mapHeight);
+    this.branchFeature(this.rooms, x, y+3, width, height-3, mapWidth, mapHeight);
     //console.log(this.mapFeatures);
     this.writeToMap(this.mapFeatures, mapWidth, mapHeight);
+    this.randomTerrain(100, x, y, width, height, mapWidth, mapHeight, 14)
+    this.writeTiles(mapWidth,mapHeight);
+    this.randomTerrain(500, x, y, width, height, mapWidth, mapHeight, 14)
   },
   generate: function generate(mapWidth, mapHeight, type) {
     this.mapSize = mapWidth * mapHeight;
@@ -271,7 +351,7 @@ exports.Map.prototype = {
 				"firstgid":1,
 				"image":"tiles-1.png",
 				"imageheight":16,
-				"imagewidth":304,
+				"imagewidth":752,
 				"margin":0,
 				"name":"tiles-1",
 				"properties":{},

@@ -14,14 +14,14 @@ exports.World = function(){
 exports.World.prototype = {
 	create: function () {
 
-		this.build(0,'level',300,100);
-		this.build(1,'room',50,30);
+		this.build(0,'level',1000,300);
+		/*this.build(1,'room',50,30);
 		this.build(2,'room',50,30);
 		this.build(3,'room',50,30);
 		this.build(4,'room',50,30);
 		this.build(5,'level',300,100);
 		this.build(6,'level',300,100);
-		console.log(this.maps);
+		console.log(this.maps); */
 
 	},
 	build: function build(id,type,width,height){
@@ -34,15 +34,15 @@ exports.World.prototype = {
 		//level
 		map.generate(width,height,type);
 		//door
-		console.log(map.rooms[id]);
+		/*console.log(map.rooms[id]);
 		if(type === 'level'){
 			var doorX = map.rooms[id].x;
 			var doorY = map.rooms[id].y + map.rooms[id].height - 4;
-		}else{
-			var doorX = width / 2;
-			var doorY = height / 2;
+		} else {
+			var doorX = Math.floor(width / 2);
+			var doorY = Math.floor(height / 2);
 		}
-		items.createItem(doorX,doorY,'door',id + 1);
+		items.createItem(doorX,doorY,'door',id + 1); */
 		// push and clear
 		mapWrap.map.push(map.mapData);
 		mapWrap.locations.push(items.itemData);
