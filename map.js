@@ -263,35 +263,75 @@ exports.Map.prototype = {
     }
   },
   writeTiles: function writeTiles (mapWidth, mapHeight) {
+    var map = this.map;
     for (var i = 1; i < mapWidth-1; i++) {
       for (var j = 1; j < mapHeight-1; j++) {
-        if (this.map[i+mapWidth*j] !== 0) {
-          if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
-            if (this.map[(i-1)+mapWidth*(j+1)] === 0 && this.map[(i-1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j+1)] !== 0) {
-              this.map[i+mapWidth*j] = 3;
-            } else if (this.map[(i-1)+mapWidth*(j+1)] !== 0 && this.map[(i-1)+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j+1)] !== 0) {
-              this.map[i+mapWidth*j] = 2;
-            } else if (this.map[(i-1)+mapWidth*(j+1)] !== 0 && this.map[(i-1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*(j+1)] !== 0) {
-              this.map[i+mapWidth*j] = 5;
-            } else if (this.map[(i-1)+mapWidth*(j+1)] !== 0 && this.map[(i-1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*(j+1)] === 0) {
-              this.map[i+mapWidth*j] = 4;
+        if (map[i+mapWidth*j] !== 0) {
+          if (map[(i-1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j-1)] !== 0
+          && map[(i+1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j+1)] !== 0) {
+            if (map[(i-1)+mapWidth*(j+1)] === 0
+            && map[(i-1)+mapWidth*(j-1)] !== 0
+            && map[(i+1)+mapWidth*(j-1)] !== 0
+            && map[(i+1)+mapWidth*(j+1)] !== 0) {
+              map[i+mapWidth*j] = 3;
+            } else if (map[(i-1)+mapWidth*(j+1)] !== 0
+            && map[(i-1)+mapWidth*(j-1)] === 0
+            && map[(i+1)+mapWidth*(j-1)] !== 0
+            && map[(i+1)+mapWidth*(j+1)] !== 0) {
+              map[i+mapWidth*j] = 2;
+            } else if (map[(i-1)+mapWidth*(j+1)] !== 0
+            && map[(i-1)+mapWidth*(j-1)] !== 0
+            && map[(i+1)+mapWidth*(j-1)] === 0
+            && map[(i+1)+mapWidth*(j+1)] !== 0) {
+              map[i+mapWidth*j] = 5;
+            } else if (map[(i-1)+mapWidth*(j+1)] !== 0
+            && map[(i-1)+mapWidth*(j-1)] !== 0
+            && map[(i+1)+mapWidth*(j-1)] !== 0
+            && map[(i+1)+mapWidth*(j+1)] === 0) {
+              map[i+mapWidth*j] = 4;
             }
-          } else if (this.map[(i-1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
-            this.map[i+mapWidth*j] = 6;
-          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] === 0) {
-            this.map[i+mapWidth*j] = 7;
-          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j+1)] !== 0) {
-            this.map[i+mapWidth*j] = 8;
-          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
-            this.map[i+mapWidth*j] = 9;
-          } else if (this.map[(i-1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] !== 0) {
-            this.map[i+mapWidth*j] = 10;
-          } else if (this.map[(i-1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j+1)] === 0) {
-            this.map[i+mapWidth*j] = 11;
-          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] !== 0 && this.map[(i+1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j+1)] === 0) {
-            this.map[i+mapWidth*j] = 12;
-          } else if (this.map[(i-1)+mapWidth*j] !== 0 && this.map[i+mapWidth*(j-1)] === 0 && this.map[(i+1)+mapWidth*j] === 0 && this.map[i+mapWidth*(j+1)] !== 0) {
-            this.map[i+mapWidth*j] = 13;
+          } else if (map[(i-1)+mapWidth*j] === 0
+          && map[i+mapWidth*(j-1)] !== 0
+          && map[(i+1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j+1)] !== 0) {
+            map[i+mapWidth*j] = 6;
+          } else if (map[(i-1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j-1)] !== 0
+          && map[(i+1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j+1)] === 0) {
+            map[i+mapWidth*j] = 7;
+          } else if (map[(i-1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j-1)] !== 0
+          && map[(i+1)+mapWidth*j] === 0
+          && map[i+mapWidth*(j+1)] !== 0) {
+            map[i+mapWidth*j] = 8;
+          } else if (map[(i-1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j-1)] === 0
+          && map[(i+1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j+1)] !== 0) {
+            map[i+mapWidth*j] = 9;
+          } else if (map[(i-1)+mapWidth*j] === 0
+          && map[i+mapWidth*(j-1)] === 0
+          && map[(i+1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j+1)] !== 0) {
+            map[i+mapWidth*j] = 10;
+          } else if (map[(i-1)+mapWidth*j] === 0
+          && map[i+mapWidth*(j-1)] !== 0
+          && map[(i+1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j+1)] === 0) {
+            map[i+mapWidth*j] = 11;
+          } else if (map[(i-1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j-1)] !== 0
+          && map[(i+1)+mapWidth*j] === 0
+          && map[i+mapWidth*(j+1)] === 0) {
+            map[i+mapWidth*j] = 12;
+          } else if (map[(i-1)+mapWidth*j] !== 0
+          && map[i+mapWidth*(j-1)] === 0
+          && map[(i+1)+mapWidth*j] === 0
+          && map[i+mapWidth*(j+1)] !== 0) {
+            map[i+mapWidth*j] = 13;
           } 
         }
       }
