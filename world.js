@@ -28,8 +28,12 @@ exports.World.prototype = {
 		var mapWrap = {
 			id:id,
 			map: [],
-			locations:[],
-			spawnpoints:[]
+			locations: [],
+			spawnpoints: [],
+			monsters: [],
+			entrances: [],
+			exits: []
+
 		};
 		//level
 		map.generate(width,height,type);
