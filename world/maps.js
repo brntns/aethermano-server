@@ -3,15 +3,25 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var Monster = require('./decorator/monster.js');
-var Items = require('./decorator/items.js');
-var monster = new Monster.Monster();
-var items = new Items.Items();
+var Mines = require('./templates/mines.js');
+var Treasureroom = require('./templates/treasureroom.js');
+var mines = new Mines.Mines();
+var treasure = new Treasureroom.Treasureroom();
 
-exports.Mines = function(){
-
+exports.Map = function(){
+	this.mapData = {};
+  this.map = [];
+  this.maps = [];
+  this.shafts = [];
+  this.connectors = [];
+  this.connectorRooms = [];
+  this.branches = [];
+  this.rooms = [];
+	this.locationSprites = [];
+  this.locations = [];
+  this.mapFeatures = [];
 };
-exports.Mines.prototype = {
+exports.Map.prototype = {
     //console.log('Creating New Map...');
     //console.log('Done Creating Map!' + JSON.stringify(this.maps.length));
   clear: function clear() {
@@ -320,7 +330,7 @@ exports.Mines.prototype = {
           && map[(i+1)+mapWidth*j] === 0
           && map[i+mapWidth*(j+1)] !== 0) {
             map[i+mapWidth*j] = 13;
-          } 
+          }
         }
       }
     }
@@ -396,7 +406,7 @@ exports.Mines.prototype = {
 				"firstgid":1,
 				"image":"tiles-1.png",
 				"imageheight":16,
-				"imagewidth":256,
+				"imagewidth":752,
 				"margin":0,
 				"name":"tiles-1",
 				"properties":{},
