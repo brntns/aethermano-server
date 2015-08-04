@@ -45,7 +45,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
 		// send Monster
-		socket.emit('updateMonsters',monsters);
+	//	socket.emit('updateMonsters',monsters);
 	});
 	// update player postition
 	socket.on('newPlayerPosition', function (data) {
