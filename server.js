@@ -2,13 +2,10 @@ var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
 	, gameWorld = require('./world/world.js')
-	, gameMonster = require('./world/monster.js');
 var Infiniteloop = require('infinite-loop');
 
 
 var world = new gameWorld.World();
-var monster = new gameMonster.Monster();
-var monsters = monster.monsters;
 world.create();
 //map.create();
 
