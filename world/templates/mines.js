@@ -340,6 +340,23 @@ exports.Mines.prototype = {
     }
     return N;
   },
+  addMonsters: function addMonsters(object, n) {
+    for (var i = 0; i < n; i++) {
+      var X = this.Random(object.x,object.x+object.width-1);
+      var Y = this.Random(object.y,object.y+object.height-1);
+      var spawnPoint = {
+       'x': X,
+       'y':Y
+      };
+      monster.spawn(spawnPoint);
+    }
+  },
+  spawnMonsters: function spawnMonsters(array) {
+    for (var i = 0; i < array.length; i++) {
+      var n = this.Random(0,4);
+      this.addMonsters(array[i], n)
+    }
+  },
   Bedrock: function Bedrock(x, y, width, height, mapWidth, mapHeight) {
     this.makeTerrain(x, y, width, height, mapWidth, mapHeight, 1);
     //this.makeTerrain(100, 25, 100, 50, mapWidth, mapHeight, 0);
@@ -356,6 +373,7 @@ exports.Mines.prototype = {
     this.writeTiles(mapWidth,mapHeight);
     this.randomTerrain(500, x, y, width, height, mapWidth, mapHeight, 14)
     var N = this.countRooms(this.mapFeatures);
+    this.spawnMonsters(this.rooms);
     console.log(N);
   },
   generate: function generate(mapWidth, mapHeight, type) {
