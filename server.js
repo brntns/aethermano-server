@@ -107,6 +107,9 @@ io.sockets.on('connection', function (socket) {
 		monster.spawn(data);
   	io.sockets.emit('updateMonsters',monsters);
   });
+	socket.on('buildLadder', function(data){
+		socket.broadcast.emit('buildLadder',data);
+	});
 	//update level
   socket.on('requestLevelChange', function (level) {
 		// console.log(level);
