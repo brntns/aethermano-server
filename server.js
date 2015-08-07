@@ -1,34 +1,19 @@
 var app = require('http').createServer()
 	, io = require('socket.io').listen(app)
 	, _ = require('lodash')
-	, gameMap = require('./map.js')
-  , gameItems = require('./items.js')
-	, gameMonster = require('./monster.js');
-//var Infiniteloop = require('infinite-loop');
+	, gameWorld = require('./world/world.js')
 
 
-var map = new gameMap.Map();
-var items = new gameItems.Items();
-var monster = new gameMonster.Monster();
-var monsters = monster.monsters;
-map.create();
-map.create();
 
-var monsterPerScreen = 0.1;
-var monsterNum = monsterPerScreen*map.mapSize/3072;
-//
-for (i = 0; i < monsterNum; i++) {
+var world = new gameWorld.World();
+world.create();
+//map.create();
 
-	monster.create(map.ret);
 
-}
-//console.log(monster.monsters);
-items.create();
 
 
 app.listen(process.env.PORT);
 
-//  app.listen(8000);
 
 
 var players = [];
@@ -40,31 +25,32 @@ io.sockets.on('connection', function (socket) {
 	socket.room = 1;
 	socket.join(1);
 	//spawn points
-	var spawnx = Math.floor(0.4*Math.random()*map.ret*16+0.3*map.ret);
-	var spawny = Math.floor(0.4*Math.random()*map.ret*16+0.3*map.ret);
+	var spawnx = 10;//Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
+	var spawny = 10;//Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
 	var spawnPoint = {x: spawnx, y: spawny, level:socket.room};
-	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: spawnPoint.status};
+	var player = { id: socket.id , x: spawnPoint.x, y: spawnPoint.y, status: 0, class: 1000};
 	// add player
 	players.push(player);
 	// connect player
-	socket.emit('playerConnected', player);
+	socket.emit('playerConnected', [player]);
 	//push map
-	socket.emit('getMap', map.maps, map.locationSprites);
+	socket.emit('getMap', world.maps);
 	//update player
-  socket.broadcast.to('level1').emit('updatePlayers', [player])
+  	socket.broadcast.to('level1').emit('updatePlayers', [player])
 	// update Spawnpoints
 	socket.on('mapCreated', function(){
 		socket.emit('playerSpawn', spawnPoint);
 		// send Monster
-		socket.emit('updateMonsters',monsters);
+	//	socket.emit('updateMonsters',monsters);
 	});
 	// update player postition
 	socket.on('newPlayerPosition', function (data) {
 		player.x = data.x;
 		player.y = data.y;
 		player.status = data.status;
-    player.level = data.level;
-    socket.broadcast.to(data.level).emit('updatePlayers', [player]);
+		player.level = data.level;
+		player.class = data.class;
+		socket.broadcast.to(data.level).emit('updatePlayers', [player]);
 	});
 	socket.on('userChat', function(data){
 			io.sockets.emit('updateChat', data);
@@ -129,8 +115,8 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('mapUpdated', function(){
     console.log('mapupdated');
-    var spawnx = Math.random()*map.ret*16;
-    var spawny = Math.random()*map.ret*16;
+	var spawnx = 10;//Math.floor(0.4*Math.random()*map.mapWidth*16+0.3*map.mapWidth);
+	var spawny = 10;//Math.floor(0.4*Math.random()*map.mapHeight*16+0.3*map.mapHeight);
     var respawnPoint = {x: spawnx, y: spawny};
     socket.emit('playerRepawn', respawnPoint);
   });
@@ -143,20 +129,6 @@ io.sockets.on('connection', function (socket) {
 	});
 });
 
-// Monster Movement Loops
-function monsterMoveRight(monster){
-	io.sockets.emit('updateMonsters', [monster])
-	console.log(monster);
-}
-function monsterMoveLeft(monster){
-	io.sockets.emit('updateMonsters', [monster])
-	console.log(monster);
-}
-function startMovement(monster){
-	var loop = new Infiniteloop();
-	loop.add(monsterMoveRight,monster);
-	loop.setInterval(150).run();
-}
 //block
 // var fs = require('fs'),
 // PNG = require('pngjs').PNG;
