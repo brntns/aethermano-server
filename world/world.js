@@ -2,8 +2,8 @@
 var _ = require('lodash');
 var debug = true;
 var start = process.hrtime();
-var gameMaps = require('./maps.js');
-var maps = new gameMaps.Map();
+var gameMines = require('./templates/mines.js');
+var mines = new gameMines.Mines();
 
 
 exports.World = function(){
@@ -35,8 +35,9 @@ exports.World.prototype = {
 
 		};
 		//level
-		maps.generate(width,height,type);
+		mines.generate(width,height,type);
 		//door
+		console.log(mines.monsters);
 		/*console.log(map.rooms[id]);
 		if(type === 'level'){
 			var doorX = map.rooms[id].x;
@@ -47,10 +48,11 @@ exports.World.prototype = {
 		}
 		items.createItem(doorX,doorY,'door',id + 1); */
 		// push and clear
-		mapWrap.map.push(maps.mapData);
+		mapWrap.map.push(mines.mapData);
+		mapWrap.monsters = mines.monsters;
 	//	mapWrap.locations.push(items.itemData);
 		this.maps.push(mapWrap);
-		maps.clear();
+		mines.clear();
 		//items.clear();
 	}
 };

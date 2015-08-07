@@ -9,7 +9,18 @@ var monster = new Monster.Monster();
 var items = new Items.Items();
 
 exports.Mines = function(){
-
+  this.monsters = [];
+  this.mapData = {};
+  this.map = [];
+  this.maps = [];
+  this.shafts = [];
+  this.connectors = [];
+  this.connectorRooms = [];
+  this.branches = [];
+  this.rooms = [];
+	this.locationSprites = [];
+  this.locations = [];
+  this.mapFeatures = [];
 };
 exports.Mines.prototype = {
     //console.log('Creating New Map...');
@@ -320,7 +331,7 @@ exports.Mines.prototype = {
           && map[(i+1)+mapWidth*j] === 0
           && map[i+mapWidth*(j+1)] !== 0) {
             map[i+mapWidth*j] = 13;
-          } 
+          }
         }
       }
     }
@@ -349,6 +360,7 @@ exports.Mines.prototype = {
        'y':Y
       };
       monster.spawn(spawnPoint);
+      this.monsters.push(monster.monsterData);
     }
   },
   spawnMonsters: function spawnMonsters(array) {
