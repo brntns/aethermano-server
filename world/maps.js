@@ -413,7 +413,7 @@ exports.Map.prototype = {
 				"firstgid":1,
 				"image":"tiles-1.png",
 				"imageheight":16,
-				"imagewidth":752,
+				"imagewidth":256,
 				"margin":0,
 				"name":"tiles-1",
 				"properties":{},
