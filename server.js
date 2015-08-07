@@ -64,18 +64,20 @@ io.sockets.on('connection', function (socket) {
 	});
 	socket.on('monsterSlashed', function(monster){
 		// send Monster
-
-		for (var i = 0; i < monsters.length; i++) {
-			if(monsters[i].id === monster.id){
-				// monsters[i].x = monster.x;
-				// monsters[i].y = monster.y;
-				monsters[i].velox = monster.velox;
-				monsters[i].veloy = monster.veloy;
-				monsters[i].hp = monster.hp;
-			}
-			io.sockets.emit('updateMonsters', monsters[i]);
-		}
-			console.log('All Monsters:' + JSON.stringify(monsters));
+		//
+		// for (var i = 0; i < monsters.length; i++) {
+		// 	if(monsters[i].id === monster.id){
+		// 		// monsters[i].x = monster.x;
+		// 		// monsters[i].y = monster.y;
+		// 		monsters[i].velox = monster.velox;
+		// 		monsters[i].veloy = monster.veloy;
+		// 		monsters[i].hp = monster.hp;
+		// 	}
+		// 	io.sockets.emit('updateMonsters', monsters[i]);
+		//
+		// }
+		// 	console.log('All Monsters:' + JSON.stringify(monsters));
+					socket.broadcast.emit('updateMonsters', monster);
 	});
 	//update monsters
 	socket.on('monsterUpdate', function (data) {
