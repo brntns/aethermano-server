@@ -33,13 +33,6 @@ exports.Map.prototype = {
     this.locations = [];
     this.mapFeatures = [];
   },
-  createRoom: function createRoom(x, y, width, height, color) {
-    for (var z = 0; z < width; z++){
-      for (var i = 0; i < height; i++){
-        this.map[x+y*width+z+i*width] = color;
-      }
-    }
-  },
   makeFeature: function makeFeature(x, y, width, height, boundLeft, boundRight, boundTop, boundBottom, color, type, subtype) {
     var feature = {};
     feature = {

@@ -61,40 +61,42 @@ io.sockets.on('connection', function (socket) {
 	});
 	socket.on('monsterSlashed', function(monster){
 		// send Monster
-
-		for (var i = 0; i < monsters.length; i++) {
-			if(monsters[i].id === monster.id){
-				// monsters[i].x = monster.x;
-				// monsters[i].y = monster.y;
-				monsters[i].velox = monster.velox;
-				monsters[i].veloy = monster.veloy;
-				monsters[i].hp = monster.hp;
-			}
-			io.sockets.emit('updateMonsters', monsters[i]);
-		}
-			console.log('All Monsters:' + JSON.stringify(monsters));
+		//
+		// for (var i = 0; i < monsters.length; i++) {
+		// 	if(monsters[i].id === monster.id){
+		// 		// monsters[i].x = monster.x;
+		// 		// monsters[i].y = monster.y;
+		// 		monsters[i].velox = monster.velox;
+		// 		monsters[i].veloy = monster.veloy;
+		// 		monsters[i].hp = monster.hp;
+		// 	}
+		// 	io.sockets.emit('updateMonsters', monsters[i]);
+		//
+		// }
+		// 	console.log('All Monsters:' + JSON.stringify(monsters));
+					socket.broadcast.emit('updateMonsters', monster);
 	});
 	//update monsters
 	socket.on('monsterUpdate', function (data) {
-    console.log('updating:' + JSON.stringify(data));
-		for (var i = 0; i < monsters.length; i++) {
-			if(monsters[i].id === data.id){
-				monsters[i].x = data.x;
-				monsters[i].y = data.y;
-				monsters[i].velox = data.velox;
-				monsters[i].veloy = data.veloy;
-				monsters[i].hp = data.hp;
-				monsters[i].aggro = data.aggro;
-			}
-			io.sockets.emit('updateMonsters', monsters[i]);
-		}
+    // console.log('updating:' + JSON.stringify(data));
+		// for (var i = 0; i < monsters.length; i++) {
+		// 	if(monsters[i].id === data.id){
+		// 		monsters[i].x = data.x;
+		// 		monsters[i].y = data.y;
+		// 		monsters[i].velox = data.velox;
+		// 		monsters[i].veloy = data.veloy;
+		// 		monsters[i].hp = data.hp;
+		// 		monsters[i].aggro = data.aggro;
+		// 	}
+			socket.broadcast.emit('updateMonsters', data);
+		//}
 	});
 
 	socket.on('monsterKill', function(monster){
-		console.log('killed' + monster.id)
-			_.remove(monsters, function(m) {
-				return m.id == monster.id;
-			});
+		// console.log('killed' + monster.id)
+		// 	_.remove(monsters, function(m) {
+		// 		return m.id == monster.id;
+		// 	});
 				io.sockets.emit('removeMonster', monster.id);
 
 	});
@@ -102,6 +104,9 @@ io.sockets.on('connection', function (socket) {
 		monster.spawn(data);
   	io.sockets.emit('updateMonsters',monsters);
   });
+	socket.on('buildLadder', function(data){
+		socket.broadcast.emit('buildLadder',data);
+	});
 	//update level
   socket.on('requestLevelChange', function (level) {
 		// console.log(level);
